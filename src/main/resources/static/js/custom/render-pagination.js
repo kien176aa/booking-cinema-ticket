@@ -68,4 +68,4 @@ function renderPagination(totalRecords, pageIndex, pageSize) {
 }
 
 // Gọi hàm với dữ liệu mẫu
-renderPagination(100, 1, 31);
+renderPagination(100, 1, 10);
