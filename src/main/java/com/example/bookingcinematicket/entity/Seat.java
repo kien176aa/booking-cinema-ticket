@@ -1,0 +1,31 @@
+package com.example.bookingcinematicket.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Entity
+@Table(name = "seats")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Seat {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "seat_id")
+    private Long seatId;
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
+    @Column(nullable = false)
+    private String seatNumber;
+    private String seatType;
+    private boolean status;
+    @OneToMany(mappedBy = "seat")
+    private List<Ticket> tickets;
+}
