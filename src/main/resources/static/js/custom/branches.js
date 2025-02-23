@@ -53,17 +53,9 @@ function renderTableRow(item) {
             </td>
             <td>
                 <div class="dropdown">
-                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                        <i class="ri-more-2-line"></i>
+                    <button type="button" class="btn btn-warning" onclick="setContentModal('edit', editBranch, '${item.branchId}')">
+                        <i class="ri-pencil-line me-1"></i> Cập nhật
                     </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="javascript:void(0);" onclick="setContentModal('edit', editBranch, '${item.branchId}')">
-                            <i class="ri-pencil-line me-1"></i> Edit
-                        </a>
-                        <a class="dropdown-item" href="javascript:void(0);" onclick="deleteItem('${item.branchId}')">
-                            <i class="ri-delete-bin-6-line me-1"></i> Delete
-                        </a>
-                    </div>
                 </div>
             </td>
         </tr>
@@ -126,10 +118,12 @@ function createBranch(){
         success: function(response) {
             console.log('response: ', response);
             modalDialog.modal('hide');
+            showSuccessToast('Dữ liệu đã được lưu thành công!');
             fetchBranches({condition: searchText, pageSize: 10, pageIndex: 1});
         },
         error: function(error) {
             console.error("Error fetching branches:", error);
+            showErrorToast(error.responseText);
         }
     });
 }
@@ -145,10 +139,12 @@ function editBranch(){
         success: function(response) {
             console.log('response: ', response);
             modalDialog.modal('hide');
+            showSuccessToast('Dữ liệu đã được lưu thành công!');
             fetchBranches({condition: searchText, pageSize: 10, pageIndex: currentPageIndex});
         },
         error: function(error) {
             console.error("Error fetching branches:", error);
+            showErrorToast('Đã xảy ra lỗi khi cập nhật chi nhánh!');
         }
     });
 }
