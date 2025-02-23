@@ -1,6 +1,9 @@
 package com.example.bookingcinematicket.controller.apis;
 
 import com.example.bookingcinematicket.dtos.BranchDTO;
+import com.example.bookingcinematicket.dtos.common.SearchRequest;
+import com.example.bookingcinematicket.dtos.common.SearchResponse;
+import com.example.bookingcinematicket.entity.Branch;
 import com.example.bookingcinematicket.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +16,9 @@ public class BranchController {
     @Autowired
     private BranchService branchService;
 
-    @GetMapping
-    public List<BranchDTO> getAllBranches() {
-        return branchService.getAllBranches();
+    @PostMapping("/search")
+    public SearchResponse<List<BranchDTO>> getAllBranches(@RequestBody SearchRequest<String, Branch> request) {
+        return branchService.getAllBranches(request);
     }
 
     @GetMapping("/{id}")

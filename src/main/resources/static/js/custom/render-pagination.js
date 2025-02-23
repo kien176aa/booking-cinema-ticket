@@ -1,11 +1,12 @@
-function renderPagination(totalRecords, pageIndex, pageSize) {
-    const totalPages = Math.ceil(totalRecords / pageSize); // Tổng số trang
-    const $pagination = $('.pagination'); // Chọn phần tử pagination
-    $pagination.empty(); // Xóa nội dung cũ
+function renderPagination(response, id, callbackFunc) {
+    const {totalRecords, pageIndex, pageSize} = response;
+    console.log("starting pagination", totalRecords, pageIndex, pageSize, id);
+    const totalPages = Math.ceil(totalRecords / pageSize);
+    const $pagination = $(id);
+    $pagination.empty();
 
-    if (totalPages <= 1) return; // Không hiển thị nếu chỉ có 1 trang
+    if (totalPages <= 1) return;
 
-    // Tạo nút "First" và "Prev"
     $pagination.append(`
         <li class="page-item first ${pageIndex === 1 ? 'disabled' : ''}">
             <a class="page-link" href="javascript:void(0);" data-page="1">
@@ -62,10 +63,9 @@ function renderPagination(totalRecords, pageIndex, pageSize) {
     $('.pagination .page-link').on('click', function () {
         const newPage = parseInt($(this).data('page'));
         if (!isNaN(newPage) && newPage !== pageIndex) {
-            renderPagination(totalRecords, newPage, pageSize);
+            callbackFunc(totalRecords, newPage, pageSize);
         }
     });
+    console.log("end pagination");
 }
 
-// Gọi hàm với dữ liệu mẫu
-renderPagination(100, 1, 10);

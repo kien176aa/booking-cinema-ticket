@@ -1,25 +1,38 @@
 package com.example.bookingcinematicket.service;
 
 import com.example.bookingcinematicket.dtos.BranchDTO;
+import com.example.bookingcinematicket.dtos.common.SearchRequest;
+import com.example.bookingcinematicket.dtos.common.SearchResponse;
 import com.example.bookingcinematicket.entity.Branch;
 import com.example.bookingcinematicket.repository.BranchRepository;
 import com.example.bookingcinematicket.utils.ConvertUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class BranchService {
     @Autowired
     private BranchRepository branchRepository;
 
-    public List<BranchDTO> getAllBranches() {
-        List<Branch> branches = branchRepository.findAll();
-        return branches.stream()
-                .map(branch -> ConvertUtils.convert(branch, BranchDTO.class))
-                .collect(Collectors.toList());
+    public SearchResponse<List<BranchDTO>> getAllBranches(SearchRequest<String, Branch> request) {
+        if(request.getCondition() != null)
+            request.setCondition(request.getCondition().toLowerCase().trim());
+        Page<Branch> branches = branchRepository.search(
+                request.getCondition(),
+                request.getPageable(Branch.class)
+        );
+        SearchResponse<List<BranchDTO>> response = new SearchResponse<>();
+        response.setData(ConvertUtils.convertList(branches.getContent(), BranchDTO.class));
+        response.setPageSize(request.getPageSize());
+        response.setPageIndex(request.getPageIndex());
+        response.setTotalRecords(branches.getTotalElements());
+        return response;
     }
 
     public BranchDTO getBranchById(Long id) {
@@ -28,6 +41,7 @@ public class BranchService {
     }
 
     public BranchDTO createBranch(BranchDTO branchDTO) {
+        log.info("Creating branch {}", branchDTO);
         boolean exists = branchRepository.existsByName(branchDTO.getName());
         if (exists) {
             throw new RuntimeException("Branch name already exists");
