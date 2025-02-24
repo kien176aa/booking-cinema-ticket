@@ -2,20 +2,14 @@ const arr = [
     {
         isHeader: false,
         text: "Dashboards",
-        icon: "home-smile",
-        href: "javascript:void(0);",
+        icon: "ri-home-smile-line",
+        href: "/",
         badge: { text: "5", color: "danger" },
-        subItem: [
-            {
-                text: "Analytics",
-                href: "index"
-            }
-        ]
     },
     {
         isHeader: false,
         text: "Quản lý chi nhánh",
-        icon: "home-smile",
+        icon: "ri-map-pin-2-line",
         href: "/branch-management",
         badge: { text: "5", color: "danger" },
     },
@@ -154,22 +148,4 @@ const arr = [
             { text: "Basic Tables", href: "tables-basic" },
         ]
     },
-    {
-        isHeader: true,
-        text: "Misc"
-    },
-    {
-        isHeader: false,
-        text: "Support",
-        icon: "lifebuoy",
-        href: "https://github.com/themeselection/materio-bootstrap-html-admin-template-free/issues",
-        target: "_blank"
-    },
-    {
-        isHeader: false,
-        text: "Documentation",
-        icon: "article",
-        href: "https://demos.themeselection.com/materio-bootstrap-html-admin-template/documentation/",
-        target: "_blank"
-    }
 ];

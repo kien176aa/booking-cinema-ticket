@@ -1,5 +1,6 @@
 function renderMenu() {
-    console.log('render menu start');
+    let currentUrl = window.location.pathname;
+    console.log('render menu start', currentUrl);
     const $ul = $('#custom-menu-container');
     $ul.empty(); // Clear existing items
 
@@ -16,9 +17,9 @@ function renderMenu() {
             // Kiểm tra nếu không có subItem
             if (!item.subItem || item.subItem.length === 0) {
                 const $li = $(`
-                    <li class="menu-item">
+                    <li class="menu-item ${currentUrl === item.href ? 'active' : ''}">
                         <a href="${item.href}" class="menu-link">
-                            <i class="menu-icon tf-icons ri-${item.icon || 'drag-drop'}-line"></i>
+                            <i class="menu-icon tf-icons ${item.icon || 'drag-drop'}"></i>
                             <div data-i18n="${item.text}">${item.text}</div>
                         </a>
                     </li>

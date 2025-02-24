@@ -1,4 +1,4 @@
-let searchText = '', currentPageIndex = 1;
+let searchText = '', currentPageIndex = 1, currentPageSize = 7;
 let branches = [];
 const btnCheckbox = $('#defaultCheck1');
 const inputBId = $('#bId');
@@ -8,6 +8,7 @@ const inputEmail = $('#emailLarge');
 const inputPhone = $('#phone');
 const modalDialog = $('#largeModal');
 function fetchBranches(req) {
+    toggleLoading(true);
     $.ajax({
         url: "/branches/search",
         type: "POST",
@@ -23,9 +24,11 @@ function fetchBranches(req) {
                 tableBody.append(renderTableRow(item));
             });
             renderPagination(response, '#branches-pagination', changePageIndex);
+            toggleLoading(false);
         },
         error: function(error) {
             console.error("Error fetching branches:", error);
+            toggleLoading(false);
         }
     });
 }
@@ -34,7 +37,7 @@ function changePageIndex(totalRecords, newPage, pageSize){
     fetchBranches({condition: searchText, pageSize: pageSize, pageIndex: newPage});
 }
 
-fetchBranches({condition: null, pageSize: 10, pageIndex: 1});
+fetchBranches({condition: null, pageSize: currentPageSize, pageIndex: 1});
 
 
 function renderTableRow(item) {
@@ -108,6 +111,7 @@ function getBranchInfo(type){
 }
 
 function createBranch(){
+    toggleLoading(true);
     const req = getBranchInfo('add');
     console.log('create', req);
     $.ajax({
@@ -119,16 +123,18 @@ function createBranch(){
             console.log('response: ', response);
             modalDialog.modal('hide');
             showSuccessToast('Dữ liệu đã được lưu thành công!');
-            fetchBranches({condition: searchText, pageSize: 10, pageIndex: 1});
+            fetchBranches({condition: searchText, pageSize: currentPageSize, pageIndex: 1});
         },
         error: function(error) {
             console.error("Error fetching branches:", error);
             showErrorToast(error.responseText);
+            toggleLoading(false);
         }
     });
 }
 
 function editBranch(){
+    toggleLoading(true);
     const req = getBranchInfo('edit');
     console.log('edit', req);
     $.ajax({
@@ -140,18 +146,19 @@ function editBranch(){
             console.log('response: ', response);
             modalDialog.modal('hide');
             showSuccessToast('Dữ liệu đã được lưu thành công!');
-            fetchBranches({condition: searchText, pageSize: 10, pageIndex: currentPageIndex});
+            fetchBranches({condition: searchText, pageSize: currentPageSize, pageIndex: currentPageIndex});
         },
         error: function(error) {
             console.error("Error fetching branches:", error);
             showErrorToast('Đã xảy ra lỗi khi cập nhật chi nhánh!');
+            toggleLoading(false);
         }
     });
 }
 $(document).ready(function() {
     $('#button-addon2').on('click', function() {
         searchText = $('.form-control').val().trim();
-        fetchBranches({condition: searchText, pageSize: 10, pageIndex: 1});
+        fetchBranches({condition: searchText, pageSize: currentPageSize, pageIndex: 1});
     });
     $('#create-branch').on('click', function() {
         setContentModal('add', createBranch);

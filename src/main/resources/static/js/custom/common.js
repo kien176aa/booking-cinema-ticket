@@ -1,3 +1,13 @@
+function toggleLoading(isLoading) {
+    if (isLoading) {
+        if ($('.loading').length === 0) {
+            $('body').append('<div class="loading">Loading&#8230;</div>');
+        }
+    } else {
+        $('.loading').remove();
+    }
+}
+
 
 function addFirstAndDeleteLast(id, newItem, arr, pageSize = 10) {
     arr.unshift(newItem);

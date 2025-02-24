@@ -41,6 +41,7 @@
     <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css"/>
 
     <!-- Page CSS -->
+    <link rel="stylesheet" href="/assets/css/custom/loading.css"/>
 
     <!-- Helpers -->
     <script src="/assets/vendor/js/helpers.js"></script>
@@ -48,7 +49,6 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="/assets/js/config.js"></script>
 </head>
-
 <body>
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
@@ -131,482 +131,6 @@
             <div class="menu-inner-shadow"></div>
 
             <ul id="custom-menu-container" class="menu-inner py-1">
-                <!-- Dashboards -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-home-smile-line"></i>
-                        <div data-i18n="Dashboards">Dashboards</div>
-                        <div class="badge bg-danger rounded-pill ms-auto">5</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/dashboards-crm.html"
-                                    target="_blank"
-                                    class="menu-link">
-                                <div data-i18n="CRM">CRM</div>
-                                <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="index.html" class="menu-link">
-                                <div data-i18n="Analytics">Analytics</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/app-ecommerce-dashboard.html"
-                                    target="_blank"
-                                    class="menu-link">
-                                <div data-i18n="eCommerce">eCommerce</div>
-                                <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/app-logistics-dashboard.html"
-                                    target="_blank"
-                                    class="menu-link">
-                                <div data-i18n="Logistics">Logistics</div>
-                                <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/app-academy-dashboard.html"
-                                    target="_blank"
-                                    class="menu-link">
-                                <div data-i18n="Academy">Academy</div>
-                                <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Layouts -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-layout-2-line"></i>
-                        <div data-i18n="Layouts">Layouts</div>
-                    </a>
-
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="layouts-without-menu.html" class="menu-link">
-                                <div data-i18n="Without menu">Without menu</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="layouts-without-navbar.html" class="menu-link">
-                                <div data-i18n="Without navbar">Without navbar</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="layouts-container.html" class="menu-link">
-                                <div data-i18n="Container">Container</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="layouts-fluid.html" class="menu-link">
-                                <div data-i18n="Fluid">Fluid</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="layouts-blank.html" class="menu-link">
-                                <div data-i18n="Blank">Blank</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Front Pages -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-file-copy-line"></i>
-                        <div data-i18n="Front Pages">Front Pages</div>
-                        <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/front-pages/landing-page.html"
-                                    class="menu-link"
-                                    target="_blank">
-                                <div data-i18n="Landing">Landing</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/front-pages/pricing-page.html"
-                                    class="menu-link"
-                                    target="_blank">
-                                <div data-i18n="Pricing">Pricing</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/front-pages/payment-page.html"
-                                    class="menu-link"
-                                    target="_blank">
-                                <div data-i18n="Payment">Payment</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/front-pages/checkout-page.html"
-                                    class="menu-link"
-                                    target="_blank">
-                                <div data-i18n="Checkout">Checkout</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a
-                                    href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/front-pages/help-center-landing.html"
-                                    class="menu-link"
-                                    target="_blank">
-                                <div data-i18n="Help Center">Help Center</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="menu-header mt-7">
-                    <span class="menu-header-text">Apps &amp; Pages</span>
-                </li>
-                <!-- Apps -->
-                <li class="menu-item">
-                    <a
-                            href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/app-email.html"
-                            target="_blank"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-mail-open-line"></i>
-                        <div data-i18n="Email">Email</div>
-                        <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a
-                            href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/app-chat.html"
-                            target="_blank"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-wechat-line"></i>
-                        <div data-i18n="Chat">Chat</div>
-                        <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a
-                            href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/app-calendar.html"
-                            target="_blank"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-calendar-line"></i>
-                        <div data-i18n="Calendar">Calendar</div>
-                        <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a
-                            href="/kanban"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-drag-drop-line"></i>
-                        <div data-i18n="Kanban">Kanban</div>
-                    </a>
-                </li>
-                <!-- Pages -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-layout-left-line"></i>
-                        <div data-i18n="Account Settings">Account Settings</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="pages-account-settings-account.html" class="menu-link">
-                                <div data-i18n="Account">Account</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="pages-account-settings-notifications.html" class="menu-link">
-                                <div data-i18n="Notifications">Notifications</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="pages-account-settings-connections.html" class="menu-link">
-                                <div data-i18n="Connections">Connections</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-shield-keyhole-line"></i>
-                        <div data-i18n="Authentications">Authentications</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="auth-login-basic.html" class="menu-link" target="_blank">
-                                <div data-i18n="Basic">Login</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="auth-register-basic.html" class="menu-link" target="_blank">
-                                <div data-i18n="Basic">Register</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="auth-forgot-password-basic.html" class="menu-link" target="_blank">
-                                <div data-i18n="Basic">Forgot Password</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-box-3-line"></i>
-                        <div data-i18n="Misc">Misc</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="pages-misc-error.html" target="_blank" class="menu-link">
-                                <div data-i18n="Error">Error</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="pages-misc-under-maintenance.html" target="_blank" class="menu-link">
-                                <div data-i18n="Under Maintenance">Under Maintenance</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- Components -->
-                <li class="menu-header mt-7"><span class="menu-header-text">Components</span></li>
-                <!-- Cards -->
-                <li class="menu-item">
-                    <a href="cards-basic.html" class="menu-link">
-                        <i class="menu-icon tf-icons ri-bank-card-2-line"></i>
-                        <div data-i18n="Basic">Cards</div>
-                    </a>
-                </li>
-                <!-- User interface -->
-                <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-toggle-line"></i>
-                        <div data-i18n="User interface">User interface</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="ui-accordion.html" class="menu-link">
-                                <div data-i18n="Accordion">Accordion</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-alerts.html" class="menu-link">
-                                <div data-i18n="Alerts">Alerts</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-badges.html" class="menu-link">
-                                <div data-i18n="Badges">Badges</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-buttons.html" class="menu-link">
-                                <div data-i18n="Buttons">Buttons</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-carousel.html" class="menu-link">
-                                <div data-i18n="Carousel">Carousel</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-collapse.html" class="menu-link">
-                                <div data-i18n="Collapse">Collapse</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-dropdowns.html" class="menu-link">
-                                <div data-i18n="Dropdowns">Dropdowns</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-footer.html" class="menu-link">
-                                <div data-i18n="Footer">Footer</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-list-groups.html" class="menu-link">
-                                <div data-i18n="List Groups">List Groups</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-modals.html" class="menu-link">
-                                <div data-i18n="Modals">Modals</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-navbar.html" class="menu-link">
-                                <div data-i18n="Navbar">Navbar</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-offcanvas.html" class="menu-link">
-                                <div data-i18n="Offcanvas">Offcanvas</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-pagination-breadcrumbs.html" class="menu-link">
-                                <div data-i18n="Pagination & Breadcrumbs">Pagination &amp; Breadcrumbs</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-progress.html" class="menu-link">
-                                <div data-i18n="Progress">Progress</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-spinners.html" class="menu-link">
-                                <div data-i18n="Spinners">Spinners</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-tabs-pills.html" class="menu-link">
-                                <div data-i18n="Tabs & Pills">Tabs &amp; Pills</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-toasts.html" class="menu-link">
-                                <div data-i18n="Toasts">Toasts</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-tooltips-popovers.html" class="menu-link">
-                                <div data-i18n="Tooltips & Popovers">Tooltips &amp; Popovers</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="ui-typography.html" class="menu-link">
-                                <div data-i18n="Typography">Typography</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Extended components -->
-                <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-box-3-line"></i>
-                        <div data-i18n="Extended UI">Extended UI</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
-                                <div data-i18n="Perfect Scrollbar">Perfect Scrollbar</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="extended-ui-text-divider.html" class="menu-link">
-                                <div data-i18n="Text Divider">Text Divider</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Icons -->
-                <li class="menu-item">
-                    <a href="icons-ri.html" class="menu-link">
-                        <i class="menu-icon tf-icons ri-remixicon-line"></i>
-                        <div data-i18n="Icons">Icons</div>
-                    </a>
-                </li>
-
-                <!-- Forms & Tables -->
-                <li class="menu-header fw-medium mt-4"><span class="menu-header-text">Forms &amp; Tables</span></li>
-                <!-- Forms -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-radio-button-line"></i>
-                        <div data-i18n="Form Elements">Form Elements</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="forms-basic-inputs.html" class="menu-link">
-                                <div data-i18n="Basic Inputs">Basic Inputs</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="forms-input-groups.html" class="menu-link">
-                                <div data-i18n="Input groups">Input groups</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons ri-box-3-line"></i>
-                        <div data-i18n="Form Layouts">Form Layouts</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="form-layouts-vertical.html" class="menu-link">
-                                <div data-i18n="Vertical Form">Vertical Form</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="form-layouts-horizontal.html" class="menu-link">
-                                <div data-i18n="Horizontal Form">Horizontal Form</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- Form Validation -->
-                <li class="menu-item">
-                    <a
-                            href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/form-validation.html"
-                            target="_blank"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-checkbox-multiple-line"></i>
-                        <div data-i18n="Form Validation">Form Validation</div>
-                        <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                    </a>
-                </li>
-                <!-- Tables -->
-                <li class="menu-item active">
-                    <a href="tables-basic.html" class="menu-link">
-                        <i class="menu-icon tf-icons ri-table-alt-line"></i>
-                        <div data-i18n="Tables">Tables</div>
-                    </a>
-                </li>
-                <!-- Data Tables -->
-                <li class="menu-item">
-                    <a
-                            href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/html/vertical-menu-template/tables-datatables-basic.html"
-                            target="_blank"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-grid-line"></i>
-                        <div data-i18n="Datatables">Datatables</div>
-                        <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div>
-                    </a>
-                </li>
-                <!-- Misc -->
-                <li class="menu-header mt-7"><span class="menu-header-text">Misc</span></li>
-                <li class="menu-item">
-                    <a
-                            href="https://github.com/themeselection/materio-bootstrap-html-admin-template-free/issues"
-                            target="_blank"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-lifebuoy-line"></i>
-                        <div data-i18n="Support">Support</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a
-                            href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/documentation/"
-                            target="_blank"
-                            class="menu-link">
-                        <i class="menu-icon tf-icons ri-article-line"></i>
-                        <div data-i18n="Documentation">Documentation</div>
-                    </a>
-                </li>
             </ul>
         </aside>
         <!-- / Menu -->
@@ -630,12 +154,12 @@
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item">
                                 <a href="javascript:void(0);" class="d-flex align-items-center"
-                                ><i class="ri-star-fill ri-20px me-1 text-body"></i>Trang chủ</a
+                                ><i class="menu-icon tf-icons ri-home-smile-line"></i>Trang chủ</a
                                 >
                             </li>
                             <li class="breadcrumb-item">
                                 <a href="javascript:void(0);" class="d-flex align-items-center"
-                                ><i class="ri-star-fill ri-20px me-1 text-body"></i>Quản lý chi nhánh</a
+                                ><i class="ri-map-pin-2-line ri-20px me-1 text-body"></i>Quản lý chi nhánh</a
                                 >
                             </li>
                         </ol>
@@ -818,30 +342,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>
-                                        <span>name</span><i class="ri-information-line ri-22px me-4"></i>
-                                    </td>
-                                    <td>email</td>
-                                    <td>
-                                        phone
-                                    </td>
-                                    <td><span class="badge rounded-pill bg-label-primary me-1">status</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                    data-bs-toggle="dropdown">
-                                                <i class="ri-more-2-line"></i>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="javascript:void(0);"
-                                                ><i class="ri-pencil-line me-1"></i> Edit</a
-                                                >
-                                                <a class="dropdown-item" href="javascript:void(0);"
-                                                ><i class="ri-delete-bin-6-line me-1"></i> Delete</a
-                                                >
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td colspan="5" class="text-center">Không có dữ liệu</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -915,16 +416,18 @@
                         <div class="col mb-6 mt-2">
                             <div class="form-floating form-floating-outline">
                                 <input type="text" id="nameLarge" class="form-control" placeholder="Nhập tên chi nhánh" />
-                                <label for="nameLarge">Tên chi nhánh</label>
+                                <label for="nameLarge">Tên chi nhánh*</label>
                             </div>
+                            <span id="nameLarge-error"></span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-6 mt-2">
                             <div class="form-floating form-floating-outline">
                                 <input type="text" id="address" class="form-control" placeholder="Nhập địa chỉ" />
-                                <label for="address">Địa chỉ</label>
+                                <label for="address">Địa chỉ*</label>
                             </div>
+                            <span id="address-error"></span>
                         </div>
                     </div>
                     <div class="row g-4">
@@ -935,8 +438,9 @@
                                         id="emailLarge"
                                         class="form-control"
                                         placeholder="xxxx@xxx.xx" />
-                                <label for="emailLarge">Email</label>
+                                <label for="emailLarge">Email*</label>
                             </div>
+                            <span id="emailLarge-error"></span>
                         </div>
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
@@ -947,8 +451,9 @@
                                         id="phone"
                                         class="form-control"
                                         placeholder="Nhập số điện thoại" />
-                                <label for="phone">Số điện thoại</label>
+                                <label for="phone">Số điện thoại*</label>
                             </div>
+                            <span id="phone-error"></span>
                         </div>
                     </div>
                     <div class="row">
@@ -1002,10 +507,10 @@
 <script src="/data/menu-items.js"></script>
 
 <!--    custom-->
+<script src="/js/custom/common.js"></script>
 <script src="/js/custom/render-menu.js"></script>
 <script src="/js/custom/render-pagination.js"></script>
 <script src="/js/custom/branches.js"></script>
-<script src="/js/custom/common.js"></script>
 <script src="/js/custom/custom-ui-toast.js"></script>
 
 </body>
