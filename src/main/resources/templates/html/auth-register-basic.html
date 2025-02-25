@@ -133,20 +133,23 @@
               <h4 class="mb-1">Adventure starts here 🚀</h4>
               <p class="mb-5">Make your app management easy and fun!</p>
 
-              <form id="formAuthentication" class="mb-5" action="index.html" method="POST">
+              <form id="formAuthentication" class="mb-5" action="/auth/register" method="POST">
                 <div class="form-floating form-floating-outline mb-5">
                   <input
                     type="text"
                     class="form-control"
-                    id="username"
-                    name="username"
-                    placeholder="Enter your username"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="Nhập họ và tên"
                     autofocus />
-                  <label for="username">Username</label>
+                  <label for="fullName">Họ và Tên</label>
+                    <span id="fullName-error"></span>
+
                 </div>
                 <div class="form-floating form-floating-outline mb-5">
-                  <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email" />
                   <label for="email">Email</label>
+                  <span id="email-error"></span>
                 </div>
                 <div class="mb-5 form-password-toggle">
                   <div class="input-group input-group-merge">
@@ -163,23 +166,24 @@
                     <span class="input-group-text cursor-pointer"><i class="ri-eye-off-line ri-20px"></i></span>
                   </div>
                 </div>
-
+                <span id="password-error"></span>
+                <p style="color: red" th:text="${error}"></p>
                 <div class="mb-5 py-2">
                   <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
-                    <label class="form-check-label" for="terms-conditions">
-                      I agree to
-                      <a href="javascript:void(0);">privacy policy & terms</a>
-                    </label>
+<!--                    <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />-->
+<!--                    <label class="form-check-label" for="terms-conditions">-->
+<!--                      I agree to-->
+<!--                      <a href="javascript:void(0);">privacy policy & terms</a>-->
+<!--                    </label>-->
                   </div>
                 </div>
-                <button class="btn btn-primary d-grid w-100 mb-5">Sign up</button>
+                <button type="submit" class="btn btn-primary d-grid w-100 mb-5">Đăng ký</button>
               </form>
 
               <p class="text-center mb-5">
                 <span>Already have an account?</span>
-                <a href="auth-login-basic.html">
-                  <span>Sign in instead</span>
+                <a href="/auth/login">
+                  <span>Đăng nhập</span>
                 </a>
               </p>
             </div>
@@ -206,15 +210,6 @@
 
     <!-- / Content -->
 
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/item/materio-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
-
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="../assets/vendor/libs/jquery/jquery.js"></script>
@@ -235,5 +230,36 @@
 
     <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script>
+        $('#formAuthentication').submit(function (event) {
+            console.log('register');
+            let fullName = $('#fullName').val().trim();
+            let email = $('#email').val().trim();
+            let password = $('#password').val().trim();
+
+            if (!fullName || fullName.length === 0) {
+                $('#fullName-error').text('Họ và tên không được để trống').css('color', 'red');
+                event.preventDefault();
+            } else {
+                $('#fullName-error').text('');
+            }
+
+            if (!email || email.length === 0) {
+                $('#email-error').text('Email không được để trống').css('color', 'red');
+                event.preventDefault();
+            } else {
+                $('#email-error').text('');
+            }
+
+            if (!password || password.length === 0) {
+                $('#password-error').text('Mật khẩu không được để trống').css('color', 'red');
+                event.preventDefault();
+            } else {
+                $('#password-error').text('');
+            }
+        });
+    </script>
+
   </body>
 </html>

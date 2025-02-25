@@ -47,8 +47,8 @@ const arr = [
         icon: "shield-keyhole",
         href: "javascript:void(0);",
         subItem: [
-            { text: "Login", href: "auth-login-basic", target: "_blank" },
-            { text: "Register", href: "auth-register-basic", target: "_blank" },
+            { text: "Login", href: "/auth/login" },
+            { text: "Register", href: "/auth/register"},
             { text: "Forgot Password", href: "auth-forgot-password-basic", target: "_blank" }
         ]
     },

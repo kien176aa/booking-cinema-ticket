@@ -1,5 +1,6 @@
 package com.example.bookingcinematicket.service;
 
+import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.dtos.BranchDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
@@ -36,7 +37,7 @@ public class BranchService {
     }
 
     public BranchDTO getBranchById(Long id) {
-        Branch branch = branchRepository.findById(id).orElseThrow(() -> new RuntimeException("Branch not found"));
+        Branch branch = branchRepository.findById(id).orElseThrow(() -> new RuntimeException(SystemMessage.BRANCH_NOT_FOUND));
         return ConvertUtils.convert(branch, BranchDTO.class);
     }
 
@@ -44,7 +45,7 @@ public class BranchService {
         log.info("Creating branch {}", branchDTO);
         boolean exists = branchRepository.existsByName(branchDTO.getName());
         if (exists) {
-            throw new RuntimeException("Branch name already exists");
+            throw new RuntimeException(SystemMessage.BRANCH_NAME_IS_EXISTED);
         }
         Branch branch = ConvertUtils.convert(branchDTO, Branch.class);
         Branch savedBranch = branchRepository.save(branch);
@@ -53,11 +54,11 @@ public class BranchService {
 
     public BranchDTO updateBranch(Long id, BranchDTO branchDTO) {
         Branch branch = branchRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Branch not found"));
+                .orElseThrow(() -> new RuntimeException(SystemMessage.BRANCH_NOT_FOUND));
 
         boolean nameExists = branchRepository.existsByNameAndBranchIdNot(branchDTO.getName(), id);
         if (nameExists) {
-            throw new RuntimeException("Branch name is already used by another branch");
+            throw new RuntimeException(SystemMessage.BRANCH_NAME_IS_EXISTED);
         }
         branch.setName(branchDTO.getName());
         branch.setAddress(branchDTO.getAddress());

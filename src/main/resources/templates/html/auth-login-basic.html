@@ -133,18 +133,19 @@
             <div class="card-body mt-1">
               <h4 class="mb-1">Welcome to Materio! 👋🏻</h4>
               <p class="mb-5">Please sign-in to your account and start the adventure</p>
-
-              <form id="formAuthentication" class="mb-5" action="index.html" method="POST">
+                <input id="register-mess" hidden="hidden" th:value="${mess}">
+              <form id="formAuthentication" class="mb-5" action="/auth/login" method="POST">
                 <div class="form-floating form-floating-outline mb-5">
                   <input
                     type="text"
                     class="form-control"
                     id="email"
-                    name="email-username"
-                    placeholder="Enter your email or username"
+                    name="email"
+                    placeholder="Enter your email"
                     autofocus />
-                  <label for="email">Email or Username</label>
+                  <label for="email">Email</label>
                 </div>
+                  <span id="email-error"></span>
                 <div class="mb-5">
                   <div class="form-password-toggle">
                     <div class="input-group input-group-merge">
@@ -162,24 +163,26 @@
                     </div>
                   </div>
                 </div>
+                  <span id="password-error"></span>
+                <p style="color: red" th:text="${error}"></p>
                 <div class="mb-5 pb-2 d-flex justify-content-between pt-2 align-items-center">
                   <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="remember-me" />
-                    <label class="form-check-label" for="remember-me"> Remember Me </label>
+<!--                    <input class="form-check-input" type="checkbox" id="remember-me" />-->
+<!--                    <label class="form-check-label" for="remember-me"> Remember Me </label>-->
                   </div>
                   <a href="auth-forgot-password-basic.html" class="float-end mb-1">
-                    <span>Forgot Password?</span>
+                    <span>Quên mật khẩu?</span>
                   </a>
                 </div>
                 <div class="mb-5">
-                  <button class="btn btn-primary d-grid w-100" type="submit">login</button>
+                  <button class="btn btn-primary d-grid w-100" type="submit">Đăng nhập</button>
                 </div>
               </form>
 
               <p class="text-center mb-5">
                 <span>New on our platform?</span>
-                <a href="auth-register-basic.html">
-                  <span>Create an account</span>
+                <a href="/auth/register">
+                  <span>Tạo tài khoản</span>
                 </a>
               </p>
             </div>
@@ -203,17 +206,7 @@
         </div>
       </div>
     </div>
-
     <!-- / Content -->
-
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/item/materio-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -230,10 +223,41 @@
 
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
+    <script src="/js/custom/common.js"></script>
+    <script src="/js/custom/custom-ui-toast.js"></script>
 
     <!-- Page JS -->
 
     <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var message = document.getElementById('register-mess').value;
+            if (message && message.length > 0) {
+                showSuccessToast(message);
+            }
+        });
+        $('#formAuthentication').submit(function (event) {
+            console.log('login');
+            let email = $('#email').val().trim();
+            let password = $('#password').val().trim();
+
+            if (!email || email.length === 0) {
+                $('#email-error').text('Email không được để trống').css('color', 'red');
+                event.preventDefault();
+            } else {
+                $('#email-error').text('');
+            }
+
+            if (!password || password.length === 0) {
+                $('#password-error').text('Mật khẩu không được để trống').css('color', 'red');
+                event.preventDefault();
+            } else {
+                $('#password-error').text('');
+            }
+        });
+    </script>
+
   </body>
 </html>

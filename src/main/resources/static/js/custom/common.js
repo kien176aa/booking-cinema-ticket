@@ -8,20 +8,15 @@ function toggleLoading(isLoading) {
     }
 }
 
+function hasValue(id, fieldName) {
+    let value = $(id).val().trim();
+    let errorSpan = $(id + '-error');
 
-function addFirstAndDeleteLast(id, newItem, arr, pageSize = 10) {
-    arr.unshift(newItem);
-
-    if (arr.length >= pageSize) {
-        arr.pop();
+    if (!value || value.length === 0) {
+        errorSpan.text(fieldName + ' không được để trống').css('color', 'red');
+        return false;
+    } else {
+        errorSpan.text('');
+        return true;
     }
-    // console.log('arr: ', $(id), arr);
-    // const firstRow = arr[0];
-    // const lastRow = arr[arr.length - 1];
-    // console.log('fRow: ', firstRow);
-    // console.log('lRow: ', lastRow);
-    // $(id).replaceWith(renderFunc(firstRow));
-    // if (arr.length > 1) {
-    //     $(id).replaceWith(renderFunc(lastRow));
-    // }
 }

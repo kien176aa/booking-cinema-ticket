@@ -100,20 +100,30 @@ function setContentModal(modalType, callbackFunc, id) {
 }
 
 function getBranchInfo(type){
-    return {
-        branchId: type === 'edit' ? inputBId.val() : null,
-        name: inputName.val(),
-        address: inputAddress.val(),
-        email: inputEmail.val(),
-        phone: inputPhone.val(),
-        status: type === 'add' ? true : btnCheckbox.prop("checked")
-    }
+    let isValid = hasValue('#nameLarge', 'Tên chi nhánh');
+    isValid = hasValue('#address', 'Địa chỉ') && isValid;
+    isValid = hasValue('#emailLarge', 'Email') && isValid;
+    isValid = hasValue('#phone', 'Số điện thoại') && isValid;
+    if(isValid)
+        return {
+            branchId: type === 'edit' ? inputBId.val() : null,
+            name: inputName.val(),
+            address: inputAddress.val(),
+            email: inputEmail.val(),
+            phone: inputPhone.val(),
+            status: type === 'add' ? true : btnCheckbox.prop("checked")
+        }
+    return false;
 }
 
 function createBranch(){
     toggleLoading(true);
     const req = getBranchInfo('add');
     console.log('create', req);
+    if(!req) {
+        toggleLoading(false);
+        return;
+    }
     $.ajax({
         url: "/branches",
         type: "POST",
@@ -137,6 +147,10 @@ function editBranch(){
     toggleLoading(true);
     const req = getBranchInfo('edit');
     console.log('edit', req);
+    if(!req) {
+        toggleLoading(false);
+        return;
+    }
     $.ajax({
         url: `/branches/${req.branchId}`,
         type: "PUT",

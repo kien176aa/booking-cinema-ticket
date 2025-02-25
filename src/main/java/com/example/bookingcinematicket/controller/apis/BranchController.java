@@ -1,5 +1,6 @@
 package com.example.bookingcinematicket.controller.apis;
 
+import com.example.bookingcinematicket.controller.BaseController;
 import com.example.bookingcinematicket.dtos.BranchDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
@@ -12,12 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/branches")
-public class BranchController {
+public class BranchController extends BaseController {
     @Autowired
     private BranchService branchService;
 
     @PostMapping("/search")
     public SearchResponse<List<BranchDTO>> getAllBranches(@RequestBody SearchRequest<String, Branch> request) {
+        System.out.println("aa: " + getCurrentUser());
         return branchService.getAllBranches(request);
     }
 
