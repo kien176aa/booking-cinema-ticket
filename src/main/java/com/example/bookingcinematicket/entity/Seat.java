@@ -24,8 +24,10 @@ public class Seat {
     private Room room;
     @Column(nullable = false)
     private String seatNumber;
-    private String seatType;
-    private boolean status;
+    @ManyToOne
+    @JoinColumn(name = "seat_type_id")
+    private SeatType seatType;
+    private Boolean status;
     @OneToMany(mappedBy = "seat")
     private List<Ticket> tickets;
 }

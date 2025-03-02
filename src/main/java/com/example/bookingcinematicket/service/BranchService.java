@@ -5,6 +5,7 @@ import com.example.bookingcinematicket.dtos.BranchDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
 import com.example.bookingcinematicket.entity.Branch;
+import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.BranchRepository;
 import com.example.bookingcinematicket.utils.ConvertUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class BranchService {
     }
 
     public BranchDTO getBranchById(Long id) {
-        Branch branch = branchRepository.findById(id).orElseThrow(() -> new RuntimeException(SystemMessage.BRANCH_NOT_FOUND));
+        Branch branch = branchRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
         return ConvertUtils.convert(branch, BranchDTO.class);
     }
 
@@ -45,7 +46,7 @@ public class BranchService {
         log.info("Creating branch {}", branchDTO);
         boolean exists = branchRepository.existsByName(branchDTO.getName());
         if (exists) {
-            throw new RuntimeException(SystemMessage.BRANCH_NAME_IS_EXISTED);
+            throw new CustomException(SystemMessage.BRANCH_NAME_IS_EXISTED);
         }
         Branch branch = ConvertUtils.convert(branchDTO, Branch.class);
         Branch savedBranch = branchRepository.save(branch);
@@ -54,11 +55,11 @@ public class BranchService {
 
     public BranchDTO updateBranch(Long id, BranchDTO branchDTO) {
         Branch branch = branchRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(SystemMessage.BRANCH_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
 
         boolean nameExists = branchRepository.existsByNameAndBranchIdNot(branchDTO.getName(), id);
         if (nameExists) {
-            throw new RuntimeException(SystemMessage.BRANCH_NAME_IS_EXISTED);
+            throw new CustomException(SystemMessage.BRANCH_NAME_IS_EXISTED);
         }
         branch.setName(branchDTO.getName());
         branch.setAddress(branchDTO.getAddress());

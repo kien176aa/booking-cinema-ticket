@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "food_orders")
+@Table(name = "foods")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +21,5 @@ public class Food {
     private Double price;
     private String image;
     private Integer quantity;
+    private Boolean status;
 }

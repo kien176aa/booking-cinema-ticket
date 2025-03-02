@@ -21,19 +21,20 @@ public class Promotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "promotion_id")
     private Long promotionId;
-    @Column(nullable = false, unique = true)
-    private String code;
+    @Column(nullable = false)
+    private String title;
     private String description;
-    @Column(precision = 10, scale = 2)
-    private BigDecimal discountAmount;
-    @Column(precision = 5, scale = 2)
-    private BigDecimal discountPercent;
+    private Double discountAmount;
+    private Double discountPercent;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Integer minPurchase;
-    @Column(precision = 10, scale = 2)
-    private BigDecimal maxDiscount;
-    private boolean status;
+    private Double minPurchase;
+    private Double maxDiscount;
+    private Boolean status;
+    private Long numberOfItems;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", nullable = false)
+    private Branch branch;
     @OneToMany(mappedBy = "promotion")
     private List<Booking> bookings;
 }

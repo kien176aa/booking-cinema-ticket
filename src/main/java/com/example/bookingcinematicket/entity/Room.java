@@ -27,6 +27,8 @@ public class Room {
     private String name;
     private Integer capacity;
     private String roomType;
+    @Column(columnDefinition = "TEXT")
+    private String seatMap;
     private Boolean status;
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Seat> seats;

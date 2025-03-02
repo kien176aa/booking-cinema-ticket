@@ -12,5 +12,4 @@ public class BranchDTO {
     private String phone;
     private String email;
     private Boolean status;
-    private List<Long> roomIds;
 }

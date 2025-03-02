@@ -9,4 +9,21 @@ public class SystemMessage {
     public static final String INACTIVE_ACCOUNT = "Tài khoản của bạn đã bị khóa";
     public static final String EMAIL_IS_EXISTED = "Email đã tồn tại";
     public static final String KEY_COOKIE_JWT = "JWT_TOKEN";
+    public static final String FOOD_NOT_FOUND = "Đồ ăn không tồn tại";
+    public static final String FOOD_NAME_IS_EXISTED = "Tên đồ ăn đã tồn tại";
+    public static final String ERRROR_UPLOAD = "Xảy ra lỗi trong quá trình tải tệp";
+    public static final String ERROR_500 = "Xảy ra lỗi trong quá trình xử lý";
+    public static final String ROOM_NOT_FOUND = "Phòng chiếu không tồn tại";
+    public static final String ROOM_NAME_IS_EXISTED = "Tên phòng chiếu đã tồn tại";
+    public static final String PLEASE_CHOOSE_BRANCH = "Vui lòng chọn chi nhánh";
+    public static final String SEAT_TYPE_NOT_FOUND = "Loại ghế không tồn tại";
+    public static final String SEAT_TYPE_IS_EXISTED = "Loại ghế đã tồn tại";
+    public static final String PROMOTION_NOT_FOUND = "Thông tin khuyến mãi không tồn tại";
+    public static final String PROMOTION_TITLE_IS_EXISTED = "Tiêu đề khuyến mãi đã tồn tại";
+    public static final String ROLE_NOT_FOUND = "Vai trò không tồn tại";
+    public static final String ROLE_IS_EXISTED = "Vai trò đã tồn tại";
+    public static final String PERSON_NOT_FOUND = "Diễn viên không tồn tại";
+    public static final String VID_DESCRIPTION = "Trailer movie";
+    public static final String MOVIE_NOT_FOUND = "Bộ phim không tồn tại";
+    public static final String MOVIE_TITLE_IS_EXISTED = "Tên bộ phim đã tồn tại";
 }

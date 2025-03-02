@@ -20,14 +20,21 @@ function fetchBranches(req) {
             tableBody.empty();
             branches = response.data;
             currentPageIndex = response.pageIndex;
-            response.data.forEach(item => {
-                tableBody.append(renderTableRow(item));
-            });
+            if(response.data.length === 0){
+                tableBody.append(`<tr>
+                                    <td colspan="5" class="text-center">Không có dữ liệu</td>
+                                </tr>`);
+            }else{
+                response.data.forEach(item => {
+                    tableBody.append(renderTableRow(item));
+                });
+            }
             renderPagination(response, '#branches-pagination', changePageIndex);
             toggleLoading(false);
         },
         error: function(error) {
             console.error("Error fetching branches:", error);
+            showErrorToast(error.responseText);
             toggleLoading(false);
         }
     });
@@ -88,6 +95,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputEmail.val('');
         inputPhone.val('');
     }
+    modalDialog.find('[id*="error"]').text('');
 
     $('#largeModal .btn-primary').off('click').on('click', function() {
         if (typeof callbackFunc === 'function') {
@@ -100,10 +108,10 @@ function setContentModal(modalType, callbackFunc, id) {
 }
 
 function getBranchInfo(type){
-    let isValid = hasValue('#nameLarge', 'Tên chi nhánh');
-    isValid = hasValue('#address', 'Địa chỉ') && isValid;
-    isValid = hasValue('#emailLarge', 'Email') && isValid;
-    isValid = hasValue('#phone', 'Số điện thoại') && isValid;
+    let isValid = hasValue('#nameLarge', 'Tên chi nhánh') && checkLength('#nameLarge', 'Tên chi nhánh', 0, 255);
+    isValid = hasValue('#address', 'Địa chỉ') && checkLength('#address', 'Địa chỉ', 0, 255) && isValid;
+    isValid = hasValue('#emailLarge', 'Email') && checkLength('#emailLarge', 'Email', 0, 255) && isValid;
+    isValid = hasValue('#phone', 'Số điện thoại') && checkLength('#phone', 'Số điện thoại', 10, 11) && isValid;
     if(isValid)
         return {
             branchId: type === 'edit' ? inputBId.val() : null,
@@ -164,7 +172,7 @@ function editBranch(){
         },
         error: function(error) {
             console.error("Error fetching branches:", error);
-            showErrorToast('Đã xảy ra lỗi khi cập nhật chi nhánh!');
+            showErrorToast(error.responseText);
             toggleLoading(false);
         }
     });

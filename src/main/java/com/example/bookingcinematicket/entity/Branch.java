@@ -27,4 +27,6 @@ public class Branch {
     private Boolean status;
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     private List<Room> rooms;
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
+    private List<SeatType> seatTypes;
 }

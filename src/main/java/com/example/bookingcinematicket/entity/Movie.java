@@ -25,11 +25,13 @@ public class Movie {
     @Column(columnDefinition = "TEXT")
     private String description;
     private Integer duration;
+    @Column(length = 500)
     private String genre;
     @Column(name = "release_date")
     private LocalDate releaseDate;
     private Float rating;
     private String posterUrl;
+    private String trailerUrl;
     private String country;
     private String language;
     private Boolean status;

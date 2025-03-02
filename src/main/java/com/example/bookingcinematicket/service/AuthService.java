@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.service;
 import com.example.bookingcinematicket.config.jwt.JwtUtil;
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.entity.Account;
+import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.AccountRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,10 @@ public class AuthService {
         }
     }
 
-    public void register(Account user) throws Exception {
+    public void register(Account user) {
         Account account = accountRepository.findByEmail(user.getEmail());
         if(account != null){
-            throw new Exception(SystemMessage.EMAIL_IS_EXISTED);
+            throw new CustomException(SystemMessage.EMAIL_IS_EXISTED);
         }
         user.setActive(true);
         user.setAccountId(null);

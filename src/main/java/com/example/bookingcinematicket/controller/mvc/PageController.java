@@ -63,6 +63,11 @@ public class PageController {
         return "pages-misc-error";
     }
 
+    @GetMapping("/not-found")
+    public String getErrorNotFoundPage() {
+        return "not-found-error";
+    }
+
     @GetMapping("/pages-misc-under-maintenance")
     public String getUnderMaintenancePage() {
         return "pages-misc-under-maintenance";

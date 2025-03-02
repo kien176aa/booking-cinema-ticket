@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BranchRepository extends JpaRepository<Branch, Long> {
-    @Query("select b from Branch b where :name is null or b.name like %:name%")
+    @Query("select b from Branch b where (:name is null or b.name like %:name%) and b.status = true ")
     List<Branch> findBranchByName(String name);
 
     boolean existsByName(String name);

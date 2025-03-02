@@ -1,0 +1,44 @@
+#seat-map-body {
+    text-align: center;
+}
+.screen {
+    background: #ccc;
+    width: 80%;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: black;
+}
+.seat-map {
+    display: grid;
+    gap: 5px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.seat {
+    width: 40px;
+    height: 40px;
+    background: #6a0dad;
+    color: white;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+.seat.vip { background: red; }
+.seat.sweetbox { background: pink; }
+.seat.regular { background: purple; }
+.seat.hidden { background: black; color: white; }
+.sbtn {
+    padding: 10px 20px;
+    background: #d4145a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}

@@ -27,7 +27,7 @@ public class Person {
     @Column(columnDefinition = "TEXT")
     private String biography;
     private String imageUrl;
-    private boolean status;
+    private Boolean status;
     @OneToMany(mappedBy = "person")
     private List<MoviePerson> moviePersons;
 }

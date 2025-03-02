@@ -1,6 +1,7 @@
 package com.example.bookingcinematicket.config;
 
 import com.example.bookingcinematicket.config.jwt.JwtUtil;
+import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    private List<String> authUrl = List.of("/branch-management");
+    private final List<String> authUrl = List.of("/branch-management");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -34,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Optional<String> jwtOptional = getJwtFromCookies(request);
         String currentUrl = request.getRequestURI();
         System.out.println("Current URL: " + currentUrl);
-
         if (authUrl.contains(currentUrl) && jwtOptional.isEmpty()) {
             response.sendRedirect("/forbidden");
             return;
@@ -46,7 +46,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (email != null && jwtUtil.validateToken(jwt)) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                if(userDetails == null) {
+                    Cookie jwtCookie = new Cookie(SystemMessage.KEY_COOKIE_JWT, "");
+                    jwtCookie.setMaxAge(0);
+                    jwtCookie.setPath("/");
 
+                    response.addCookie(jwtCookie);
+                    response.sendRedirect("/auth/login");
+                    return;
+                }
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
