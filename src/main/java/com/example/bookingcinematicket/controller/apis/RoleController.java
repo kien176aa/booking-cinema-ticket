@@ -25,6 +25,11 @@ public class RoleController extends BaseController {
         return roleService.search(request);
     }
 
+    @GetMapping("/get-active-role")
+    public List<RoleDTO> getActiveRole() {
+        return roleService.getActiveRoles();
+    }
+
     @GetMapping("/{id}")
     public RoleDTO getById(@PathVariable Long id) {
         return roleService.getById(id);

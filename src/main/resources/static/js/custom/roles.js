@@ -1,7 +1,6 @@
 let searchText = '', branchId = null, currentPageIndex = 1, currentPageSize = 7;
 let roles = [], branches = [];
 const btnCheckbox = $('#defaultCheck1');
-const checkboxIsDefault = $('#defaultCheck2');
 const inputBId = $('#bId');
 const inputName = $('#nameLarge');
 const inputDescription = $('#description');
@@ -51,7 +50,13 @@ function renderTableRow(item) {
             <td>
                 <span>${item.name}</span>
             </td>
-            <td>${item.description}</td>
+            <td>
+                <span class="badge rounded-pill ${item.status ? 'bg-label-primary' : 'bg-label-warning'} me-1">
+                    ${item.status ? 'Sử dụng' : 'Dừng sử dụng'}
+                </span>
+            </td>
+            <td title="${item.description}" 
+                style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.description}</td>
             <td>
                 <div class="dropdown">
                     <button type="button" class="btn btn-warning" onclick="setContentModal('edit', editRole, '${item.roleId}')">
@@ -72,12 +77,15 @@ function setContentModal(modalType, callbackFunc, id) {
         const item = roles.find(item => item.roleId === Number(id));
         console.log('id', id, item);
         $('#exampleModalLabel3').text('Cập nhật vai trò');
-
+        btnCheckbox.prop('checked', item.status);
+        btnCheckbox.prop('disabled', false);
         inputBId.val(item.roleId);
         inputName.val(item.name);
         inputDescription.val(item.description);
     } else {
         $('#exampleModalLabel3').text('Tạo mới vai trò');
+        btnCheckbox.prop('checked', true);
+        btnCheckbox.prop('disabled', true);
         inputBId.val('');
         inputName.val('');
         inputDescription.val('');
@@ -101,7 +109,8 @@ function getRoleInfo(type){
         return {
             roleId: type === 'edit' ? inputBId.val() : null,
             name: inputName.val(),
-            description: inputDescription.val()
+            description: inputDescription.val(),
+            status: type === 'add' ? true : btnCheckbox.prop("checked")
         }
     return false;
 }

@@ -41,10 +41,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if (jwtOptional.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
             String jwt = jwtOptional.get();
+            if(!jwtUtil.validateToken(jwt)){
+                Cookie jwtCookie = new Cookie(SystemMessage.KEY_COOKIE_JWT, "");
+                jwtCookie.setMaxAge(0);
+                jwtCookie.setPath("/");
 
+                response.addCookie(jwtCookie);
+                response.sendRedirect("/auth/login");
+                return;
+            }
             String email = jwtUtil.extractUsername(jwt);
 
-            if (email != null && jwtUtil.validateToken(jwt)) {
+            if (email != null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 if(userDetails == null) {
                     Cookie jwtCookie = new Cookie(SystemMessage.KEY_COOKIE_JWT, "");

@@ -50,6 +50,13 @@ const arr = [
     },
     {
         isHeader: false,
+        text: "Quản lý diễn viên",
+        icon: "ri-user-line",
+        href: "/person-management",
+        badge: { text: "5", color: "danger" },
+    },
+    {
+        isHeader: false,
         text: "Quản lý phim",
         icon: "ri-movie-2-line",
         href: "/movie-management",

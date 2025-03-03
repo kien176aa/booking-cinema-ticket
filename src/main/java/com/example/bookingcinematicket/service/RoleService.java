@@ -39,6 +39,11 @@ public class RoleService {
         return response;
     }
 
+    public List<RoleDTO> getActiveRoles() {
+        List<Role> roles = roleRepository.findByStatus(true);
+        return ConvertUtils.convertList(roles, RoleDTO.class);
+    }
+
     public RoleDTO getById(Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.ROLE_NOT_FOUND));
         return ConvertUtils.convert(role, RoleDTO.class);
@@ -64,6 +69,7 @@ public class RoleService {
         }
         role.setName(roleDTO.getName());
         role.setDescription(roleDTO.getDescription());
+        role.setStatus(roleDTO.getStatus());
         roleRepository.save(role);
         return ConvertUtils.convert(role, RoleDTO.class);
     }

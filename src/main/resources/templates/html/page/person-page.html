@@ -13,7 +13,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
 
-    <title>Quản lý vai trò bộ phim</title>
+    <title>Quản lý thông tin diễn viên</title>
 
     <meta name="description" content=""/>
 
@@ -159,7 +159,7 @@
                             </li>
                             <li class="breadcrumb-item">
                                 <a href="javascript:void(0);" class="d-flex align-items-center"
-                                ><i class="ri-medal-line ri-20px me-1 text-body"></i>Quản lý vai trò bộ phim</a
+                                ><i class="ri-user-line ri-20px me-1 text-body"></i>Quản lý thông tin diễn viên</a
                                 >
                             </li>
                         </ol>
@@ -168,7 +168,6 @@
 
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
                         <!-- Place this tag where you want the button to render. -->
-
                         <!-- User -->
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a
@@ -248,12 +247,12 @@
                 <!-- Content -->
 
                 <div class="container-xxl flex-grow-1 container-p-y">
-                    <h3>Quản lý vai trò bộ phim</h3>
+                    <h3>Quản lý thông tin diễn viên</h3>
                     <!-- Bootstrap Table with Caption -->
                     <div class="card">
 <!--                        <h5 class="card-header">Table Caption</h5>-->
                         <div class="row">
-                            <div class="col-md-3 ms-3 mt-4" style="width: 40%; height: 60px">
+                            <div class="col-md-6 ms-3 mt-4" style="width: 40%; height: 60px">
                                 <!-- Search -->
                                 <div class="input-group">
                                     <input
@@ -266,15 +265,8 @@
                                 </div>
                                 <!-- /Search -->
                             </div>
-                            <div class="col-md-4 mt-4">
-<!--                                <div class="form-floating form-floating-outline mb-6">-->
-<!--                                    <select class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">-->
 
-<!--                                    </select>-->
-<!--                                    <label for="exampleFormControlSelect1">Chọn chi nhánh</label>-->
-<!--                                </div>-->
-                            </div>
-                            <div class="col-md-3 text-end mt-4" >
+                            <div class="col-md-6 text-end mt-4" >
                                 <button id="btnCreate" type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#largeModal">
                                     <span class="tf-icons ri-add-line ri-16px me-1_5"></span>Tạo mới
@@ -287,7 +279,7 @@
                                 <caption>
                                     <!-- Outline Pagination -->
                                     <nav aria-label="Page navigation">
-                                        <ul id="role-pagination" class="pagination pagination-outline-primary">
+                                        <ul id="persons-pagination" class="pagination pagination-outline-primary">
                                             <li class="page-item first">
                                                 <a class="page-link" href="javascript:void(0);"
                                                 ><i class="tf-icon ri-skip-back-mini-line ri-22px"></i
@@ -317,15 +309,17 @@
                                 </caption>
                                 <thead>
                                 <tr>
-                                    <th>Vai trò</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Họ và tên</th>
+                                    <th>Ngày sinh</th>
+                                    <th>Quốc tịch</th>
                                     <th>Trạng thái</th>
-                                    <th>Mô tả</th>
                                     <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td colspan="3" class="text-center">Không có dữ liệu</td>
+                                    <td colspan="6" class="text-center">Không có dữ liệu</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -394,42 +388,85 @@
                             aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input id="bId" hidden="hidden" />
+                    <input id="personId" type="hidden" />
+
                     <div class="row">
-                        <div class="col mb-6 mt-2">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" id="nameLarge" class="form-control" placeholder="Nhập tên vai trò" />
-                                <label for="nameLarge">Tên vai trò*</label>
+                        <div class="col mb-3">
+                            <div class="form-floating">
+                                <input type="text" id="name" class="form-control" placeholder="Nhập tên diễn viên" required />
+                                <label for="name">Tên diễn viên*</label>
                             </div>
-                            <span id="nameLarge-error"></span>
+                            <span id="name-error" class="text-danger"></span>
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="col mb-6 mt-2">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <textarea
-                                        class="form-control h-px-100"
-                                        id="description"
-                                        placeholder="Nhập mô tả"></textarea>
-                                <label for="description">Mô tả</label>
+                        <div class="col mb-3">
+                            <div class="form-floating">
+                                <input type="date" id="birthDate" class="form-control" required />
+                                <label for="birthDate">Ngày sinh*</label>
                             </div>
-                            <span id="description-error"></span>
+                            <span id="birthDate-error" class="text-danger"></span>
+                        </div>
+                        <div class="col mb-3">
+                            <div class="form-floating">
+                                <input type="text" id="nationality" class="form-control" placeholder="Nhập quốc tịch" required />
+                                <label for="nationality">Quốc tịch*</label>
+                            </div>
+                            <span id="nationality-error" class="text-danger"></span>
                         </div>
                     </div>
+
+<!--                    <div class="row">-->
+<!--                        <div class="col mb-3">-->
+<!--                            <div class="form-floating">-->
+<!--                                <input type="text" id="nationality" class="form-control" placeholder="Nhập quốc tịch" required />-->
+<!--                                <label for="nationality">Quốc tịch*</label>-->
+<!--                            </div>-->
+<!--                            <span id="nationality-error" class="text-danger"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
                     <div class="row">
-                        <div class="col mb-6 mt-2">
-                            <div class="form-check mt-4">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-                                <label class="form-check-label" for="defaultCheck1"> Vai trò này còn được sử dụng? </label>
+                        <div class="col mb-3">
+                            <input id="oldImg" value="/assets/img/empty_img.jfif" type="hidden" />
+                            <div class="mb-3">
+                                <label for="imageUrl" class="form-label">Hình ảnh</label>
+                                <input class="form-control" type="file" id="imageUrl" accept="image/jpeg,image/png" />
+                            </div>
+                            <span id="imageUrl-error" class="text-danger"></span>
+                            <br>
+                            <img id="preview" style="width: 50px; height: 50px" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="status" />
+                                <label class="form-check-label" for="status"> Diễn viên này còn hoạt động? </label>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <div class="form-floating">
+                                <textarea id="biography" class="form-control" placeholder="Nhập tiểu sử" style="height: 100px"></textarea>
+                                <label for="biography">Tiểu sử</label>
+                            </div>
+                            <span id="biography-error" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Đóng
                     </button>
-                    <button id="btnSave" type="button" class="btn btn-primary">Lưu thông tin</button>
+                    <button type="button" class="btn btn-primary">Lưu thông tin</button>
                 </div>
             </div>
         </div>
@@ -469,7 +506,7 @@
 <script src="/js/custom/common.js"></script>
 <script src="/js/custom/render-menu.js"></script>
 <script src="/js/custom/render-pagination.js"></script>
-<script src="/js/custom/roles.js"></script>
+<script src="/js/custom/persons.js"></script>
 <script src="/js/custom/custom-ui-toast.js"></script>
 
 </body>

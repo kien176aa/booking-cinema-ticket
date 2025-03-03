@@ -22,6 +22,7 @@ public class Role {
     @Column(nullable = false)
     private String name;
     private String description;
+    private Boolean status;
     @OneToMany(mappedBy = "role")
     private List<MoviePerson> moviePersons;
 }
