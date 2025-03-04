@@ -400,3 +400,23 @@ function updateSelectedOptions(id, label, selectedOptions) {
         updateSelectedText(id, selectedOptions.map(option => option.label).join(", "), genreDatas);
     }
 }
+
+function validateBirthDate(id, value) {
+    const errorSpan = $(id + "-error");
+    const birthDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+    if (!value || !birthDatePattern.test(value)) {
+        errorSpan.text("Ngày sinh không hợp lệ. Vui lòng nhập đúng định dạng (yyyy-mm-dd).");
+        return false;
+    }
+
+    const birthDate = new Date(value);
+    const currentDate = new Date();
+    if (birthDate > currentDate) {
+        errorSpan.text("Ngày sinh không thể trong tương lai.");
+        return false;
+    }
+
+    errorSpan.text("");
+    return true;
+}

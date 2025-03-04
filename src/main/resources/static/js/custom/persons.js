@@ -4,8 +4,6 @@ const btnCheckbox = $('#status');
 const inputBId = $('#personId');
 const defaultImg = $('#oldImg');
 const previewImg = $("#preview");
-const inputPrice = $('#price');
-const inputQuantity = $('#quantity');
 const modalDialog = $('#largeModal');
 const defaultImgUrl = '/assets/img/empty_img.jfif';
 let inputName = $('#name');
@@ -52,7 +50,7 @@ function changePageIndex(totalRecords, newPage, pageSize){
 }
 
 fetchPersons({condition: null, pageSize: currentPageSize, pageIndex: 1});
-
+fetchCountries('#nationality');
 
 function renderTableRow(item) {
     return `
@@ -91,7 +89,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputBId.val(item.personId);
         inputName.val(item.name);
         defaultImg.val(item.imageUrl ? item.imageUrl : defaultImgUrl);
-        inputBiography.val(item.biopraphy);
+        inputBiography.val(item.biography);
         inputNationality.val(item.nationality);
         inputBirthDate.val(item.birthDate);
         previewImg.attr("src", item.imageUrl ? item.imageUrl : defaultImgUrl).show();
@@ -103,7 +101,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputName.val('');
         defaultImg.val(defaultImgUrl);
         inputBiography.val('');
-        inputNationality.val('');
+        // inputNationality.val('');
         inputBirthDate.val('');
         previewImg.attr("src", defaultImg.val()).show();
     }
@@ -121,6 +119,8 @@ function setContentModal(modalType, callbackFunc, id) {
 
 function getPersonInfo(type){
     let isValid = hasValue('#name', 'Tên diễn viên') && checkLength('#name', 'Tên diễn viên', 0, 255);
+    isValid = validateBirthDate('#birthDate', inputBirthDate.val()) && isValid;
+    isValid = checkLength('#biography', 'Tiểu sử', 0, 1000) && isValid;
     if(isValid && acceptImg) {
         let fileInput = inputImg[0].files[0];
         let formData = new FormData();
