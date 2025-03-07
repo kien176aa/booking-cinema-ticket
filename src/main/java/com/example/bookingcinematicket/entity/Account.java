@@ -19,6 +19,7 @@ public class Account {
     private Long accountId;
     private String fullName;
     private String email;
+    private String phone;
     private String password;
     private String role;
     private Boolean active;

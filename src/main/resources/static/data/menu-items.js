@@ -15,6 +15,13 @@ const arr = [
     },
     {
         isHeader: false,
+        text: "Quản lý người dùng",
+        icon: "ri-user-line",
+        href: "/account-management",
+        badge: { text: "5", color: "danger" },
+    },
+    {
+        isHeader: false,
         text: "Quản lý phòng chiếu",
         icon: "ri-vidicon-line",
         href: "/room-management",

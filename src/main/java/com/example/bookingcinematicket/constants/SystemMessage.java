@@ -26,4 +26,5 @@ public class SystemMessage {
     public static final String VID_DESCRIPTION = "Trailer movie";
     public static final String MOVIE_NOT_FOUND = "Bộ phim không tồn tại";
     public static final String MOVIE_TITLE_IS_EXISTED = "Tên bộ phim đã tồn tại";
+    public static final String ACCOUNT_NOT_FOUND = "Tài khoản không tồn tại";
 }
