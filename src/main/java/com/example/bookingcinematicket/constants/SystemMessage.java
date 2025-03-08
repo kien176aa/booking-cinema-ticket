@@ -27,4 +27,14 @@ public class SystemMessage {
     public static final String MOVIE_NOT_FOUND = "Bộ phim không tồn tại";
     public static final String MOVIE_TITLE_IS_EXISTED = "Tên bộ phim đã tồn tại";
     public static final String ACCOUNT_NOT_FOUND = "Tài khoản không tồn tại";
+    public static final String EMAIL_IS_REQUIRED = "Email là bắt buộc";
+    public static final String NEW_PASSWORD_IS_REQUIRED = "Mật khẩu mới là bắt buộc";
+    public static final String EMAIL_IS_NOT_CORRECT = "Email không chính xác";
+    public static final String CONFIRM_PASSWORD_IS_REQUIRED = "Mật khẩu xác nhận là bắt buộc";
+    public static final String NEW_PASSWORD_IS_NOT_EQUAL_CONFIRM_PASSWORD = "Mật khẩu mới và mật khẩu xác nhận không giống nhau";
+    public static final String OLD_PASSWORD_IS_NOT_CORRECT = "Mật khẩu cũ không chính xác";
+    public static final String MOVIE_IS_REQUIRED = "Thông tin bộ phim là bắt buộc";
+    public static final String PERSON_MOVIE_IS_REQUIRED = "Thông tin diễn viên là bắt buộc";
+    public static final String ROLE_IS_REQUIRED = "Vai trò bộ phim là bắt buộc";
+    public static final String CHARACTER_NAME_IS_REQUIRED = "Tên nhân vật là bắt buộc";
 }

@@ -1,4 +1,11 @@
 let genreDatas = [];
+const commonDefaultImgUrl = '/assets/img/empty_img.jfif';
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll("input").forEach(input => {
+        input.setAttribute("autocomplete", "off");
+    });
+});
 
 function toggleLoading(isLoading) {
     if (isLoading) {
@@ -8,6 +15,12 @@ function toggleLoading(isLoading) {
     } else {
         $('.loading').remove();
     }
+}
+
+function getImageUrl(url){
+    if(!url || url.length === 0)
+        return commonDefaultImgUrl;
+    return url;
 }
 
 function hasValue(id, fieldName) {
@@ -377,27 +390,18 @@ function getSelectedData(id) {
     }).get();
 }
 
-function updateSelectedOptions(id, label, selectedOptions) {
+function updateSelectedOptions(id, label, selectedOptions, arr) {
     if(!selectedOptions || selectedOptions.length === 0){
         $(`#${id} .option-checkbox`).each(function() {
             $(this).prop("checked", false);
         });
-        updateSelectedText(id, label, genreDatas);
+        updateSelectedText(id, label, arr);
     } else{
-        // selectedOptions.forEach(option => {
-        //     $(`#${id} .option-checkbox`).each(function() {
-        //         if ($(this).val() === option.value.toString()) {
-        //             $(this).prop("checked", true);
-        //         } else {
-        //             $(this).prop("checked", false);
-        //         }
-        //     });
-        // });
         $(`#${id} .option-checkbox`).each(function() {
             let idx = selectedOptions.findIndex(o => o.value.toString() === $(this).val());
             $(this).prop("checked", idx !== -1);
         });
-        updateSelectedText(id, selectedOptions.map(option => option.label).join(", "), genreDatas);
+        updateSelectedText(id, selectedOptions.map(option => option.label).join(", "), arr);
     }
 }
 
@@ -420,3 +424,73 @@ function validateBirthDate(id, value) {
     errorSpan.text("");
     return true;
 }
+
+function createChangePasswordModal() {
+    let modalHtml = `
+            <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Thay đổi mật khẩu</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-floating mb-3">
+                                <input type="password" id="oldPassword" value="****" class="form-control" placeholder="Nhập mật khẩu cũ" />
+                                <label for="oldPassword">Mật khẩu cũ</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" id="newPassword" class="form-control" placeholder="Nhập mật khẩu mới" />
+                                <label for="newPassword">Mật khẩu mới</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" id="confirmPassword" class="form-control" placeholder="Nhập mật khẩu xác nhận" />
+                                <label for="confirmPassword">Mật khẩu xác nhận</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="savePassword">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    let oldPassword = $('#oldPassword');
+    if (!$('#changePasswordModal').length) {
+        oldPassword.val('******');
+        $('body').append(modalHtml);
+    }
+    oldPassword.val('');
+    $('#newPassword').val('');
+    $('#confirmPassword').val('');
+    $('#changePasswordModal').modal('show');
+}
+$('#btnChangePassword').on('click', function () {
+    createChangePasswordModal();
+    $(document).off('click', '#savePassword').on('click', '#savePassword', function () {
+        let oldPassword = $('#oldPassword').val();
+        let newPassword = $('#newPassword').val();
+        let confirmPassword = $('#confirmPassword').val();
+        toggleLoading(true);
+        $.ajax({
+            url: '/accounts/change-password',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                oldPassword: oldPassword,
+                newPassword: newPassword,
+                confirmPassword: confirmPassword
+            }),
+            success: function (response) {
+                showSuccessToast("Thay đổi mật khẩu thành công");
+                $('#changePasswordModal').modal('hide');
+                toggleLoading(false);
+            },
+            error: function (xhr) {
+                showErrorToast(xhr.responseText || "Có lỗi xảy ra, vui lòng thử lại!");
+                toggleLoading(false);
+            }
+        });
+    });
+});

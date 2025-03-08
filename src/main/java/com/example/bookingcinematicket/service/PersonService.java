@@ -44,6 +44,23 @@ public class PersonService {
         return response;
     }
 
+    public SearchResponse<List<PersonDTO>> searchActivePerson(SearchRequest<String, Person> request) {
+        if(request.getCondition() != null){
+            request.setCondition(request.getCondition().trim().toLowerCase());
+        }
+        Page<Person> persons = personRepository.searchActivePerson(
+                request.getCondition(),
+                request.getPageable(Person.class)
+        );
+
+        SearchResponse<List<PersonDTO>> response = new SearchResponse<>();
+        response.setData(ConvertUtils.convertList(persons.getContent(), PersonDTO.class));
+        response.setPageSize(request.getPageSize());
+        response.setPageIndex(request.getPageIndex());
+        response.setTotalRecords(persons.getTotalElements());
+        return response;
+    }
+
     public PersonDTO getById(Long id) {
         Person person = personRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.PERSON_NOT_FOUND));
         return ConvertUtils.convert(person, PersonDTO.class);

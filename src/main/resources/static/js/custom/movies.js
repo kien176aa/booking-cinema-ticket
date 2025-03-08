@@ -125,7 +125,7 @@ function setContentModal(modalType, callbackFunc, id) {
             updateSelectedOptions('genre', 'Chọn thể loại', item.genre.split(',').map(g => ({
                 value: g,
                 label: g
-            })));
+            })), genreDatas);
         }
         inputReleaseDate.val(item.releaseDate);
         inputCountry.val(item.country);
@@ -139,7 +139,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputDescription.val('');
         inputDuration.val(1);
         // inputGenre.val('');
-        updateSelectedOptions('genre', 'Chọn thể loại', []);
+        updateSelectedOptions('genre', 'Chọn thể loại', [], genreDatas);
         inputReleaseDate.val('');
         // inputLanguage.val('');
         vidContainer.empty();

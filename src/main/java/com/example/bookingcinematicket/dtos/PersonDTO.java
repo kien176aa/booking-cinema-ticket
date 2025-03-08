@@ -17,4 +17,8 @@ public class PersonDTO {
     private String biography;
     private String imageUrl;
     private Boolean status;
+
+    public void validateInput(){
+
+    }
 }

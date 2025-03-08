@@ -40,8 +40,10 @@
 
   <!-- Vendors CSS -->
   <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+  <link rel="stylesheet" href="/assets/css/custom/movie-detail.css" />
 
   <!-- Page CSS -->
+  <link rel="stylesheet" href="/assets/css/custom/loading.css"/>
 
   <!-- Helpers -->
   <script src="/assets/vendor/js/helpers.js"></script>
@@ -211,8 +213,8 @@
                         </div>
                       </div>
                       <div class="flex-grow-1">
-                        <h6 class="mb-0 small">John Doe</h6>
-                        <small class="text-muted">Admin</small>
+                        <h6 class="mb-0 small" th:text="${account.fullName}"></h6>
+                        <small class="text-muted">Quản trị viên</small>
                       </div>
                     </div>
                   </a>
@@ -223,13 +225,7 @@
                 <li>
                   <a class="dropdown-item" href="#">
                     <i class="ri-user-3-line ri-22px me-2"></i>
-                    <span class="align-middle">My Profile</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    <i class="ri-settings-4-line ri-22px me-2"></i>
-                    <span class="align-middle">Settings</span>
+                    <span class="align-middle">Đổi mật khẩu</span>
                   </a>
                 </li>
                 <li>
@@ -300,7 +296,7 @@
                                 aria-controls="navs-justified-profile"
                                 aria-selected="false">
                               <span class="d-none d-sm-block"
-                              ><i class="tf-icons ri-group-line me-1_5"></i> Diễn viên & đạo diễn</span
+                              ><i class="tf-icons ri-group-line me-1_5"></i> Diễn viên & đoàn làm phim</span
                               ><i class="ri-user-3-line ri-20px d-sm-none"></i>
                         </button>
                       </li>
@@ -348,15 +344,27 @@
                       </div>
                     </div>
                     <div class="tab-pane fade" id="navs-justified-profile" role="tabpanel">
-                      <p>
-                        Donut dragée jelly pie halvah. Danish gingerbread bonbon cookie wafer candy oat cake ice
-                        cream. Gummies halvah tootsie roll muffin biscuit icing dessert gingerbread. Pastry ice
-                        cream cheesecake fruitcake.
-                      </p>
-                      <p class="mb-0">
-                        Jelly-o jelly beans icing pastry cake cake lemon drops. Muffin muffin pie tiramisu halvah
-                        cotton candy liquorice caramels.
-                      </p>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="input-group">
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Nhập từ khóa..."
+                                    aria-label="Recipient's username"
+                                    aria-describedby="button-addon2" />
+                            <button class="btn btn-outline-primary" type="button" id="button-addon2"><i class="ri-search-line"></i></button>
+                          </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                          <button id="btnCreate" type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal"
+                                  data-bs-target="#largeModal">
+                            <span class="tf-icons ri-settings-6-line ri-16px me-1_5"></span>Cập nhật
+                          </button>
+                        </div>
+                      </div>
+
+                      <div id="carousel-container"></div>
                     </div>
                     <div class="tab-pane fade" id="navs-justified-messages" role="tabpanel">
                       <p>
@@ -439,6 +447,55 @@
     </div>
   </div>
 
+  <!-- Large Modal -->
+  <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel3">Modal title</h5>
+          <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row"  style="max-height: 600px; overflow-y: auto;">
+            <div class="col-md-6">
+              <input type="text" id="inputSearchPerson" class="form-control mb-2" placeholder="Tìm kiếm theo tên diễn viên" style="position: sticky; top: 0; z-index: 1020; background: white;">
+              <table class="table table-bordered">
+                <thead>
+                <tr>
+                  <th></th>
+                  <th>Hình ảnh</th>
+                  <th>Tên</th>
+                  <th>Ngày sinh</th>
+                </tr>
+                </thead>
+                <tbody id="actor-table" >
+
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <div id="selected-actors" class="row mt-5">
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Đóng
+          </button>
+          <button type="button" class="btn btn-primary">Lưu thông tin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Overlay -->
   <div class="layout-overlay layout-menu-toggle"></div>
 </div>
@@ -469,6 +526,7 @@
 <script src="/js/custom/render-menu.js"></script>
 <script src="/js/custom/render-pagination.js"></script>
 <script src="/js/custom/custom-ui-toast.js"></script>
+<script src="/js/custom/movie-detail.js"></script>
 
 <!-- Place this tag before closing body tag for github widget button. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>

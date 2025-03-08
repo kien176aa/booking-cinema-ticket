@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.service;
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.dtos.AccountDTO;
 import com.example.bookingcinematicket.dtos.BranchDTO;
+import com.example.bookingcinematicket.dtos.auth.ChangePasswordRequest;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
 import com.example.bookingcinematicket.entity.Account;
@@ -29,11 +30,12 @@ public class AccountService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public SearchResponse<List<AccountDTO>> search(SearchRequest<String, Account> request) {
+    public SearchResponse<List<AccountDTO>> search(SearchRequest<String, Account> request, Account currentUser) {
         if(request.getCondition() != null)
             request.setCondition(request.getCondition().toLowerCase().trim());
         Page<Account> accounts = accountRepository.search(
                 request.getCondition(),
+                currentUser.getAccountId(),
                 request.getPageable(Account.class)
         );
         SearchResponse<List<AccountDTO>> response = new SearchResponse<>();
@@ -93,6 +95,18 @@ public class AccountService {
 
     public void delete(Long id) {
         accountRepository.deleteById(id);
+    }
+
+    public void changePassword(ChangePasswordRequest request, Long accountId){
+        request.validateInput();
+        Account acc = accountRepository.findByAccountId(accountId).orElseThrow(
+                () -> new CustomException(SystemMessage.ACCOUNT_NOT_FOUND)
+        );
+        if(!passwordEncoder.matches(request.getOldPassword(), acc.getPassword())){
+            throw new CustomException(SystemMessage.OLD_PASSWORD_IS_NOT_CORRECT);
+        }
+        acc.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        accountRepository.save(acc);
     }
 
 }

@@ -68,4 +68,9 @@ public class AuthController {
     public String getRegisterPage() {
         return "auth-register-basic";
     }
+
+    @GetMapping("/forgot-password")
+    public String getForgotPasswordPage() {
+        return "auth-forgot-password-basic";
+    }
 }

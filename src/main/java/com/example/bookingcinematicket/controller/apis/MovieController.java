@@ -4,10 +4,14 @@ import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.controller.BaseController;
 import com.example.bookingcinematicket.dtos.FoodDTO;
 import com.example.bookingcinematicket.dtos.MovieDTO;
+import com.example.bookingcinematicket.dtos.MoviePersonDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
+import com.example.bookingcinematicket.dtos.movie.SearchMoviePersonRequest;
+import com.example.bookingcinematicket.dtos.movie.UpdatePersonMovie;
 import com.example.bookingcinematicket.entity.Food;
 import com.example.bookingcinematicket.entity.Movie;
+import com.example.bookingcinematicket.entity.MoviePerson;
 import com.example.bookingcinematicket.service.ApiVideoService;
 import com.example.bookingcinematicket.service.FoodService;
 import com.example.bookingcinematicket.service.MovieService;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -29,6 +34,11 @@ public class MovieController extends BaseController {
     @PostMapping("/search")
     public SearchResponse<List<MovieDTO>> search(@RequestBody SearchRequest<String, Movie> request) {
         return movieService.search(request);
+    }
+
+    @PostMapping("/search-movie-person")
+    public HashMap<String, List<MoviePersonDTO>> searchMoviePerson(@RequestBody SearchRequest<SearchMoviePersonRequest, MoviePerson> request) {
+        return movieService.searchPersonByMovie(request);
     }
 
     @GetMapping("/{id}")
@@ -48,5 +58,15 @@ public class MovieController extends BaseController {
                                 @RequestPart(value = "file", required = false) MultipartFile file,
                            @RequestPart(value = "video", required = false) MultipartFile video) {
         return movieService.update(id, movieDTO, file, video);
+    }
+
+    @PutMapping("/update-person-movie")
+    public void updatePersonMovie(@RequestBody UpdatePersonMovie req) {
+        movieService.updatePersonToMovie(req);
+    }
+
+    @DeleteMapping("/{id}/remove-person/{personId}")
+    public void removePersonFromMovie(@PathVariable("id") Long id, @PathVariable("personId") Long personId) {
+        movieService.removePersonFromMovie(personId, id);
     }
 }

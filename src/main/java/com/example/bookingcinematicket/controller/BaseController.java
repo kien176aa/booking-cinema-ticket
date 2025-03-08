@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller;
 import com.example.bookingcinematicket.config.jwt.JwtUtil;
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.entity.Account;
+import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.AccountRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -26,20 +27,22 @@ public abstract class BaseController {
     protected Account getCurrentUser() {
         Cookie[] cookies = request.getCookies();
         Account account = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                log.info("abc: {}", cookie.getName());
-                if (SystemMessage.KEY_COOKIE_JWT.equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    if (jwtUtil.validateToken(token)) {
-                        log.info("xyz: {}", cookie.getName());
-                        String email = jwtUtil.extractUsername(token);
-                        account = accountRepository.findByEmail(email);
-                        account.setPassword(null);
+        try{
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (SystemMessage.KEY_COOKIE_JWT.equals(cookie.getName())) {
+                        String token = cookie.getValue();
+                        if (jwtUtil.validateToken(token)) {
+                            log.info("xyz: {}", cookie.getName());
+                            String email = jwtUtil.extractUsername(token);
+                            account = accountRepository.findByEmail(email);
+                        }
                     }
                 }
             }
+            return account;
+        }catch (Exception ex){
+            throw new CustomException(SystemMessage.ERROR_500);
         }
-        return account;
     }
 }

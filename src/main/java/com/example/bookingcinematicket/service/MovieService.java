@@ -3,20 +3,25 @@ package com.example.bookingcinematicket.service;
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.dtos.FoodDTO;
 import com.example.bookingcinematicket.dtos.MovieDTO;
+import com.example.bookingcinematicket.dtos.MoviePersonDTO;
+import com.example.bookingcinematicket.dtos.PersonDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
-import com.example.bookingcinematicket.entity.Food;
-import com.example.bookingcinematicket.entity.Movie;
+import com.example.bookingcinematicket.dtos.movie.SearchMoviePersonRequest;
+import com.example.bookingcinematicket.dtos.movie.UpdatePersonMovie;
+import com.example.bookingcinematicket.entity.*;
 import com.example.bookingcinematicket.exception.CustomException;
-import com.example.bookingcinematicket.repository.FoodRepository;
-import com.example.bookingcinematicket.repository.MovieRepository;
+import com.example.bookingcinematicket.repository.*;
 import com.example.bookingcinematicket.utils.ConvertUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -24,6 +29,12 @@ import java.util.List;
 public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private PersonRepository personRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private MoviePersonRepository moviePersonRepository;
     @Autowired
     private ImgurService imgurService;
     @Autowired
@@ -110,5 +121,63 @@ public class MovieService {
         dto = ConvertUtils.convert(movie, MovieDTO.class);
         dto.setVideoId(vId);
         return dto;
+    }
+
+    public HashMap<String, List<MoviePersonDTO>> searchPersonByMovie(
+            SearchRequest<SearchMoviePersonRequest, MoviePerson> request){
+        request.getCondition().validateInput();
+        List<MoviePerson> moviePeople = moviePersonRepository.search(
+            request.getCondition().getMovieId(),
+            request.getCondition().getKeyWord()
+        );
+        HashMap<String, List<MoviePersonDTO>> map = new HashMap<>();
+        String role;
+        for (MoviePerson mp : moviePeople) {
+            role = mp.getRole().getName();
+            if (map.containsKey(role)) {
+                List<MoviePersonDTO> mps = map.get(role);
+                mps.add(ConvertUtils.convert(mp, MoviePersonDTO.class));
+            } else {
+                List<MoviePersonDTO> newList = new ArrayList<>();
+                newList.add(ConvertUtils.convert(mp, MoviePersonDTO.class));
+                map.put(role, newList);
+            }
+        }
+        return map;
+    }
+
+    public void removePersonFromMovie(Long personId, Long movieId){
+        moviePersonRepository.deleteByPerson_PersonIdAndMovie_MovieId(personId, movieId);
+    }
+
+    @Transactional
+    public void updatePersonToMovie(UpdatePersonMovie request){
+        request.validateInput();
+        Movie movie = movieRepository.findById(request.getMovieId()).orElseThrow(
+                () -> new CustomException(SystemMessage.MOVIE_NOT_FOUND)
+        );
+        moviePersonRepository.deleteByMovieId(request.getMovieId());
+        List<MoviePerson> mps = new ArrayList<>();
+        for (MoviePersonDTO dto : request.getMoviePersonDTOs()) {
+            MoviePerson mp = moviePersonRepository.findByMovieIdAndPersonId(movie.getMovieId(), dto.getPersonPersonId());
+            if(mp == null){
+                mp = new MoviePerson();
+                mp.setMovie(movie);
+                mp.setPerson(new Person());
+                mp.getPerson().setPersonId(dto.getPersonPersonId());
+                mp.setRole(new Role());
+                mp.getRole().setRoleId(dto.getRoleRoleId());
+            }else {
+                mp.setPerson(new Person());
+                mp.getPerson().setPersonId(dto.getPersonPersonId());
+                mp.setRole(new Role());
+                mp.getRole().setRoleId(dto.getRoleRoleId());
+            }
+            mp.setCharacterName(dto.getCharacterName());
+            mp.setRoleArr(dto.getRoleArr());
+            moviePersonRepository.save(mp);
+//            mps.add(mp);
+        }
+//        moviePersonRepository.saveAll(mps);
     }
 }

@@ -27,5 +27,5 @@ public class MoviePerson {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
     private String characterName;
-    private String description;
+    private String roleArr;
 }

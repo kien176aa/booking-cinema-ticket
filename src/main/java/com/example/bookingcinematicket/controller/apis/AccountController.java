@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller.apis;
 import com.example.bookingcinematicket.controller.BaseController;
 import com.example.bookingcinematicket.dtos.AccountDTO;
 import com.example.bookingcinematicket.dtos.BranchDTO;
+import com.example.bookingcinematicket.dtos.auth.ChangePasswordRequest;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
 import com.example.bookingcinematicket.entity.Account;
@@ -22,7 +23,7 @@ public class AccountController extends BaseController {
 
     @PostMapping("/search")
     public SearchResponse<List<AccountDTO>> search(@RequestBody SearchRequest<String, Account> request) {
-        return accountService.search(request);
+        return accountService.search(request, getCurrentUser());
     }
 
     @GetMapping("/{id}")
@@ -38,6 +39,11 @@ public class AccountController extends BaseController {
     @PutMapping("/{id}")
     public AccountDTO update(@PathVariable Long id, @RequestBody AccountDTO dto) {
         return accountService.update(id, dto);
+    }
+
+    @PutMapping("change-password")
+    public void changePassword(@RequestBody ChangePasswordRequest request) {
+        accountService.changePassword(request, getCurrentUser().getAccountId());
     }
 
     @DeleteMapping("/{id}")

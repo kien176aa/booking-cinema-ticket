@@ -50,13 +50,6 @@ public class PageController {
         return "pages-account-settings-connections";
     }
 
-
-
-    @GetMapping("/auth-forgot-password")
-    public String getForgotPasswordPage() {
-        return "auth-forgot-password-basic";
-    }
-
     // Misc
     @GetMapping("/forbidden")
     public String getErrorPage() {

@@ -77,7 +77,7 @@ function setContentModal(modalType, callbackFunc, id) {
         const item = branches.find(item => item.accountId === Number(id));
         console.log('id', id, item);
         $('#exampleModalLabel3').text('Cập nhật thông tin người dùng');
-        btnCheckbox.prop('checked', item.status);
+        btnCheckbox.prop('checked', item.active);
         btnCheckbox.prop('disabled', false);
 
         inputBId.val(item.accountId);
