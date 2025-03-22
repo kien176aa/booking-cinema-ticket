@@ -1,18 +1,16 @@
 package com.example.bookingcinematicket.controller.apis;
 
-import com.example.bookingcinematicket.controller.BaseController;
-import com.example.bookingcinematicket.dtos.BranchDTO;
-import com.example.bookingcinematicket.dtos.RoleDTO;
-import com.example.bookingcinematicket.dtos.common.SearchRequest;
-import com.example.bookingcinematicket.dtos.common.SearchResponse;
-import com.example.bookingcinematicket.entity.Branch;
-import com.example.bookingcinematicket.entity.Role;
-import com.example.bookingcinematicket.service.BranchService;
-import com.example.bookingcinematicket.service.RoleService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.example.bookingcinematicket.controller.BaseController;
+import com.example.bookingcinematicket.dtos.RoleDTO;
+import com.example.bookingcinematicket.dtos.common.SearchRequest;
+import com.example.bookingcinematicket.dtos.common.SearchResponse;
+import com.example.bookingcinematicket.entity.Role;
+import com.example.bookingcinematicket.service.RoleService;
 
 @RestController
 @RequestMapping("/roles")

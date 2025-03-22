@@ -310,8 +310,8 @@
                                 aria-controls="navs-justified-messages"
                                 aria-selected="false">
                               <span class="d-none d-sm-block"
-                              ><i class="tf-icons ri-message-2-line me-1_5"></i> Messages</span
-                              ><i class="ri-message-2-line ri-20px d-sm-none"></i>
+                              ><i class="tf-icons ri-slideshow-4-line me-1_5"></i> Suất chiếu phim</span
+                              ><i class="ri-slideshow-4-line ri-20px d-sm-none"></i>
                         </button>
                       </li>
                     </ul>
@@ -367,15 +367,130 @@
                       <div id="carousel-container"></div>
                     </div>
                     <div class="tab-pane fade" id="navs-justified-messages" role="tabpanel">
-                      <p>
-                        Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
-                        cupcake gummi bears cake chocolate.
-                      </p>
-                      <p class="mb-0">
-                        Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake.
-                        Sweet roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert.
-                        Pudding jelly jelly-o tart brownie jelly.
-                      </p>
+                      <div class="row">
+                        <div class="col-md-3 ms-3 mt-4" style="width: 40%; height: 60px">
+                          <!-- Search -->
+                          <div class="input-group">
+                            <button
+                                    type="button"
+                                    class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-auto-close="outside"
+                                    aria-expanded="false">
+                              <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Tìm kiếm theo trạng thái..."
+                                    aria-label="Recipient's username"
+                                    aria-describedby="button-addon2" />
+                            <button class="btn btn-outline-primary rounded-end" type="button" id="button-addon22">
+                              <i class="ri-search-line"></i>
+                            </button>
+
+                            <div class="dropdown-menu w-100 dropdown-menu-md-start">
+                              <div class="p-4 mt-2">
+                                <div class="row g-4">
+                                  <div class="col-12 mb-4">
+                                    <div class="form-floating form-floating-outline">
+                                      <input type="datetime-local" id="startDate1" class="form-control" />
+                                      <label for="startDate1">Ngày bắt đầu</label>
+                                    </div>
+                                  </div>
+                                  <div class="col-12 mb-4">
+                                    <div class="form-floating form-floating-outline">
+                                      <input type="datetime-local" id="endDate1" class="form-control" />
+                                      <label for="endDate1">Ngày kết thúc</label>
+                                    </div>
+                                  </div>
+                                  <div class="col mb-4">
+                                    <div class="form-floating form-floating-outline mb-6">
+                                      <select class="form-select" id="selectRoom" aria-label="Default select example">
+
+                                      </select>
+                                      <label for="selectRoom">Chọn phòng chiếu</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="text-end">
+                                  <button id="advanceSearch2" type="button" class="btn btn-primary">Tìm kiếm</button>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                          <!-- /Search -->
+                        </div>
+                        <div class="col-md-4 mt-4">
+                          <div class="form-floating form-floating-outline mb-6">
+                            <select class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
+
+                            </select>
+                            <label for="exampleFormControlSelect1">Chọn chi nhánh</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3 text-end mt-4" >
+                          <button id="btnCreate2" type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal"
+                                  data-bs-target="#largeModal2">
+                            <span class="tf-icons ri-edit-line ri-16px me-1_5"></span>Cập nhật
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="table-responsive text-nowrap">
+                        <table id="custom-table" class="table">
+                          <caption>
+                            <!-- Outline Pagination -->
+                            <nav aria-label="Page navigation">
+                              <ul id="showtime-pagination" class="pagination pagination-outline-primary">
+                                <li class="page-item first">
+                                  <a class="page-link" href="javascript:void(0);"
+                                  ><i class="tf-icon ri-skip-back-mini-line ri-22px"></i
+                                  ></a>
+                                </li>
+                                <li class="page-item prev">
+                                  <a class="page-link" href="javascript:void(0);"
+                                  ><i class="tf-icon ri-arrow-left-s-line ri-22px"></i
+                                  ></a>
+                                </li>
+                                <li class="page-item active">
+                                  <a class="page-link" href="javascript:void(0);">...</a>
+                                </li>
+                                <li class="page-item next">
+                                  <a class="page-link" href="javascript:void(0);"
+                                  ><i class="tf-icon ri-arrow-right-s-line ri-22px"></i
+                                  ></a>
+                                </li>
+                                <li class="page-item last">
+                                  <a class="page-link" href="javascript:void(0);"
+                                  ><i class="tf-icon ri-skip-forward-mini-line ri-22px"></i
+                                  ></a>
+                                </li>
+                              </ul>
+                            </nav>
+                            <!--/ Outline Pagination -->
+                          </caption>
+                          <thead>
+                          <tr>
+                            <th>
+                              <input class="form-check-input" type="checkbox" id="showtime-selectAll" />
+                            </th>
+                            <th>Phòng chiếu</th>
+                            <th>Thời gian</th>
+                            <th>Giá</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td colspan="6" class="text-center">Không có dữ liệu</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -427,6 +542,8 @@
     </div>
     <!-- / Layout page -->
   </div>
+  <input id="movieId" th:value="${movie.movieId}" hidden="hidden">
+  <input type="number" id="movieDuration" class="form-control" hidden="hidden" th:value="${movie.duration}" placeholder="Nhập thời lượng phim">
 
   <div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -496,6 +613,113 @@
     </div>
   </div>
 
+  <!-- Large Modal -->
+  <div class="modal fade" id="largeModal2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel32">Modal title</h5>
+          <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <h5 th:text="${'Phim ' + movie.title}"></h5>
+              <span th:text="${'Thời lượng: ' + movie.duration + ' phút'}"></span>
+            </div>
+          </div>
+          <div class="row">
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-floating form-floating-outline">
+                <input type="date" id="showDate" class="form-control">
+                <label for="showDate">Ngày bắt đầu chiếu*</label>
+              </div>
+              <span id="showDate-error"></span>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-floating form-floating-outline">
+                <input type="date" id="endDate" class="form-control">
+                <label for="endDate">Ngày kết thúc chiếu*</label>
+              </div>
+              <span id="endDate-error"></span>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-floating form-floating-outline">
+                <input type="time" id="startTime" class="form-control">
+                <label for="startTime">Thời gian bắt đầu*</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-floating form-floating-outline mb-6">
+                <select class="form-select" id="roomSelectModal" aria-label="Default select example">
+                </select>
+                <label for="roomSelectModal">Chọn phòng chiếu</label>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-floating form-floating-outline">
+                <input type="number" id="price" class="form-control" placeholder="Nhập giá vé">
+                <label for="price">Giá vé*</label>
+              </div>
+              <span id="price-error"></span>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-floating form-floating-outline">
+                <input type="number" id="showCount" class="form-control" placeholder="Nhập số suất chiếu">
+                <label for="showCount">Số suất chiếu trong ngày*</label>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary mt-3" onclick="generateShowtimesData()"><i class="ri-ai-generate me-2"></i>Tạo suất chiếu</button>
+          <button id="createSingleBtn" class="btn btn-primary mt-3"><i class="ri-menu-add-line me-2"></i>Thêm suất chiếu</button>
+
+          <h5 class="mt-4">Danh sách suất chiếu:</h5>
+          <div id="showtimesContainer"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Đóng
+          </button>
+          <button id="btnSave2" type="button" class="btn btn-primary">Lưu thông tin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Xác Nhận Xóa -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteLabel">Xác nhận xóa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn xóa mục này không?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-danger" onclick="deleteConfirmed()">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Overlay -->
   <div class="layout-overlay layout-menu-toggle"></div>
 </div>
@@ -527,6 +751,7 @@
 <script src="/js/custom/render-pagination.js"></script>
 <script src="/js/custom/custom-ui-toast.js"></script>
 <script src="/js/custom/movie-detail.js"></script>
+<script src="/js/custom/showtime.js"></script>
 
 <!-- Place this tag before closing body tag for github widget button. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>

@@ -1,12 +1,13 @@
 package com.example.bookingcinematicket.dtos.promotion;
 
+import java.time.LocalDateTime;
+
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.exception.CustomException;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,11 +19,11 @@ public class SearchPromotionRequest {
     private Boolean status;
     private String branchId;
 
-    public void validateInput(){
-        if(branchId == null){
+    public void validateInput() {
+        if (branchId == null) {
             throw new CustomException(SystemMessage.PLEASE_CHOOSE_BRANCH);
         }
-        if(name != null){
+        if (name != null) {
             name = name.trim().toLowerCase();
         }
     }

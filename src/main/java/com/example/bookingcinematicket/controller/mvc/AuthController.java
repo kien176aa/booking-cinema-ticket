@@ -1,19 +1,21 @@
 package com.example.bookingcinematicket.controller.mvc;
 
-import com.example.bookingcinematicket.constants.SystemMessage;
-import com.example.bookingcinematicket.dtos.auth.LoginRequest;
-import com.example.bookingcinematicket.entity.Account;
-import com.example.bookingcinematicket.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.ui.Model;
+
+import com.example.bookingcinematicket.constants.SystemMessage;
+import com.example.bookingcinematicket.dtos.auth.LoginRequest;
+import com.example.bookingcinematicket.entity.Account;
+import com.example.bookingcinematicket.service.AuthService;
 
 @Controller
 @RequestMapping("/auth")
@@ -40,6 +42,7 @@ public class AuthController {
         }
         return "auth-login-basic";
     }
+
     @PostMapping("/login")
     public String login(@ModelAttribute LoginRequest request, HttpServletResponse response, Model model) {
         String message = authService.login(request.getEmail(), request.getPassword(), response);
@@ -54,11 +57,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute Account user, Model model) {
-        try{
+        try {
             authService.register(user);
             model.addAttribute("mess", SystemMessage.REGISTER_SUCCESS);
             return "auth-login-basic";
-        }catch (Exception ex){
+        } catch (Exception ex) {
             model.addAttribute("error", ex.getMessage());
             return "auth-register-basic";
         }

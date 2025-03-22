@@ -1,29 +1,32 @@
 package com.example.bookingcinematicket.service;
 
-import com.example.bookingcinematicket.exception.CustomException;
-import com.example.bookingcinematicket.repository.JobLogRepository;
-import com.example.bookingcinematicket.entity.JobLog;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import video.api.client.ApiVideoClient;
-import video.api.client.api.ApiException;
-import video.api.client.api.models.Video;
-import video.api.client.api.models.VideoCreationPayload;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.bookingcinematicket.entity.JobLog;
+import com.example.bookingcinematicket.exception.CustomException;
+import com.example.bookingcinematicket.repository.JobLogRepository;
+
+import video.api.client.ApiVideoClient;
+import video.api.client.api.ApiException;
+import video.api.client.api.models.Video;
+import video.api.client.api.models.VideoCreationPayload;
+
 @Service
 public class ApiVideoService {
 
     @Value("${apivideo.api.key}")
     private String apiKey;
+
     @Autowired
     private JobLogRepository jobLogRepository;
 
@@ -88,7 +91,7 @@ public class ApiVideoService {
         return tempFile.toFile();
     }
 
-    public String getUrlByVideoId(String videoId){
+    public String getUrlByVideoId(String videoId) {
         return String.format("https://embed.api.video/vod/%s", videoId);
     }
 }

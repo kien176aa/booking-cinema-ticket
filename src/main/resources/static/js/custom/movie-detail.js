@@ -1,4 +1,5 @@
 let actorData = {};
+let movieJson = {};
 let persons = [], roles = [], selectedPersons = [];
 let keyWord = '', movieId = null;
 const btnCheckbox = $('#status');
@@ -59,7 +60,6 @@ function renderCarouselItem(carouselId, actors, isActive) {
     const row = $('<div class="d-flex justify-content-sm-evenly mt-3"></div>');
 
     actors.forEach(actor => {
-        console.log('actor', actor);
         let roleIds = actor.roleArr.split(',').map(Number);
         let roleNames = roleIds.map(id => roles.find(role => role.roleId === id)?.name).filter(Boolean).join(',');
         const actorDiv = $('<div class="text-center" style="position:relative;"></div>');
@@ -107,12 +107,17 @@ function fetchMoviePersons() {
             console.log('response: ', response);
             actorData = response;
             carouselContainer.empty();
+            let hasData = false;
             roles.forEach(function (item) {
                let arr = response[`${item.name}`];
                if(arr && arr.length > 0){
+                   hasData = true;
                    renderCarousel(item.name, arr);
                }
             });
+            if(!hasData){
+                renderEmptyData('#carousel-container');
+            }
             toggleLoading(false);
         },
         error: function(error) {
@@ -387,6 +392,18 @@ function renderPersonRow(searchText){
     });
 
     $('.actor-checkbox').change(handleCheckboxChange);
+}
+
+function getMovieData(){
+    let movieJsonString = $("#movieJson").val();
+    console.log(movieJsonString);
+
+    try {
+        let movieData = JSON.parse(movieJsonString.replace(/MovieDTO|MoviePersonDTO|\(|\)/g, ""));
+        console.log(movieData.duration);
+    } catch (error) {
+        console.error("Lỗi khi parse JSON:", error);
+    }
 }
 
 $(document).ready(function () {

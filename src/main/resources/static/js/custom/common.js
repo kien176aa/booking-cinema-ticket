@@ -23,6 +23,20 @@ function getImageUrl(url){
     return url;
 }
 
+function renderEmptyData(id){
+    let empty = `<div style="font-size: 25px" class="text-center m-5">
+        <i style="font-size: 50px" class="ri-archive-2-line"></i>
+        Không có dữ liệu
+      </div>`;
+    $(id).append(empty);
+}
+
+function convertToVietnamTime(date) {
+    const localDate = new Date(date);  // Chuyển chuỗi thành đối tượng Date
+    localDate.setHours(localDate.getHours() + 7);  // Chuyển thành giờ Việt Nam (UTC+7)
+    return localDate.toISOString();  // Chuyển lại thành chuỗi ISO (ISO 8601)
+}
+
 function hasValue(id, fieldName) {
     let value = $(id).val().trim();
     let errorSpan = $(id + '-error');

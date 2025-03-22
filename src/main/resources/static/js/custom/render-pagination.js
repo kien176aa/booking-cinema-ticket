@@ -2,6 +2,7 @@ function renderPagination(response, id, callbackFunc) {
     const {totalRecords, pageIndex, pageSize} = response;
     console.log("starting pagination", totalRecords, pageIndex, pageSize, id);
     const totalPages = Math.ceil(totalRecords / pageSize);
+    console.log('total pages: ', totalPages);
     const $pagination = $(id);
     $pagination.empty();
 

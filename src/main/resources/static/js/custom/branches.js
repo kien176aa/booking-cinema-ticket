@@ -79,6 +79,22 @@ function setContentModal(modalType, callbackFunc, id) {
         $('#exampleModalLabel3').text('Cập nhật chi nhánh');
         btnCheckbox.prop('checked', item.status);
         btnCheckbox.prop('disabled', false);
+        if(item.lat && item.lng){
+            if (marker) marker.remove();
+            marker = new mapboxgl.Marker()
+                .setLngLat([item.lng, item.lat])
+                .addTo(map);
+
+            map.flyTo({
+                center: [item.lng, item.lat],
+                zoom: 14, // zoom level tùy chỉnh
+                speed: 1.2 // tốc độ bay tới điểm
+            });
+
+            $('#lat').val(item.lat);
+            $('#lng').val(item.lng);
+        }
+
 
         inputBId.val(item.branchId);
         inputName.val(item.name);
@@ -94,6 +110,8 @@ function setContentModal(modalType, callbackFunc, id) {
         inputAddress.val('');
         inputEmail.val('');
         inputPhone.val('');
+        $('#lat').val('');
+        $('#lng').val('');
     }
     modalDialog.find('[id*="error"]').text('');
 
@@ -119,6 +137,8 @@ function getBranchInfo(type){
             address: inputAddress.val(),
             email: inputEmail.val(),
             phone: inputPhone.val(),
+            lat: $('#lat').val(),
+            lng: $('#lng').val(),
             status: type === 'add' ? true : btnCheckbox.prop("checked")
         }
     return false;
@@ -184,5 +204,8 @@ $(document).ready(function() {
     });
     $('#create-branch').on('click', function() {
         setContentModal('add', createBranch);
+    });
+    $('#largeModal').on('shown.bs.modal', function () {
+        map.resize();
     });
 });

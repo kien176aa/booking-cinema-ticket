@@ -1,19 +1,20 @@
 package com.example.bookingcinematicket.dtos.common;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +25,7 @@ public class SearchRequest<T, E> {
     private Integer pageIndex;
     private Boolean orderBy;
     private String sortBy;
+
     @JsonIgnore
     private Pageable pageable;
 
@@ -33,8 +35,7 @@ public class SearchRequest<T, E> {
             @JsonProperty("pageSize") Integer pageSize,
             @JsonProperty("pageIndex") Integer pageIndex,
             @JsonProperty("orderBy") Boolean orderBy,
-            @JsonProperty("sortBy") String sortBy
-    ) {
+            @JsonProperty("sortBy") String sortBy) {
         log.info("search req start: {}", this);
         this.condition = condition;
         this.pageSize = (pageSize != null && pageSize > 0) ? pageSize : 10;
@@ -44,10 +45,13 @@ public class SearchRequest<T, E> {
 
         log.info("search req end: {}", this);
     }
+
     public Pageable getPageable(Class<E> entityClass) {
         validateSortBy(entityClass);
         if (sortBy != null && !sortBy.isEmpty()) {
-            this.pageable = PageRequest.of(this.pageIndex - 1, this.pageSize,
+            this.pageable = PageRequest.of(
+                    this.pageIndex - 1,
+                    this.pageSize,
                     this.orderBy ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
         } else {
             this.pageable = PageRequest.of(this.pageIndex - 1, this.pageSize);

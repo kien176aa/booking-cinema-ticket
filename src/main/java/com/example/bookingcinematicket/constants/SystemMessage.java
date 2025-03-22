@@ -31,10 +31,24 @@ public class SystemMessage {
     public static final String NEW_PASSWORD_IS_REQUIRED = "Mật khẩu mới là bắt buộc";
     public static final String EMAIL_IS_NOT_CORRECT = "Email không chính xác";
     public static final String CONFIRM_PASSWORD_IS_REQUIRED = "Mật khẩu xác nhận là bắt buộc";
-    public static final String NEW_PASSWORD_IS_NOT_EQUAL_CONFIRM_PASSWORD = "Mật khẩu mới và mật khẩu xác nhận không giống nhau";
+    public static final String NEW_PASSWORD_IS_NOT_EQUAL_CONFIRM_PASSWORD =
+            "Mật khẩu mới và mật khẩu xác nhận không giống nhau";
     public static final String OLD_PASSWORD_IS_NOT_CORRECT = "Mật khẩu cũ không chính xác";
     public static final String MOVIE_IS_REQUIRED = "Thông tin bộ phim là bắt buộc";
     public static final String PERSON_MOVIE_IS_REQUIRED = "Thông tin diễn viên là bắt buộc";
     public static final String ROLE_IS_REQUIRED = "Vai trò bộ phim là bắt buộc";
     public static final String CHARACTER_NAME_IS_REQUIRED = "Tên nhân vật là bắt buộc";
+    public static final String SHOW_TIME_STATUS_AVAILABLE = "Còn vé";
+    public static final String SHOW_TIME_STATUS_SOLD_OUT = "Hết vé";
+    public static final String SHOW_TIME_STATUS_CANCELED = "Đã hủy";
+    public static final String SHOW_TIME_STATUS_FINISHED = "Kết thúc";
+    public static final String BRANCH_IS_REQUIRED = "Thông tin chi nhánh là cần thiết";
+    public static final String SHOW_TIME_IS_REQUIRED = "Thông tin suất chiếu là bắt buộc";
+    public static final String ROOM_IS_REQUIRED = "Thông tin phòng chiếu là bắt buộc";
+    public static final String START_END_TIME_IS_REQUIRED = "Thời gian bắt đầu và kết thúc là bắt buộc";
+    public static final String SHOW_TIME_NOT_FOUND = "Suất chiếu không tồn tại";
+    public static final String BOOKING_SUCCESS = "Thành công";
+    public static final String BOOKING_PAYMENT_METHOD = "Stripe";
+    public static final String TOTAL_AMOUNT_MUST_NOT_BE_NEGATIVE_NUMBER = "Tổng tiền phải >= 0";
+    public static final String SEAT_IS_REQUIRED = "Thông tin ghế là bắt buộc";
 }

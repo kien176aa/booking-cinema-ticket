@@ -1,23 +1,23 @@
-//package com.example.bookingcinematicket.config.jwt;
+// package com.example.bookingcinematicket.config.jwt;
 //
-//import com.example.bookingcinematicket.service.CustomUserDetailsService;
-//import jakarta.servlet.FilterChain;
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.stereotype.Component;
-//import org.springframework.web.filter.OncePerRequestFilter;
+// import com.example.bookingcinematicket.service.CustomUserDetailsService;
+// import jakarta.servlet.FilterChain;
+// import jakarta.servlet.ServletException;
+// import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletResponse;
+// import lombok.RequiredArgsConstructor;
+// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+// import org.springframework.security.core.context.SecurityContextHolder;
+// import org.springframework.stereotype.Component;
+// import org.springframework.web.filter.OncePerRequestFilter;
 //
-//import java.io.IOException;
+// import java.io.IOException;
 //
-//import static org.springframework.util.StringUtils.hasText;
+// import static org.springframework.util.StringUtils.hasText;
 //
-//@Component
-//@RequiredArgsConstructor
-//public class JwtFilter extends OncePerRequestFilter {
+// @Component
+// @RequiredArgsConstructor
+// public class JwtFilter extends OncePerRequestFilter {
 //
 //    private static final String AUTHORIZATION_HEADER = "Authorization";
 //    private static final String AUTH_TYPE = "Bearer ";
@@ -27,7 +27,8 @@
 //    private final CustomUserDetailsService customUserDetailsService;
 //
 //    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+// throws ServletException, IOException {
 //        var token = getTokenFromRequest(request);
 //        if (token != null) {
 //            var loginFromToken = jwtProvider.getLoginFromToken(token);
@@ -50,4 +51,4 @@
 //    private boolean validateBearer(String bearer) {
 //        return hasText(bearer) && bearer.startsWith(AUTH_TYPE);
 //    }
-//}
+// }

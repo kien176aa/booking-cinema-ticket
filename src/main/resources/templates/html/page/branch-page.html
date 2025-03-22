@@ -395,7 +395,7 @@
                     <div class="row">
                         <div class="col mb-6 mt-2">
                             <div class="form-floating form-floating-outline">
-                                <input type="text" id="address" class="form-control" placeholder="Nhập địa chỉ" />
+                                <input type="text" id="address" class="form-control" placeholder="Chọn từ bản đồ" readonly/>
                                 <label for="address">Địa chỉ*</label>
                             </div>
                             <span id="address-error"></span>
@@ -435,7 +435,11 @@
                             </div>
                         </div>
                     </div>
-
+                    <div id="map" style="height: 300px; width: 760px; margin-top: 5px;"></div>
+                    <div class="coordinates">
+                        <input type="text" id="lat" readonly hidden="hidden">
+                        <input type="text" id="lng" readonly hidden="hidden">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
@@ -483,6 +487,65 @@
 <script src="/js/custom/render-pagination.js"></script>
 <script src="/js/custom/branches.js"></script>
 <script src="/js/custom/custom-ui-toast.js"></script>
+
+<!-- Mapbox CSS + JS -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2llbm52aGUxNjM3NzEiLCJhIjoiY204YmU4dTg2MW1kMzJub202a2xiaGZnaiJ9.JAtn6ifs0DFyPiAV9cTzHA';
+    let map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [105.85, 21.02], // Hà Nội
+        zoom: 10
+    });
+
+    // Thêm geocoder (search box)
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl
+    });
+    map.addControl(geocoder);
+
+    // Marker khi click map
+    let marker = null;
+    map.on('click', function (e) {
+        const lngLat = e.lngLat;
+
+        // Hiển thị marker
+        if (marker) marker.remove();
+        marker = new mapboxgl.Marker()
+            .setLngLat([lngLat.lng, lngLat.lat])
+            .addTo(map);
+        reverseGeocode(lngLat.lng, lngLat.lat);
+        // Gán vào input
+        document.getElementById('lat').value = lngLat.lat.toFixed(6);
+        document.getElementById('lng').value = lngLat.lng.toFixed(6);
+    });
+
+    // Nếu chọn từ ô search
+    geocoder.on('result', function(e) {
+        const coords = e.result.center;
+        document.getElementById('lat').value = coords[1].toFixed(6);
+        document.getElementById('lng').value = coords[0].toFixed(6);
+        reverseGeocode(coords[1].toFixed(6), coords[0].toFixed(6));
+    });
+
+    function reverseGeocode(lng, lat) {
+        fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxgl.accessToken}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log('dd', data);
+                if (data.features.length > 0) {
+                    document.getElementById('address').value = data.features[0].place_name;
+                }
+            });
+    }
+</script>
+
 
 </body>
 </html>

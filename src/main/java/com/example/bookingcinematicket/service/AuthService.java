@@ -1,32 +1,35 @@
 package com.example.bookingcinematicket.service;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.example.bookingcinematicket.config.jwt.JwtUtil;
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.entity.Account;
 import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.AccountRepository;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import jakarta.servlet.http.Cookie;
+
 @Service
 public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private AccountRepository accountRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-
 
     public String login(String email, String password, HttpServletResponse response) {
         try {
             Account account = accountRepository.findByEmail(email);
-            if(account == null || !passwordEncoder.matches(password, account.getPassword()))
+            if (account == null || !passwordEncoder.matches(password, account.getPassword()))
                 return (SystemMessage.INCORRECT_EMAIL_OR_PASSWORD);
-            if(!account.getActive())
-                return SystemMessage.INACTIVE_ACCOUNT;
+            if (!account.getActive()) return SystemMessage.INACTIVE_ACCOUNT;
             String token = jwtUtil.generateToken(email);
 
             Cookie cookie = new Cookie(SystemMessage.KEY_COOKIE_JWT, token);
@@ -44,7 +47,7 @@ public class AuthService {
 
     public void register(Account user) {
         Account account = accountRepository.findByEmail(user.getEmail());
-        if(account != null){
+        if (account != null) {
             throw new CustomException(SystemMessage.EMAIL_IS_EXISTED);
         }
         user.setActive(true);

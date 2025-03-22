@@ -1,14 +1,11 @@
 package com.example.bookingcinematicket.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.NoHandlerFoundException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice(annotations = Controller.class)
 @Slf4j
@@ -28,15 +25,15 @@ public class MvcExceptionHandler {
         return "error-page";
     }
 
-//    @ExceptionHandler(NoHandlerFoundException.class)
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    public String handleNotFoundError(NoHandlerFoundException ex, Model model, HttpServletRequest request) {
-//        String requestUri = request.getRequestURI();
-//        log.error("MVC Error123: {}", ex.getMessage());
-//        if (requestUri.matches(".*\\.(css|js|png|jpg|jpeg|gif|ico|svg|woff2|woff|ttf|map)$")) {
-//            return null;
-//        }
-//        model.addAttribute("errorMessage", "Oops! The page you are looking for does not exist.");
-//        return "not-found-error";
-//    }
+    //    @ExceptionHandler(NoHandlerFoundException.class)
+    //    @ResponseStatus(HttpStatus.NOT_FOUND)
+    //    public String handleNotFoundError(NoHandlerFoundException ex, Model model, HttpServletRequest request) {
+    //        String requestUri = request.getRequestURI();
+    //        log.error("MVC Error123: {}", ex.getMessage());
+    //        if (requestUri.matches(".*\\.(css|js|png|jpg|jpeg|gif|ico|svg|woff2|woff|ttf|map)$")) {
+    //            return null;
+    //        }
+    //        model.addAttribute("errorMessage", "Oops! The page you are looking for does not exist.");
+    //        return "not-found-error";
+    //    }
 }

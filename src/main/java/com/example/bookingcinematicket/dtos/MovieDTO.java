@@ -1,13 +1,11 @@
 package com.example.bookingcinematicket.dtos;
 
-import com.example.bookingcinematicket.entity.MoviePerson;
-import com.example.bookingcinematicket.entity.Showtime;
+import java.time.LocalDate;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @AllArgsConstructor

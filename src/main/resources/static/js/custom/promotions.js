@@ -165,13 +165,40 @@ function setContentModal(modalType, callbackFunc, id) {
         modalDialog.modal('show');
 }
 
+function checkValidMinPurchase(){
+    let discountAmount = parseFloat(inputDiscountAmount.val()) || null;
+    if(discountAmount){
+        let minPurchase = parseFloat(inputMinPurchase.val());
+        if(minPurchase < discountAmount){
+            $('#minPurchase-error').text('Giá trị đơn hàng tối thiểu phải >= số tiền giảm').css('color', 'red');
+            return false;
+        } else{
+            $('#minPurchase-error').text('');
+        }
+    }
+    return true;
+}
+
+function checkMaxDiscountPercent(){
+    let percent = parseFloat(inputDiscountPercent.val()) || null;
+    if(percent && percent > 40){
+        $('#discountPercent-error').text('Phần trăm giảm phải >= 40%').css('color', 'red');
+        return false;
+    } else{
+        $('#discountPercent-error').text('');
+    }
+    return true;
+}
+
 function getPromotionInfo(type) {
     let isValid = hasValue('#title', 'Tiêu đề khuyến mãi') &&
         checkLength('#title', 'Tiêu đề khuyến mãi', 1, 255);
     isValid = checkNeedOneOfTwo('#discountAmount', '#discountPercent', 'Số tiền giảm', 'Phần trăm giảm') && isValid;
+    isValid = checkMaxDiscountPercent() && isValid;
     isValid = hasValue('#startDate', 'Ngày bắt đầu') && hasValue('#endDate', 'Ngày kết thúc')
         && checkValidStartAndEndDate('#startDate', '#endDate', 'Ngày bắt đầu', 'Ngày kết thúc') && isValid;
-    isValid = hasValue('#minPurchase', 'Giá trị đơn hàng tối thiểu') && isValid;
+    isValid = hasValue('#minPurchase', 'Giá trị đơn hàng tối thiểu') && isPositiveNumber('#minPurchase', 'Giá trị đơn hàng tối thiểu')
+        && checkValidMinPurchase() && isValid;
     isValid = isPositiveNumber('#numberOfItems', 'Số lượng vé áp dụng') && isValid;
     isValid = checkLength('#description', 'Mô tả', 0, 255) && isValid;
 

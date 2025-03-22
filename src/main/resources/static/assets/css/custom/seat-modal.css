@@ -1,0 +1,195 @@
+/* Main modal container */
+#seatModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal content */
+#seatModal > div {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 900px;
+    color: #fff;
+    position: relative;
+    text-align: center;
+}
+
+/* Seat Map container */
+#seatMap {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Default seat style */
+.seat {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+}
+
+/* Regular seat default color */
+.seat.regular {
+    background-color: #3b3b3b; /* Darker gray */
+}
+
+/* Selected seat */
+.seat.selected {
+    outline: 2px solid #fff;
+    background-color: #e91e63; /* Pinkish color for selected seats */
+}
+
+/* Hidden seats (no seat available) */
+.seat.hidden {
+    background-color: #000;
+    color: white;
+}
+
+.seat.booked {
+    background-color: gray;
+    color: white;
+}
+
+/* Hover effect for seats */
+.seat:hover {
+    transform: scale(1.1);
+}
+
+/* Confirm and close buttons */
+#confirmSeats, #closeModal {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#confirmSeats {
+    background-color: #e91e63; /* Pink button */
+}
+
+#confirmSeats:hover {
+    background-color: #d81b60; /* Darker pink */
+}
+
+#closeModal {
+    background-color: #555;
+    color: #fff;
+}
+
+#closeModal:hover {
+    background-color: #444;
+}
+
+/* Seat text */
+.seat {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 768px) {
+    #seatMap {
+        grid-template-columns: repeat(8, 30px);
+    }
+}
+
+@media (max-width: 480px) {
+    #seatMap {
+        grid-template-columns: repeat(6, 30px);
+    }
+}
+
+
+#seatMapWrapper {
+    width: 100%;
+    height: 500px; /* Điều chỉnh chiều cao vùng chứa */
+    overflow: auto; /* Cho phép cuộn */
+    position: relative;
+    border: 1px solid #ddd;
+}
+
+#seatMap {
+    display: grid;
+    grid-template-columns: repeat(18, 30px);
+    gap: 5px;
+    justify-content: center;
+    transition: transform 0.3s ease; /* Hiệu ứng chuyển động */
+}
+
+.promotion-item {
+    margin-bottom: 8px;
+}
+
+.promo-radio-container {
+    display: flex;
+    align-items: center;
+}
+
+.promo-radio {
+    margin-right: 8px;
+}
+
+.promo-label {
+    display: flex;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.promo-label:hover {
+    border-color: #bbbbbb;
+    background-color: #f9f9f9;
+}
+
+input[type="radio"]:checked + .promo-label {
+    border-color: #2979ff;
+    background-color: #f0f7ff;
+}
+
+.promo-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.promo-code {
+    font-weight: 500;
+    color: #333333;
+}
+
+.promo-value {
+    font-weight: 600;
+}
+
+.promo-value.percent {
+    color: #e53935;
+}
+
+.promo-value.amount {
+    color: #2e7d32;
+}

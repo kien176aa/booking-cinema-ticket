@@ -14,7 +14,7 @@
         toastContainer.setAttribute('aria-live', 'assertive');
         toastContainer.setAttribute('aria-atomic', 'true');
         toastContainer.setAttribute('data-bs-delay', '5000');
-
+        toastContainer.style.zIndex = '9999';
         let iconClass, bgColor;
         if (type === 'success') {
             iconClass = 'ri-check-line';

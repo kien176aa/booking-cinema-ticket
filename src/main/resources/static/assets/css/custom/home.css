@@ -1,0 +1,169 @@
+/* Body */
+body {
+    padding-top: 80px; /* Tránh nội dung bị che bởi navbar fixed */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar .nav-link {
+    font-weight: 500;
+    color: #333 !important;
+}
+
+.navbar .nav-link:hover {
+    color: #e10079 !important;
+}
+
+/* Banner */
+.banner {
+    background-color: #ffe6f0;
+    padding: 50px 0;
+}
+
+.banner h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e10079;
+}
+
+.banner ul {
+    list-style: none;
+    padding: 0;
+}
+
+.banner ul li::before {
+    content: "✔ ";
+    color: #e10079;
+    margin-right: 5px;
+}
+
+.banner img {
+    width: 200px;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Button */
+.btn-momo {
+    background-color: #e10079;
+    color: #fff;
+    border: none;
+}
+
+.btn-momo:hover {
+    background-color: #c40069;
+}
+
+.btn-outline-momo {
+    border-color: #e10079;
+    color: #e10079;
+}
+
+.btn-outline-momo:hover {
+    background-color: #e10079;
+    color: #fff;
+}
+
+/* Movie Section */
+.movie-list {
+    background-color: #000;
+    padding: 40px 0;
+    color: #fff;
+}
+
+.movie-card {
+    background: #000;
+    padding: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 10px 20px 10px;
+    position: relative;
+}
+
+/* Movie Rank */
+.movie-rank {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #ff4081;
+    color: white;
+    font-weight: bold;
+    padding: 5px 8px;
+    border-bottom-right-radius: 5px;
+    z-index: 2;
+}
+
+/* Movie Image */
+.movie-card img,
+.movie-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Play Icon */
+.image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-wrapper .play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.image-wrapper .play-icon i {
+    font-size: 50px;
+    color: rgba(255, 255, 255, 0.9);
+    transition: 0.3s;
+}
+
+.image-wrapper .play-icon i:hover {
+    color: #ff4081;
+    transform: scale(1.1);
+}
+
+/* Carousel Controls */
+.carousel-control-prev,
+.carousel-control-next,
+.custom-control {
+    width: 45px;
+    height: 45px;
+    background-color: #fff;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-size: 50% 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: invert(1);
+}
+
+/* Misc */
+.text-momo {
+    color: #e10079;
+}
+
+.list-group-item:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}

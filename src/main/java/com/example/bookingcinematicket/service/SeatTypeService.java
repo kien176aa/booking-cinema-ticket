@@ -1,31 +1,32 @@
 package com.example.bookingcinematicket.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
 import com.example.bookingcinematicket.constants.SystemMessage;
-import com.example.bookingcinematicket.dtos.RoomDTO;
 import com.example.bookingcinematicket.dtos.SeatTypeDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
 import com.example.bookingcinematicket.dtos.room.SearchRoomRequest;
 import com.example.bookingcinematicket.entity.Branch;
-import com.example.bookingcinematicket.entity.Room;
 import com.example.bookingcinematicket.entity.SeatType;
 import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.BranchRepository;
 import com.example.bookingcinematicket.repository.RoomRepository;
 import com.example.bookingcinematicket.repository.SeatTypeRepository;
 import com.example.bookingcinematicket.utils.ConvertUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class SeatTypeService {
     @Autowired
     private RoomRepository roomRepository;
+
     @Autowired
     private SeatTypeRepository seatTypeRepository;
+
     @Autowired
     private BranchRepository branchRepository;
 
@@ -35,8 +36,7 @@ public class SeatTypeService {
                 request.getCondition().getName(),
                 request.getCondition().getBranchId(),
                 request.getCondition().getStatus(),
-                request.getPageable(SeatType.class)
-        );
+                request.getPageable(SeatType.class));
 
         SearchResponse<List<SeatTypeDTO>> response = new SearchResponse<>();
         response.setData(ConvertUtils.convertList(seatTypes.getContent(), SeatTypeDTO.class));
@@ -47,15 +47,19 @@ public class SeatTypeService {
     }
 
     public SeatTypeDTO getSeatTypeById(Long id) {
-        SeatType seatType = seatTypeRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.SEAT_TYPE_NOT_FOUND));
+        SeatType seatType = seatTypeRepository
+                .findById(id)
+                .orElseThrow(() -> new CustomException(SystemMessage.SEAT_TYPE_NOT_FOUND));
         return ConvertUtils.convert(seatType, SeatTypeDTO.class);
     }
 
     public SeatTypeDTO createSeatType(SeatTypeDTO seatTypeDTO) {
-        Branch branch = branchRepository.findById(seatTypeDTO.getBranchBranchId())
+        Branch branch = branchRepository
+                .findById(seatTypeDTO.getBranchBranchId())
                 .orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
 
-        boolean exists = seatTypeRepository.existsByTypeNameAndBranch_BranchId(seatTypeDTO.getTypeName(), seatTypeDTO.getBranchBranchId());
+        boolean exists = seatTypeRepository.existsByTypeNameAndBranch_BranchId(
+                seatTypeDTO.getTypeName(), seatTypeDTO.getBranchBranchId());
         if (exists) {
             throw new CustomException(SystemMessage.SEAT_TYPE_IS_EXISTED);
         }
@@ -67,7 +71,9 @@ public class SeatTypeService {
     }
 
     public SeatTypeDTO updateSeatType(Long id, SeatTypeDTO seatTypeDTO) {
-        SeatType seatType = seatTypeRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.SEAT_TYPE_NOT_FOUND));
+        SeatType seatType = seatTypeRepository
+                .findById(id)
+                .orElseThrow(() -> new CustomException(SystemMessage.SEAT_TYPE_NOT_FOUND));
 
         boolean nameExists = seatTypeRepository.existsByTypeNameAndBranch_BranchIdAndSeatTypeIdNot(
                 seatTypeDTO.getTypeName(), seatTypeDTO.getBranchBranchId(), id);

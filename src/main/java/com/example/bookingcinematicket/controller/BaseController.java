@@ -1,15 +1,18 @@
 package com.example.bookingcinematicket.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import com.example.bookingcinematicket.config.jwt.JwtUtil;
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.entity.Account;
 import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.AccountRepository;
-import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import jakarta.servlet.http.Cookie;
-import org.springframework.stereotype.Controller;
 
 @Controller
 @Slf4j
@@ -27,7 +30,7 @@ public abstract class BaseController {
     protected Account getCurrentUser() {
         Cookie[] cookies = request.getCookies();
         Account account = null;
-        try{
+        try {
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     if (SystemMessage.KEY_COOKIE_JWT.equals(cookie.getName())) {
@@ -41,7 +44,7 @@ public abstract class BaseController {
                 }
             }
             return account;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new CustomException(SystemMessage.ERROR_500);
         }
     }

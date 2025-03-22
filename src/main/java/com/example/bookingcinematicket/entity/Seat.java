@@ -1,12 +1,13 @@
 package com.example.bookingcinematicket.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "seats")
@@ -28,6 +29,6 @@ public class Seat {
     @JoinColumn(name = "seat_type_id")
     private SeatType seatType;
     private Boolean status;
-    @OneToMany(mappedBy = "seat")
+    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
 }

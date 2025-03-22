@@ -1,10 +1,7 @@
 package com.example.bookingcinematicket.service;
 
-import com.example.bookingcinematicket.constants.SystemMessage;
-import com.example.bookingcinematicket.exception.CustomException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,7 +12,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import com.example.bookingcinematicket.constants.SystemMessage;
+import com.example.bookingcinematicket.exception.CustomException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -35,7 +37,7 @@ public class ImgurService {
 
             // Tạo một MultiValueMap để gửi file
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("image", file.getBytes());  // Gửi dữ liệu ảnh dưới dạng byte[]
+            body.add("image", file.getBytes()); // Gửi dữ liệu ảnh dưới dạng byte[]
 
             // Nếu cần, có thể thêm các tham số như title, description
             body.add("title", "My uploaded image");
@@ -44,7 +46,8 @@ public class ImgurService {
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
             // Gửi yêu cầu POST lên Imgur
-            ResponseEntity<String> response = restTemplate.exchange(IMGUR_API_URL, HttpMethod.POST, requestEntity, String.class);
+            ResponseEntity<String> response =
+                    restTemplate.exchange(IMGUR_API_URL, HttpMethod.POST, requestEntity, String.class);
             log.info("url: {}", response.getBody());
             // Trả về kết quả từ Imgur
             return parseImgurResponse(response.getBody());
@@ -69,4 +72,3 @@ public class ImgurService {
         }
     }
 }
-

@@ -1,11 +1,11 @@
 package com.example.bookingcinematicket.dtos;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,5 +23,5 @@ public class PromotionDTO {
     private Long branchBranchId;
     private Long numberOfItems;
     private String branchName;
-//    private List<CouponItemDTO> couponItems;
+    //    private List<CouponItemDTO> couponItems;
 }

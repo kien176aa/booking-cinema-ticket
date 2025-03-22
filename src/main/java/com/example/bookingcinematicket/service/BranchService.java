@@ -1,5 +1,12 @@
 package com.example.bookingcinematicket.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.dtos.BranchDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
@@ -8,13 +15,8 @@ import com.example.bookingcinematicket.entity.Branch;
 import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.BranchRepository;
 import com.example.bookingcinematicket.utils.ConvertUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -23,12 +25,9 @@ public class BranchService {
     private BranchRepository branchRepository;
 
     public SearchResponse<List<BranchDTO>> getAllBranches(SearchRequest<String, Branch> request) {
-        if(request.getCondition() != null)
+        if (request.getCondition() != null)
             request.setCondition(request.getCondition().toLowerCase().trim());
-        Page<Branch> branches = branchRepository.search(
-                request.getCondition(),
-                request.getPageable(Branch.class)
-        );
+        Page<Branch> branches = branchRepository.search(request.getCondition(), request.getPageable(Branch.class));
         SearchResponse<List<BranchDTO>> response = new SearchResponse<>();
         response.setData(ConvertUtils.convertList(branches.getContent(), BranchDTO.class));
         response.setPageSize(request.getPageSize());
@@ -38,7 +37,8 @@ public class BranchService {
     }
 
     public BranchDTO getBranchById(Long id) {
-        Branch branch = branchRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
+        Branch branch =
+                branchRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
         return ConvertUtils.convert(branch, BranchDTO.class);
     }
 
@@ -54,8 +54,8 @@ public class BranchService {
     }
 
     public BranchDTO updateBranch(Long id, BranchDTO branchDTO) {
-        Branch branch = branchRepository.findById(id)
-                .orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
+        Branch branch =
+                branchRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
 
         boolean nameExists = branchRepository.existsByNameAndBranchIdNot(branchDTO.getName(), id);
         if (nameExists) {
@@ -65,6 +65,8 @@ public class BranchService {
         branch.setAddress(branchDTO.getAddress());
         branch.setPhone(branchDTO.getPhone());
         branch.setEmail(branchDTO.getEmail());
+        branch.setLat(branchDTO.getLat());
+        branch.setLng(branchDTO.getLng());
         branch.setStatus(branchDTO.getStatus());
         Branch updatedBranch = branchRepository.save(branch);
         return ConvertUtils.convert(updatedBranch, BranchDTO.class);

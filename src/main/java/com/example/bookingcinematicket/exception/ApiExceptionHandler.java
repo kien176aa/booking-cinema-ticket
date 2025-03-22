@@ -1,9 +1,11 @@
 package com.example.bookingcinematicket.exception;
 
-import com.example.bookingcinematicket.constants.SystemMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.bookingcinematicket.constants.SystemMessage;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j

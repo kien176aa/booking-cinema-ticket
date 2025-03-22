@@ -1,22 +1,19 @@
 package com.example.bookingcinematicket.service;
 
-import com.example.bookingcinematicket.constants.SystemMessage;
-import com.example.bookingcinematicket.dtos.PromotionDTO;
-import com.example.bookingcinematicket.dtos.RoleDTO;
-import com.example.bookingcinematicket.dtos.common.SearchRequest;
-import com.example.bookingcinematicket.dtos.common.SearchResponse;
-import com.example.bookingcinematicket.dtos.promotion.SearchPromotionRequest;
-import com.example.bookingcinematicket.entity.Branch;
-import com.example.bookingcinematicket.entity.Promotion;
-import com.example.bookingcinematicket.entity.Role;
-import com.example.bookingcinematicket.exception.CustomException;
-import com.example.bookingcinematicket.repository.RoleRepository;
-import com.example.bookingcinematicket.utils.ConvertUtils;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.example.bookingcinematicket.constants.SystemMessage;
+import com.example.bookingcinematicket.dtos.RoleDTO;
+import com.example.bookingcinematicket.dtos.common.SearchRequest;
+import com.example.bookingcinematicket.dtos.common.SearchResponse;
+import com.example.bookingcinematicket.entity.Role;
+import com.example.bookingcinematicket.exception.CustomException;
+import com.example.bookingcinematicket.repository.RoleRepository;
+import com.example.bookingcinematicket.utils.ConvertUtils;
 
 @Service
 public class RoleService {
@@ -24,12 +21,9 @@ public class RoleService {
     private RoleRepository roleRepository;
 
     public SearchResponse<List<RoleDTO>> search(SearchRequest<String, Role> request) {
-        if(request.getCondition() != null)
+        if (request.getCondition() != null)
             request.setCondition(request.getCondition().trim().toLowerCase());
-        Page<Role> roles = roleRepository.search(
-                request.getCondition(),
-                request.getPageable(Role.class)
-        );
+        Page<Role> roles = roleRepository.search(request.getCondition(), request.getPageable(Role.class));
 
         SearchResponse<List<RoleDTO>> response = new SearchResponse<>();
         response.setData(ConvertUtils.convertList(roles.getContent(), RoleDTO.class));
@@ -51,7 +45,7 @@ public class RoleService {
 
     public RoleDTO create(RoleDTO req) {
         boolean existByName = roleRepository.existsByName(req.getName());
-        if(existByName){
+        if (existByName) {
             throw new CustomException(SystemMessage.ROLE_IS_EXISTED);
         }
         Role role = ConvertUtils.convert(req, Role.class);
@@ -64,7 +58,7 @@ public class RoleService {
         Role role = roleRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.ROLE_NOT_FOUND));
 
         boolean existByName = roleRepository.existsByNameAndRoleIdNot(roleDTO.getName(), id);
-        if(existByName){
+        if (existByName) {
             throw new CustomException(SystemMessage.ROLE_IS_EXISTED);
         }
         role.setName(roleDTO.getName());

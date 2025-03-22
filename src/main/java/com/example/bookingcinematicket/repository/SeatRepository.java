@@ -1,10 +1,12 @@
 package com.example.bookingcinematicket.repository;
 
-import com.example.bookingcinematicket.entity.Food;
-import com.example.bookingcinematicket.entity.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import com.example.bookingcinematicket.entity.Seat;
+
+import java.util.List;
 
 public interface SeatRepository extends JpaRepository<Seat, Long> {
     @Modifying

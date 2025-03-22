@@ -162,6 +162,8 @@ function setContentModal(modalType, callbackFunc, id) {
         btnCheckbox.prop('disabled', false);
 
         inputBId.val(item.roomId);
+        numRowsInput.value = item.rowNums;
+        numColsInput.value = item.colNums;
         inputName.val(item.name);
         inputRoomType.val(item.roomType);
         generateSeats(JSON.parse(item.seatMap));
@@ -171,6 +173,8 @@ function setContentModal(modalType, callbackFunc, id) {
         btnCheckbox.prop('disabled', true);
         inputBId.val('');
         inputName.val('');
+        numRowsInput.value = 6;
+        numColsInput.value = 8;
         generateSeats(null);
     }
     modalDialog.find('[id*="error"]').text('');
@@ -195,6 +199,8 @@ function getRoomInfo(type){
             roomType: inputRoomType.val(),
             status: type === 'add' ? true : btnCheckbox.prop("checked"),
             branchBranchId: branchId,
+            rowNums: numRowsInput.value,
+            colNums: numColsInput.value,
             seatMap: JSON.stringify(seatMap),
             capacity: seatMap.length
         }

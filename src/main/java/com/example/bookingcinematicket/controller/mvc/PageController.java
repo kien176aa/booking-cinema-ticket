@@ -17,18 +17,22 @@ public class PageController {
     public String getLayoutsPage() {
         return "layouts-without-menu";
     }
+
     @GetMapping("/layouts-without-navbar")
     public String getLayoutsWithoutNavbarPage() {
         return "layouts-without-navbar";
     }
+
     @GetMapping("/layouts-container")
     public String getLayoutsContainerPage() {
         return "layouts-container";
     }
+
     @GetMapping("/layouts-fluid")
     public String getLayoutsFluidPage() {
         return "layouts-fluid";
     }
+
     @GetMapping("/layouts-blank")
     public String getLayoutsBlankPage() {
         return "layouts-blank";
@@ -67,7 +71,7 @@ public class PageController {
     }
 
     // Components
-    @GetMapping("/cards")
+    @GetMapping("/cards-basic")
     public String getCardsPage() {
         return "cards-basic";
     }
@@ -222,5 +226,3 @@ public class PageController {
         return "https://demos.themeselection.com/materio-bootstrap-html-admin-template/documentation/";
     }
 }
-
-

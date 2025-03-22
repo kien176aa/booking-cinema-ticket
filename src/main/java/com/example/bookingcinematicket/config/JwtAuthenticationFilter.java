@@ -1,13 +1,14 @@
 package com.example.bookingcinematicket.config;
 
-import com.example.bookingcinematicket.config.jwt.JwtUtil;
-import com.example.bookingcinematicket.constants.SystemMessage;
-import com.example.bookingcinematicket.service.CustomUserDetailsService;
+import java.io.IOException;
+import java.util.*;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,13 +17,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.*;
+import com.example.bookingcinematicket.config.jwt.JwtUtil;
+import com.example.bookingcinematicket.constants.SystemMessage;
+import com.example.bookingcinematicket.service.CustomUserDetailsService;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
@@ -41,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if (jwtOptional.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
             String jwt = jwtOptional.get();
-            if(!jwtUtil.validateToken(jwt)){
+            if (!jwtUtil.validateToken(jwt)) {
                 Cookie jwtCookie = new Cookie(SystemMessage.KEY_COOKIE_JWT, "");
                 jwtCookie.setMaxAge(0);
                 jwtCookie.setPath("/");
@@ -54,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (email != null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                if(userDetails == null) {
+                if (userDetails == null) {
                     Cookie jwtCookie = new Cookie(SystemMessage.KEY_COOKIE_JWT, "");
                     jwtCookie.setMaxAge(0);
                     jwtCookie.setPath("/");
@@ -93,5 +96,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         return true;
     }
-
 }

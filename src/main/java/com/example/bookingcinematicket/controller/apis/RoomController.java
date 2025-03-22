@@ -1,15 +1,16 @@
 package com.example.bookingcinematicket.controller.apis;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.bookingcinematicket.dtos.RoomDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
 import com.example.bookingcinematicket.dtos.room.SearchRoomRequest;
 import com.example.bookingcinematicket.entity.Room;
 import com.example.bookingcinematicket.service.RoomService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/rooms")
@@ -18,7 +19,8 @@ public class RoomController {
     private RoomService roomService;
 
     @PostMapping("/search")
-    public SearchResponse<List<RoomDTO>> getAllRoomsByBranch(@RequestBody SearchRequest<SearchRoomRequest, Room> request) {
+    public SearchResponse<List<RoomDTO>> getAllRoomsByBranch(
+            @RequestBody SearchRequest<SearchRoomRequest, Room> request) {
         return roomService.getAllRoomsByBranch(request);
     }
 

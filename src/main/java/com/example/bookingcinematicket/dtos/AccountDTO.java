@@ -1,6 +1,5 @@
 package com.example.bookingcinematicket.dtos;
 
-
 import lombok.Data;
 
 @Data

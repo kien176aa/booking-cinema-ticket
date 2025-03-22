@@ -1,43 +1,40 @@
 package com.example.bookingcinematicket.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.bookingcinematicket.constants.SystemMessage;
-import com.example.bookingcinematicket.dtos.BranchDTO;
 import com.example.bookingcinematicket.dtos.RoomDTO;
-import com.example.bookingcinematicket.dtos.SeatDTO;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
 import com.example.bookingcinematicket.dtos.room.SearchRoomRequest;
 import com.example.bookingcinematicket.entity.Branch;
 import com.example.bookingcinematicket.entity.Room;
-import com.example.bookingcinematicket.entity.Seat;
-import com.example.bookingcinematicket.entity.SeatType;
 import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.BranchRepository;
 import com.example.bookingcinematicket.repository.RoomRepository;
 import com.example.bookingcinematicket.repository.SeatRepository;
 import com.example.bookingcinematicket.repository.SeatTypeRepository;
 import com.example.bookingcinematicket.utils.ConvertUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
+
     @Autowired
     private SeatRepository seatRepository;
+
     @Autowired
     private SeatTypeRepository seatTypeRepository;
+
     @Autowired
     private BranchRepository branchRepository;
 
@@ -47,8 +44,7 @@ public class RoomService {
                 request.getCondition().getName(),
                 request.getCondition().getBranchId(),
                 request.getCondition().getStatus(),
-                request.getPageable(Room.class)
-        );
+                request.getPageable(Room.class));
 
         SearchResponse<List<RoomDTO>> response = new SearchResponse<>();
         response.setData(ConvertUtils.convertList(rooms.getContent(), RoomDTO.class));
@@ -65,7 +61,8 @@ public class RoomService {
 
     @Transactional
     public RoomDTO createRoom(RoomDTO roomDTO) {
-        Branch branch = branchRepository.findById(roomDTO.getBranchBranchId())
+        Branch branch = branchRepository
+                .findById(roomDTO.getBranchBranchId())
                 .orElseThrow(() -> new CustomException(SystemMessage.BRANCH_NOT_FOUND));
 
         boolean exists = roomRepository.existsByNameAndBranch_BranchId(roomDTO.getName(), roomDTO.getBranchBranchId());
@@ -77,6 +74,8 @@ public class RoomService {
         room.setName(roomDTO.getName());
         room.setStatus(true);
         room.setRoomType(roomDTO.getRoomType());
+        room.setColNums(roomDTO.getColNums());
+        room.setRowNums(roomDTO.getRowNums());
         room.setCapacity(roomDTO.getCapacity());
         room.setSeatMap(roomDTO.getSeatMap());
         room.setBranch(branch);
@@ -98,6 +97,8 @@ public class RoomService {
         room.setSeatMap(roomDTO.getSeatMap());
         room.setName(roomDTO.getName());
         room.setCapacity(roomDTO.getCapacity());
+        room.setColNums(roomDTO.getColNums());
+        room.setRowNums(roomDTO.getRowNums());
         room.setRoomType(roomDTO.getRoomType());
         room.setStatus(roomDTO.getStatus());
         roomRepository.save(room);

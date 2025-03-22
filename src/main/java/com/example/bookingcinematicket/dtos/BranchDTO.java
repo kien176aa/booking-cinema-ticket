@@ -1,8 +1,6 @@
 package com.example.bookingcinematicket.dtos;
 
-
 import lombok.Data;
-import java.util.List;
 
 @Data
 public class BranchDTO {
@@ -11,5 +9,7 @@ public class BranchDTO {
     private String address;
     private String phone;
     private String email;
+    private String lat;
+    private String lng;
     private Boolean status;
 }
