@@ -422,7 +422,7 @@
                           </div>
                           <!-- /Search -->
                         </div>
-                        <div class="col-md-4 mt-4">
+                        <div class="col-md-3 mt-4">
                           <div class="form-floating form-floating-outline mb-6">
                             <select class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
 
@@ -431,9 +431,12 @@
                           </div>
                         </div>
                         <div class="col-md-3 text-end mt-4" >
+                          <button id="btnUpdatePrice" type="button" class="btn btn-lg btn-outline-primary">
+                            <span class="tf-icons ri-price-tag-3-fill ri-16px me-1_5"></span>Đổi Giá
+                          </button>
                           <button id="btnCreate2" type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal"
                                   data-bs-target="#largeModal2">
-                            <span class="tf-icons ri-edit-line ri-16px me-1_5"></span>Cập nhật
+                            <span class="tf-icons ri-edit-line ri-16px me-1_5"></span>Sửa
                           </button>
                         </div>
                       </div>
@@ -480,7 +483,7 @@
                             <th>Thời gian</th>
                             <th>Giá</th>
                             <th>Trạng thái</th>
-                            <th>Hành động</th>
+<!--                            <th>Hành động</th>-->
                           </tr>
                           </thead>
                           <tbody>
@@ -719,7 +722,31 @@
     </div>
   </div>
 
-
+  <!-- Modal Xác Nhận Xóa -->
+  <div class="modal fade" id="updatePriceModal" tabindex="-1" aria-labelledby="updatePriceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updatePriceModalLabel">Cập nhật giá</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="updatePriceList"></div>
+          <div class="mb-4">
+            <div class="form-floating form-floating-outline">
+              <input type="number" id="newPrice" class="form-control" placeholder="Nhập giá vé">
+              <label for="newPrice">Giá vé*</label>
+            </div>
+            <span id="newPrice-error"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="updatePrice()">Cập nhật</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Overlay -->
   <div class="layout-overlay layout-menu-toggle"></div>
 </div>

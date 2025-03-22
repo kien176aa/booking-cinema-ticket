@@ -90,7 +90,7 @@ public class PromotionService {
         promotion.setStartDate(promotionDTO.getStartDate());
         promotion.setEndDate(promotionDTO.getEndDate());
         promotion.setStatus(promotionDTO.getStatus());
-        promotion.setNumberOfItems(promotionDTO.getNumberOfItems());
+//        promotion.setNumberOfItems(promotionDTO.getNumberOfItems());
         promotionRepository.save(promotion);
         return ConvertUtils.convert(promotion, PromotionDTO.class);
     }

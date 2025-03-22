@@ -51,4 +51,7 @@ public class SystemMessage {
     public static final String BOOKING_PAYMENT_METHOD = "Stripe";
     public static final String TOTAL_AMOUNT_MUST_NOT_BE_NEGATIVE_NUMBER = "Tổng tiền phải >= 0";
     public static final String SEAT_IS_REQUIRED = "Thông tin ghế là bắt buộc";
+    public static final String PRICE_MUST_BE_POSITIVE = "Giá phải lớn hơn 0";
+    public static final String SHOW_TIME_IS_EXPIRED = "Suất chiếu đã hết thời gian";
+    public static final String SHOW_TIME_IS_EXPIRED_OR_SOLD_OUT = "Suất chiếu đã hết vé hoặc hết hạn";
 }

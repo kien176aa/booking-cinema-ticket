@@ -33,7 +33,7 @@ public class Promotion {
     private Double minPurchase;
     private Double maxDiscount;
     private Boolean status;
-    private Long numberOfItems;
+//    private Long numberOfItems;
 
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false)

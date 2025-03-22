@@ -32,6 +32,7 @@ public class ShowtimeDTO {
     private LocalDateTime endTime;
     private Double price;
     private String status;
+    private Boolean canEdit;
     private List<String> bookedSeat;
 
     public void validateInput() {

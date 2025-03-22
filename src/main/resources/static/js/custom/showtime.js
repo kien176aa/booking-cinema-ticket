@@ -1,6 +1,6 @@
 let searchText = '', branchId = null, startDate = null, endDate = null, currentPageIndex = 1, currentPageSize = 7;
 let status = null, roomId = null, rooms = [];
-let showtimes = [], branches = [], seatTypes = [], seats = [];
+let showtimes = [], branches = [], seatTypes = [], seats = [], selectedIds = [];
 let selectElement = $("#exampleFormControlSelect1");
 let showtimeArr = [];
 let inputPrice = $('#price');
@@ -25,6 +25,7 @@ function fetchShowtimes(req) {
             showtimes = response.data;
             currentPageIndex = response.pageIndex;
             checkboxAll.prop('checked', false);
+            selectedIds = [];
             if(response.data.length === 0){
                 tableBody.append(`<tr>
                                     <td colspan="5" class="text-center">Không có dữ liệu</td>
@@ -34,6 +35,7 @@ function fetchShowtimes(req) {
                     tableBody.append(renderTableRow(item));
                 });
             }
+            addCheckedEvent();
             renderPagination(response, '#showtime-pagination', changePageIndex);
             toggleLoading(false);
         },
@@ -123,24 +125,33 @@ function changePageIndex(totalRecords, newPage, pageSize){
 }
 
 function renderTableRow(item) {
+    let checkBox = `<input class="form-check-input" type="checkbox" id="inlineCheckbox-${item.showtimeId}" value="${item.showtimeId}" />`;
+    if(!item.canEdit)
+        checkBox = '';
     return `
         <tr id="showtime-tr-${item.showtimeId}">
             <td>
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox-${item.showtimeId}" value="${item.showtimeId}" />
+                ${checkBox}
             </td>
             <td>${item.roomName}</td>
             <td>${formatDate(item.startTime)} - ${formatDate(item.endTime)}</td>
             <td>${item.price}</td>
             <td>${item.status}</td>
-            <td>
-                <div class="dropdown">
-                    <button type="button" class="btn btn-warning" onclick="setContentModal('edit', editPromotion, '${item.showtimeId}')">
-                        <i class="ri-pencil-line me-1"></i> Cập nhật
-                    </button>
-                </div>
-            </td>
         </tr>
     `;
+}
+
+function addCheckedEvent(){
+    $('.form-check-input').on('change', function() {
+        const showtimeId = $(this).val();
+
+        if ($(this).prop('checked')) {
+            if(!isNaN(showtimeId))
+                selectedIds.push(showtimeId);
+        } else {
+            selectedIds = selectedIds.filter(id => id !== showtimeId);
+        }
+    });
 }
 
 function getBranchName(id){
@@ -185,7 +196,7 @@ function fetchShowtimesToModal(){
                 const startA = new Date(a.startTime);
                 const startB = new Date(b.startTime);
 
-                return startA - startB;
+                return startB - startA;
             }).forEach(show => {
                 let startTime = new Date(show.startTime).toTimeString().substring(0, 5);
                 let endTime = new Date(show.endTime).toTimeString().substring(0, 5);
@@ -241,7 +252,13 @@ function generateShowtimesData() {
     let startTime = $("#startTime").val();
 
     if (!showCount || !movieDuration || !startTime || !startDate || !endDate) {
-        alert("Vui lòng nhập đầy đủ thông tin");
+        showErrorToast("Vui lòng nhập đầy đủ thông tin");
+        return;
+    }
+    let currentDate = new Date();
+
+    if (startDate.getTime() < currentDate.getTime()) {
+        showErrorToast("Suất chiếu không thể trước thời gian hiện tại");
         return;
     }
 
@@ -254,7 +271,9 @@ function generateShowtimesData() {
 
         for (let i = 0; i < showCount; i++) {
             let endTime = new Date(currentTime.getTime() + totalDuration * 60000);
-
+            if (endTime.getDate() !== currentTime.getDate()) {
+                break;
+            }
             showtimesData.push({
                 id: crypto.randomUUID(),
                 startDate: date.toISOString().split('T')[0],
@@ -290,32 +309,47 @@ function updateShowDate(oldDate, newDate, inputElement) {
 }
 
 function addNewDateShowTime() {
-    let newDate = new Date();
-    let showCount = parseInt($("#showCount").val());
+    // let showCount = parseInt($("#showCount").val());
     let movieDuration = parseInt($("#movieDuration").val());
     let startDate = new Date($("#showDate").val());
     let endDate = new Date($("#endDate").val());
     let startTime = $("#startTime").val();
 
+    if (!movieDuration || !startTime || !startDate || !endDate) {
+        showErrorToast("Vui lòng nhập đầy đủ thông tin");
+        return;
+    }
+
+    let currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Reset giờ về 00:00:00
+    console.log('cur', currentDate);
+
+    let newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + 1); // Set ngày mới là ngày hôm sau
+    console.log('new ', newDate);
+
     if (showtimesData && showtimesData.length > 0) {
         let maxDate = null;
+
         showtimesData.forEach(item => {
             if (!maxDate || new Date(maxDate) < new Date(item.startDate)) {
                 maxDate = item.startDate;
             }
         });
-        newDate = new Date(maxDate);
-        newDate.setDate(newDate.getDate() + 1);
-    } else if (!showCount || !movieDuration || !startTime || !startDate || !endDate) {
-        alert("Vui lòng nhập đầy đủ thông tin");
-        return;
-    }
 
-    let formattedDate = newDate.toISOString().split('T')[0];
+        let maxDateObj = new Date(maxDate);
+        if (maxDateObj >= currentDate) {
+            console.log('1');
+            newDate = new Date(maxDateObj);
+            newDate.setDate(newDate.getDate() + 1);
+        }
+        console.log('2', newDate);
+    }
+    let formattedDate = newDate.toLocaleDateString("en-CA");
+    console.log('forr', formattedDate);
+
     addShowtime(formattedDate);
 }
-
-
 
 function addShowtime(date) {
     let lastShow = showtimesData
@@ -328,6 +362,10 @@ function addShowtime(date) {
     let duration = Number($('#movieDuration').val()) + 20;
     let newEndTime = calculateEndTime(newStartTime, duration);
 
+    if (!newEndTime) {
+        showErrorToast("Không thể thêm suất chiếu vì thời gian kết thúc vượt quá ngày hiện tại.");
+        return;
+    }
     let newShowtime = {
         id: crypto.randomUUID(),
         startDate: date,
@@ -335,12 +373,23 @@ function addShowtime(date) {
         endTime: newEndTime
     };
 
-    showtimesData.push(newShowtime);
+    showtimesData.unshift(newShowtime);
     renderShowtimes();
 }
 
 function calculateEndTime(startTime, duration) {
     let [hours, minutes] = startTime.split(":").map(Number);
+    let endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    let startDate = new Date();
+    startDate.setHours(hours, minutes, 0, 0);
+
+    let timeLeftInMinutes = (endOfDay - startDate) / 60000;
+
+    if (timeLeftInMinutes < duration) {
+        return false;
+    }
     let endMinutes = minutes + duration;
     let endHours = hours + Math.floor(endMinutes / 60);
     endMinutes = endMinutes % 60;
@@ -359,17 +408,24 @@ function renderShowtimes() {
     }, {});
 
     let uniqueDates = new Set([...Object.keys(groupedByDate), ...showtimesData.map(s => s.startDate)]);
-
+    let currentDate = new Date();
+    let formattedCurrentDate = currentDate.toISOString().split('T')[0];
     uniqueDates.forEach(date => {
+        let divEdit = `<div class="col-md-2 d-flex align-items-center">
+                <i style="cursor: pointer; font-size: 20px" class="ri-add-circle-line me-2 ms-2 text-primary" onclick="addShowtime('${date}')"></i>
+                <i style="cursor: pointer; font-size: 20px" class="ri-close-circle-line text-danger" onclick="confirmDelete('day', '${date}')"></i>
+            </div>`;
+        let inputDate = `<input type="date" class="form-control showTimeDate" value="${date}" data-old-date="${date}">`;
+        if(formattedCurrentDate > date){
+            divEdit = '';
+            inputDate = `<input type="date" disabled="disabled" class="form-control showTimeDate" value="${date}" data-old-date="${date}">`;
+        }
         let dayBlock = $(`
           <div class="day-block mt-2 row">
             <div class="col-md-4">
-                <input type="date" class="form-control showTimeDate" value="${date}" data-old-date="${date}">
+                ${inputDate}
             </div>
-            <div class="col-md-2 d-flex align-items-center">
-                <i style="cursor: pointer; font-size: 20px" class="ri-add-circle-line me-2 ms-2 text-primary" onclick="addShowtime('${date}')"></i>
-                <i style="cursor: pointer; font-size: 20px" class="ri-close-circle-line text-danger" onclick="confirmDelete('day', '${date}')"></i>
-            </div>
+            ${divEdit}
             <div id="day-${date}"></div>
             <div class="divider"></div>
           </div>
@@ -382,20 +438,26 @@ function renderShowtimes() {
         });
 
         (groupedByDate[date] || []).forEach(show => {
+            let disableAttr = ``;
+            let deleteIcon = `<i style="cursor: pointer" class="ri-close-circle-line text-danger" onclick="confirmDelete('showtime', '${show.id}')"></i>`;
+            if(formattedCurrentDate > date){
+                disableAttr = `disabled="disabled"`;
+                deleteIcon = ``;
+            }
             let showtimeInput = $(`
               <div class="row mt-3" id="show-${show.id}">
                 <input type="date" class="form-control" hidden="hidden" value="${date}" data-show-id="${show.id}" data-date="${date}">
                 <div class="col-md-5">
-                  <input type="time" class="form-control" value="${show.startTime}" data-show-id="${show.id}">
+                  <input type="time" class="form-control" ${disableAttr} value="${show.startTime}" data-show-id="${show.id}">
                 </div>
                 <div class="col-md-5">
-                  <input type="time" class="form-control" value="${show.endTime}" data-show-id="${show.id}">
+                  <input type="time" class="form-control" ${disableAttr} value="${show.endTime}" data-show-id="${show.id}">
                 </div>
                 <div class="col-md-2 d-flex align-items-center justify-content-center">
                     <span style="margin-right: 10px" id="minutes-${show.id}">
                         ${calculateMinutesBetween(show.startTime, show.endTime)} phút
                     </span>
-                    <i style="cursor: pointer" class="ri-close-circle-line text-danger" onclick="confirmDelete('showtime', '${show.id}')"></i>
+                    ${deleteIcon}
                 </div>
                 <span class="text-danger" id="overlapMessage-${show.id}"></span>
               </div>
@@ -582,39 +644,63 @@ function updateShowtime(){
     });
 }
 
-function editPromotion(){
-    toggleLoading(true);
-    const req = getShowtimeInfo('edit');
-    console.log('edit', req);
-    if(!req) {
-        toggleLoading(false);
+function showUpdatePriceModal(){
+    if(!selectedIds || selectedIds.length === 0){
+        showErrorToast('Vui lòng chọn ít nhất một suất chiếu');
         return;
     }
+    $('#updatePriceList').empty();
+    $('#newPrice').val('');
+    $('#newPrice-error').text('');
+    selectedIds.forEach(id => {
+       let s = showtimes.find(item => item.showtimeId == id);
+       if(s){
+           $('#updatePriceList').append(`
+                <p>${s.roomName}: ${formatTime(s.startTime)} ~ ${formatTime(s.endTime)} · ${formatDateWithoutHour(s.startTime)}</p>
+           `);
+       }
+    });
+
+    $('#updatePriceModal').modal('show');
+}
+function updatePrice(){
+    let isValid = isPositiveNumber('#newPrice', 'Giá mới');
+    if(!isValid)
+        return;
+    let price = $('#newPrice').val();
+    toggleLoading(true);
     $.ajax({
-        url: `/promotions/${req.promotionId}`,
+        url: "/showtimes/update-price",
         type: "PUT",
         contentType: "application/json",
-        data: JSON.stringify(req),
+        data: JSON.stringify({ ids: selectedIds, price: price }),
         success: function(response) {
             console.log('response: ', response);
-            modalDialog2.modal('hide');
-            showSuccessToast('Dữ liệu đã được lưu thành công!');
+            $('#updatePriceModal').modal('hide');
+            showSuccessToast('Cập nhật giá suất chiếu thành công');
             fetchShowtimes({condition: {
-                    name: searchText,
+                    status: searchText,
                     branchId: branchId,
                     roomId: roomId === '-1' ? null : roomId,
                     movieId: movieId,
                     startTime: startDate,
                     endTime: endDate
-                }, pageSize: currentPageSize, pageIndex: currentPageIndex});
+                }, pageSize: currentPageSize, pageIndex: 1});
+            toggleLoading(false);
         },
         error: function(error) {
-            console.error("Error fetching branches:", error);
+            console.error("Error update price:", error);
             showErrorToast(error.responseText);
             toggleLoading(false);
         }
     });
 }
+
+function formatTime(dateTime) {
+    const date = new Date(dateTime);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 $(document).ready(function() {
     $('#button-addon22').on('click', function() {
         searchText = $('.form-control').val().trim();
@@ -631,6 +717,10 @@ $(document).ready(function() {
         setContentModal('add', updateShowtime);
     });
 
+    $('#btnUpdatePrice').on('click', function () {
+       showUpdatePriceModal();
+    });
+
     $('#createSingleBtn').on('click', function () {
         addNewDateShowTime();
     });
@@ -638,6 +728,16 @@ $(document).ready(function() {
     checkboxAll.on('change', function () {
         let checked = $(this).prop('checked');
         $('[id^="inlineCheckbox-"]').prop('checked', checked);
+        selectedIds = [];
+        if (checked) {
+            $('[id^="inlineCheckbox-"]:checked').each(function() {
+                let value = $(this).val();
+                if (!isNaN(value)) {
+                    selectedIds.push(value);
+                }
+            });
+        }
+        console.log('selectedIds ', selectedIds);
     });
 
     roomSelectModal.on('change', function () {

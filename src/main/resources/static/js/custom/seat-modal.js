@@ -609,7 +609,7 @@ function showPayModal(selectedFoods) {
         }
 
         try {
-            const response = await fetch(`/payment/create?amount=${amountToCharge*1000}`, {
+            const response = await fetch(`/payment/create?amount=${amountToCharge}&showtimeId=${selectShowtime?.showtimeId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

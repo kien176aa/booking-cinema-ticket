@@ -79,7 +79,6 @@ public class FoodService {
         }
         food.setFoodName(dto.getFoodName());
         food.setPrice(dto.getPrice());
-        food.setQuantity(dto.getQuantity());
         food.setStatus(dto.getStatus());
         foodRepository.save(food);
         return ConvertUtils.convert(food, FoodDTO.class);

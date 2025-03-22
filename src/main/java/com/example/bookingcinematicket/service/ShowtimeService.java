@@ -1,10 +1,12 @@
 package com.example.bookingcinematicket.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.bookingcinematicket.dtos.showtime.UpdatePriceRequest;
 import com.example.bookingcinematicket.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,7 +54,15 @@ public class ShowtimeService {
                 request.getCondition().getStatus(),
                 request.getPageable(Showtime.class));
         SearchResponse<List<ShowtimeDTO>> response = new SearchResponse<>();
-        response.setData(ConvertUtils.convertList(showtimes.getContent(), ShowtimeDTO.class));
+//        response.setData(ConvertUtils.convertList(showtimes.getContent(), ShowtimeDTO.class));
+        List<ShowtimeDTO> dtos = new ArrayList<>();
+        for (Showtime showtime : showtimes) {
+            ShowtimeDTO dto = ConvertUtils.convert(showtime, ShowtimeDTO.class);
+            dto.setCanEdit(!SystemMessage.SHOW_TIME_STATUS_SOLD_OUT.equals(showtime.getStatus())
+                    && !LocalDateTime.now().isAfter(showtime.getStartTime()));
+            dtos.add(dto);
+        }
+        response.setData(dtos);
         response.setPageSize(request.getPageSize());
         response.setPageIndex(request.getPageIndex());
         response.setTotalRecords(showtimes.getTotalElements());
@@ -79,6 +89,9 @@ public class ShowtimeService {
         StringBuilder errors = new StringBuilder();
         int count = 1;
         for (ShowtimeDTO dto : request.getShowtimeDTOs()) {
+            if(LocalDateTime.now().isAfter(dto.getStartTime())){
+                continue;
+            }
             List<Showtime> existed = showtimeRepository.findOverlappingShowtimes(
                     branch.getBranchId(), room.getRoomId(), movie.getMovieId(), dto.getStartTime(), dto.getEndTime());
             if (existed != null && existed.size() > 0) {
@@ -106,7 +119,8 @@ public class ShowtimeService {
             if (showtime.getStatus() == null) showtime.setStatus(dto.getStatus());
             showtime.setStartTime(dto.getStartTime());
             showtime.setEndTime(dto.getEndTime());
-            showtime.setPrice(dto.getPrice());
+            if(showtime.getPrice() == null || showtime.getPrice() == 0)
+                showtime.setPrice(dto.getPrice());
             showtimes.add(showtime);
         }
         if (!errors.isEmpty()) throw new CustomException(errors.toString());
@@ -146,5 +160,15 @@ public class ShowtimeService {
         List<String> bookedSeat = ticketRepository.findBookedSeat(dto.getShowtimeId());
         dto.setBookedSeat(bookedSeat);
         return dto;
+    }
+
+    @Transactional
+    public void updatePrice(UpdatePriceRequest req){
+        req.validateInput();
+        List<Showtime> showtimes = showtimeRepository.findByIds(req.getIds());
+        showtimes.forEach(item -> {
+            item.setPrice(req.getPrice());
+        });
+        showtimeRepository.saveAll(showtimes);
     }
 }

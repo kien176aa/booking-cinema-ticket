@@ -22,6 +22,5 @@ public class Food {
     private String foodName;
     private Double price;
     private String image;
-    private Integer quantity;
     private Boolean status;
 }

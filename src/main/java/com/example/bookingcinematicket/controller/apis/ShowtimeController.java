@@ -2,7 +2,9 @@ package com.example.bookingcinematicket.controller.apis;
 
 import java.util.List;
 
+import com.example.bookingcinematicket.dtos.PromotionDTO;
 import com.example.bookingcinematicket.dtos.RoomDTO;
+import com.example.bookingcinematicket.dtos.showtime.UpdatePriceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +36,10 @@ public class ShowtimeController {
     @PutMapping("/update")
     public void update(@RequestBody UpdateShowtimeRequest request) {
         showtimeService.updateShowtime(request);
+    }
+
+    @PutMapping("/update-price")
+    public void updatePrice(@RequestBody UpdatePriceRequest request) {
+        showtimeService.updatePrice(request);
     }
 }

@@ -57,7 +57,6 @@ function renderTableRow(item) {
             </td>
             <td>${item.foodName}</td>
             <td>${item.price}</td>
-            <td>${item.quantity}</td>
             <td>
                 <span class="badge rounded-pill ${item.status ? 'bg-label-primary' : 'bg-label-warning'} me-1">
                     ${item.status ? 'Đang bán' : 'Dừng bán'}
@@ -86,7 +85,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputName.val(item.foodName);
         defaultImg.val(item.image ? item.image : defaultImgUrl);
         inputPrice.val(item.price);
-        inputQuantity.val(item.quantity);
+        // inputQuantity.val(item.quantity);
         previewImg.attr("src", item.image ? item.image : defaultImgUrl).show();
     } else {
         $('#exampleModalLabel3').text('Tạo mới đồ ăn/uống');
@@ -96,7 +95,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputName.val('');
         defaultImg.val(defaultImgUrl);
         inputPrice.val('');
-        inputQuantity.val('');
+        // inputQuantity.val('');
         previewImg.attr("src", defaultImg.val()).show();
     }
     modalDialog.find('[id*="error"]').text('');
@@ -114,7 +113,7 @@ function setContentModal(modalType, callbackFunc, id) {
 function getFoodInfo(type){
     let isValid = hasValue('#nameLarge', 'Tên đồ ăn/uống') && checkLength('#nameLarge', 'Tên đồ ăn/uống', 0, 255);
     isValid = hasValue('#price', 'Giá đồ ăn/uống') && isPositiveNumber('#price', 'Giá đồ ăn/uống') && isValid;
-    isValid = hasValue('#quantity', 'Số lượng') && isPositiveNumber('#quantity', 'Số lượng') && isValid;
+    // isValid = hasValue('#quantity', 'Số lượng') && isPositiveNumber('#quantity', 'Số lượng') && isValid;
     if(isValid) {
         let fileInput = inputImg[0].files[0];
         let formData = new FormData();
@@ -122,7 +121,7 @@ function getFoodInfo(type){
             formData.append("foodId", inputBId.val());
         formData.append("foodName", inputName.val());
         formData.append("price", inputPrice.val());
-        formData.append("quantity", inputQuantity.val());
+        // formData.append("quantity", inputQuantity.val());
         formData.append("status", type === 'add' ? true : btnCheckbox.prop("checked"));
         if (fileInput) {
             console.log('have image file', fileInput);

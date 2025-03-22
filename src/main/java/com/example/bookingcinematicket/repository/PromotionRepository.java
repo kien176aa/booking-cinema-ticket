@@ -35,6 +35,6 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
 
     boolean existsByTitleAndBranch_BranchIdAndPromotionIdNot(String title, Long branchBranchId, Long id);
     @Query("SELECT p FROM Promotion p WHERE p.startDate <= CURRENT_TIMESTAMP AND p.endDate > CURRENT_TIMESTAMP AND p.minPurchase <= :price " +
-            "and p.status = true and p.numberOfItems > 0 ")
+            "and p.status = true ")
     List<Promotion> getCurrentPromotions(Double price);
 }

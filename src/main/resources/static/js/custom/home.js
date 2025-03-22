@@ -128,29 +128,43 @@ function loadShowtimes(date) {
 
             Object.values(grouped).forEach(group => {
                 html += `
-                <div class="d-flex mb-4 showtime-block">
-                    <img src="${group.posterUrl || commonDefaultImgUrl}" 
-                        class="me-3 rounded" width="100" alt="Poster">
-                    <div>
-                        <h5>${group.movieTitle}</h5>
-                        <p class="small text-muted mb-2">${group.branchName}</p>
-                        <div style="overflow-y: auto; max-height: 100px" class="d-flex flex-wrap gap-2">`;
+    <div class="d-flex mb-4 showtime-block">
+        <img src="${group.posterUrl || commonDefaultImgUrl}" 
+            class="me-3 rounded" width="100" height="160" alt="Poster">
+        <div>
+            <h5>${group.movieTitle}</h5>`;
 
+                // Nhóm các showtimes theo roomName
+                const showtimesByRoom = {};
                 group.showtimes.forEach(s => {
-                    html += `<button data-showtime-id="${s.showtimeId}" 
-        class="btn btn-outline-primary btn-sm book-seat d-flex align-items-center shadow-sm"
-        style="border-radius: 8px; padding: 8px 14px; transition: all 0.3s ease-in-out;">
-            <span class="bg-secondary text-white px-2 py-1 rounded me-2 small">${s.roomName}</span> 
-            ${formatTime(s.startTime)} ~ ${formatTime(s.endTime)}
-        </button>`;
+                    if (!showtimesByRoom[s.roomName]) {
+                        showtimesByRoom[s.roomName] = [];
+                    }
+                    showtimesByRoom[s.roomName].push(s);
                 });
 
+                html += `<div class="d-flex flex-wrap gap-3">`;
 
-                html += `
-                        </div>
-                    </div>
-                </div>`;
+                // Duyệt qua từng roomName và render các showtimes tương ứng
+                Object.entries(showtimesByRoom).forEach(([roomName, showtimes]) => {
+                    html += `
+        <div>
+            <span class="fw-bold px-2 py-1 mb-4">${roomName}</span>
+            <div class="d-flex flex-wrap gap-2 mt-2">`;
+
+                    showtimes.forEach(s => {
+                        html += `<button data-showtime-id="${s.showtimeId}"
+                        class="btn btn-outline-primary btn-sm book-seat">
+                ${formatTime(s.startTime)} ~ ${formatTime(s.endTime)}
+            </button>`;
+                    });
+
+                    html += `</div></div>`;
+                });
+
+                html += `</div></div></div>`;
             });
+
         }
 
         $('#showtime-container').html(html);

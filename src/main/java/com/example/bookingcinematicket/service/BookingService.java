@@ -40,6 +40,9 @@ public class BookingService {
         bookingRepository.save(booking);
         Room room = getRoomById(req.getTickets().get(0).getRoomId());
         Showtime showtime = getShowtimeById(req.getTickets().get(0).getShowtimeId());
+        if(LocalDateTime.now().isAfter(showtime.getStartTime())){
+            throw new CustomException(SystemMessage.SHOW_TIME_IS_EXPIRED);
+        }
         for (TicketDTO t : req.getTickets()) {
             saveSeatAndTicketInfo(t, room, showtime, booking);
         }

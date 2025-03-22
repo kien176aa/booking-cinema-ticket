@@ -137,7 +137,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputEndDate.val(item.endDate);
         inputMinPurchase.val(item.minPurchase);
         // inputMaxDiscount.val(item.maxDiscount);
-        inputNumberOfItems.val(item.numberOfItems);
+        // inputNumberOfItems.val(item.numberOfItems);
     } else {
         $('#exampleModalLabel3').text('Tạo mới khuyến mãi - Chi nhánh: ' + getBranchName(branchId));
         inputStatus.prop('checked', true);
@@ -151,7 +151,7 @@ function setContentModal(modalType, callbackFunc, id) {
         inputEndDate.val(new Date());
         inputMinPurchase.val('');
         // inputMaxDiscount.val('');
-        inputNumberOfItems.val(10);
+        // inputNumberOfItems.val(10);
     }
     modalDialog.find('[id*="error"]').text('');
 
@@ -199,7 +199,7 @@ function getPromotionInfo(type) {
         && checkValidStartAndEndDate('#startDate', '#endDate', 'Ngày bắt đầu', 'Ngày kết thúc') && isValid;
     isValid = hasValue('#minPurchase', 'Giá trị đơn hàng tối thiểu') && isPositiveNumber('#minPurchase', 'Giá trị đơn hàng tối thiểu')
         && checkValidMinPurchase() && isValid;
-    isValid = isPositiveNumber('#numberOfItems', 'Số lượng vé áp dụng') && isValid;
+    // isValid = isPositiveNumber('#numberOfItems', 'Số lượng vé áp dụng') && isValid;
     isValid = checkLength('#description', 'Mô tả', 0, 255) && isValid;
 
     if (isValid) {
@@ -213,7 +213,7 @@ function getPromotionInfo(type) {
             endDate: inputEndDate.val(),
             minPurchase: parseFloat(inputMinPurchase.val()) || null,
             // maxDiscount: parseFloat(inputMaxDiscount.val()) || 0,
-            numberOfItems: parseInt(inputNumberOfItems.val()) || null,
+            // numberOfItems: parseInt(inputNumberOfItems.val()) || null,
             status: inputStatus.is(":checked"),
             branchBranchId: branchId
         };
