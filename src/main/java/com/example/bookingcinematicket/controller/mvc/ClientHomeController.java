@@ -25,4 +25,11 @@ public class ClientHomeController extends BaseController {
         model.addAttribute("account", account);
         return "page/home-page";
     }
+
+    @GetMapping("/my-booking")
+    public String viewMyBooking(Model model) {
+        Account account = getCurrentUser();
+        model.addAttribute("account", account);
+        return "page/my-booking";
+    }
 }

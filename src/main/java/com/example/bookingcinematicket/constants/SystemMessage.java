@@ -54,4 +54,5 @@ public class SystemMessage {
     public static final String PRICE_MUST_BE_POSITIVE = "Giá phải lớn hơn 0";
     public static final String SHOW_TIME_IS_EXPIRED = "Suất chiếu đã hết thời gian";
     public static final String SHOW_TIME_IS_EXPIRED_OR_SOLD_OUT = "Suất chiếu đã hết vé hoặc hết hạn";
+    public static final String RATING_IS_REQUIRED = "Đánh giá là bắt buộc";
 }

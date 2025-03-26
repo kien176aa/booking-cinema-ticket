@@ -41,6 +41,9 @@ public class MovieService {
     private MoviePersonRepository moviePersonRepository;
 
     @Autowired
+    private RatingRepository ratingRepository;
+
+    @Autowired
     private ImgurService imgurService;
 
     @Autowired
@@ -192,5 +195,50 @@ public class MovieService {
     public List<Movie> getTopMovie() {
          PageRequest pageRequest = PageRequest.of(0, 20);
         return movieRepository.findTopMovie(pageRequest);
+    }
+
+    public float ratingMovie(Long movieId, Integer rating, Account currentUser) {
+        if(movieId == null){
+            throw new CustomException(SystemMessage.MOVIE_IS_REQUIRED);
+        }
+        if(rating == null || rating <= 0){
+            throw new CustomException(SystemMessage.RATING_IS_REQUIRED);
+        }
+        Movie movie = movieRepository.findById(movieId).orElseThrow(
+                () -> new CustomException(SystemMessage.MOVIE_NOT_FOUND)
+        );
+        Rating r = null;
+        float total = 0f;
+        int num = 0;
+        if(movie.getRatings() != null){
+            for (Rating item : movie.getRatings()) {
+                if (item.getAccount().getAccountId().equals(currentUser.getAccountId())
+                        && item.getMovie().getMovieId().equals(movieId)) {
+                    r = item;
+                } else {
+                    total += item.getRating();
+                }
+            }
+            num = movie.getRatings().size();
+        }
+        if(r == null){
+            r = new Rating();
+            r.setMovie(movie);
+            r.setAccount(currentUser);
+            num++;
+        }
+        total += rating;
+        r.setRating(rating);
+        ratingRepository.save(r);
+        movie.setRating((float)Math.ceil(total / (float)num));
+        movieRepository.save(movie);
+        return movie.getRating();
+    }
+
+    public List<Movie> findTop5MovieSameGenre(Long movieId, String genre){
+        List<Movie> movies = movieRepository.findTop5MovieSameGenre(genre, movieId);
+        if (movies == null)
+            movies = new ArrayList<>();
+        return movies;
     }
 }

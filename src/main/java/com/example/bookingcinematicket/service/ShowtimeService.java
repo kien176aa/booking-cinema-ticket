@@ -143,13 +143,13 @@ public class ShowtimeService {
         return roomRepository.findById(roomId).orElseThrow(() -> new CustomException(SystemMessage.ROOM_NOT_FOUND));
     }
 
-    public List<Showtime> getShowtimesByDate(LocalDate date, Long branchId) {
+    public List<Showtime> getShowtimesByDate(LocalDate date, Long branchId, Long movieId) {
         if(branchId == null)
             throw new CustomException(SystemMessage.BRANCH_IS_REQUIRED);
         if (date == null) {
             date = LocalDate.now();
         }
-        return showtimeRepository.findShowtimesByDate(date, branchId);
+        return showtimeRepository.findShowtimesByDate(date, branchId, movieId);
     }
 
     public ShowtimeDTO getById(Long id) {

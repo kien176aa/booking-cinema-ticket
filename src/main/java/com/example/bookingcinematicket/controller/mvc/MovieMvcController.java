@@ -1,5 +1,6 @@
 package com.example.bookingcinematicket.controller.mvc;
 
+import com.example.bookingcinematicket.entity.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,5 +43,35 @@ public class MovieMvcController extends BaseController {
             log.error(e.getMessage());
             return "not-found-error";
         }
+    }
+
+    @GetMapping("/movie/{id}")
+    public String viewClientDetailsPage(@PathVariable Long id, Model model) {
+        try {
+            Movie movie = movieService.getByIdMvc(id);
+            Account account = getCurrentUser();
+            model.addAttribute("account", account);
+            String yourRating = "Bạn chưa đánh giá cho bộ phim này.";
+            if(movie.getRatings() != null){
+                Rating rating = movie.getRatings().stream().filter(
+                        item -> item.getMovie().getMovieId().equals(id)
+                            && item.getAccount().getAccountId().equals(getCurrentUser().getAccountId())
+                ).findFirst().orElse(null);
+                if(rating != null)
+                    yourRating = "Bạn đã đánh giá " + rating.getRating() + " sao.";
+            }
+            model.addAttribute("yourRating", yourRating);
+            model.addAttribute("movie", movie);
+            model.addAttribute("movies", movieService.findTop5MovieSameGenre(movie.getMovieId(), movie.getGenre()));
+            return "page/client-movie-detail";
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return "not-found-error";
+        }
+    }
+
+    @GetMapping("/movie-list")
+    public String viewMovieList(Model model){
+        return "page/movie-list";
     }
 }

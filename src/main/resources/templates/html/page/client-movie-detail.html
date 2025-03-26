@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mua vé xem phim Online</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/css/custom/home.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico"/>
+  <link rel="stylesheet" href="/assets/vendor/fonts/remixicon/remixicon.css"/>
+  <link rel="stylesheet" href="/assets/css/custom/loading.css"/>
+  <link rel="stylesheet" href="/assets/css/custom/seat-modal.css"/>
+  <link rel="stylesheet" href="/assets/css/custom/client-movie-detail.css"/>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="/assets/img/logo2.png" alt="MoMo" width="85" height="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Đặt vé xem phim</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Lịch chiếu</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Rạp chiếu</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Review phim</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Top phim</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<input th:value="${movie.movieId}" hidden="hidden" id="movieId">
+<input th:value="${movie.rating}" hidden="hidden" id="mRating">
+<div class="movie-detail-section">
+  <div class="container movie-detail-content">
+    <div class="row">
+      <!-- Poster -->
+      <div class="col-md-4 mb-4 mb-md-0 text-end">
+        <div class="poster-container">
+          <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/assets/img/empty_img.jfif'}"
+               alt="Poster"
+               class="movie-poster"
+               style="width: 250px; height: 360px;">
+          <button class="btn-play" data-bs-toggle="modal" data-bs-target="#trailerModal">
+            ▶
+          </button>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="col-md-8">
+        <h2 class="mb-3" th:text="${movie.title}"></h2>
+        <p><em th:text="${movie.releaseDate.Year + ' · ' + movie.duration + ' phút'}"></em></p>
+        <div id="rating" class="d-flex">
+          <i class="ri-star-smile-line" data-value="1"></i>
+          <i class="ri-star-smile-line" data-value="2"></i>
+          <i class="ri-star-smile-line" data-value="3"></i>
+          <i class="ri-star-smile-line" data-value="4"></i>
+          <i class="ri-star-smile-line" data-value="5"></i>
+        </div>
+        <p style="font-size: x-small" id="rating-output" th:text="${yourRating}"></p>
+        <h5 class="mt-4">Nội dung</h5>
+        <span id="description" class="truncate" th:text="${movie.description}"></span>
+        <span id="toggle" class="toggle-link">Xem thêm</span>
+
+        <p style="margin-top: 10px"><strong>Ngày chiếu:</strong> <span id="releaseDateSpan" th:text="${movie.releaseDate}"></span></p>
+        <p><strong>Thể loại:</strong> <span th:text="${movie.genre}"></span></p>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#trailerModal">Xem trailer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="movie-schedule__container container my-4" id="carousel-container"></div>
+
+<div class="movie-schedule__container container my-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold movie-schedule__title" th:text="${'Lịch chiếu ' + movie.title}"></h4>
+    <div class="d-flex gap-2">
+      <div id="branchDropdown" class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle movie-schedule__location-btn" type="button" data-bs-toggle="dropdown">
+          <i class="fas fa-map-marker-alt me-1"></i> Hà Nội
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Hồ Chí Minh</a></li>
+          <li><a class="dropdown-item" href="#">Đà Nẵng</a></li>
+          <li><a class="dropdown-item" href="#">Cần Thơ</a></li>
+          <li><a class="dropdown-item" href="#">Hải Phòng</a></li>
+        </ul>
+      </div>
+      <button id="btn-nearby" class="btn btn-outline-danger movie-schedule__near-me-btn">
+        <i class="fas fa-location-arrow"></i> Gần bạn
+      </button>
+    </div>
+  </div>
+
+  <!-- Date Carousel -->
+  <div class="movie-schedule__date-carousel position-relative mb-4">
+    <div class="movie-schedule__carousel-inner">
+      <div class="movie-schedule__date-item active">
+        <div><strong>23</strong></div>
+        <small>Hôm nay</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>24</strong></div>
+        <small>Thứ 2</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>25</strong></div>
+        <small>Thứ 3</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>26</strong></div>
+        <small>Thứ 4</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>27</strong></div>
+        <small>Thứ 5</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>28</strong></div>
+        <small>Thứ 6</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>29</strong></div>
+        <small>Thứ 7</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>30</strong></div>
+        <small>CN</small>
+      </div>
+      <div class="movie-schedule__date-item">
+        <div><strong>31</strong></div>
+        <small>Thứ 2</small>
+      </div>
+    </div>
+    <button class="movie-schedule__carousel-control movie-schedule__carousel-control-prev" type="button" id="dateCarouselPrev">
+      <i class="ri-arrow-left-line"></i>
+    </button>
+    <button class="movie-schedule__carousel-control movie-schedule__carousel-control-next" type="button" id="dateCarouselNext">
+      <i class="ri-arrow-right-line"></i>
+    </button>
+  </div>
+
+  <!-- Showtime section -->
+  <div class="row">
+    <div class="mb-3">
+      <i style="font-size: 30px" class="ri-map-pin-2-line me-2"></i>
+      <span id="branchAddress">Hà nội</span>
+    </div>
+    <div id="showtime-container" class="col-lg-8">
+<!--      <div class="movie-schedule__cinema-item">-->
+<!--        <div class="movie-schedule__cinema-name">-->
+<!--          <img src="/assets/img/empty_img.jfif" alt="Beta" width="30" height="30">-->
+<!--          <h6 class="fw-bold mb-0">Beta Xuân Thủy</h6>-->
+<!--        </div>-->
+<!--        <p class="movie-schedule__cinema-address">Tầng 4 - AEON Xuân Thủy - Mipec Building, số 122 - 124 Xuân Thủy, Cầu Giấy, Hà Nội</p>-->
+<!--        <div class="movie-schedule__showtime-category">2D Phụ đề</div>-->
+<!--        <div>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>18:45 ~ 20:27</span>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>19:30 ~ 21:12</span>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>20:15 ~ 21:57</span>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>23:00 ~ 00:42</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="movie-schedule__cinema-item">-->
+<!--        <div class="movie-schedule__cinema-name">-->
+<!--          <img src="/assets/img/empty_img.jfif" alt="CGV" width="30" height="30">-->
+<!--          <h6 class="fw-bold mb-0">CGV Indochina Plaza Hà Nội</h6>-->
+<!--        </div>-->
+<!--        <p class="movie-schedule__cinema-address">Tầng 4 | Indochina Plaza Hà Nội, số 241 đường Xuân Thủy, quận Cầu Giấy, Hà Nội</p>-->
+<!--        <div class="movie-schedule__showtime-category">2D Phụ đề</div>-->
+<!--        <div>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>17:30 ~ 19:12</span>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>19:15 ~ 20:57</span>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>21:00 ~ 22:42</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="movie-schedule__cinema-item">-->
+<!--        <div class="movie-schedule__cinema-name">-->
+<!--          <img src="/assets/img/empty_img.jfif" alt="BHD" width="30" height="30">-->
+<!--          <h6 class="fw-bold mb-0">BHD Star Discovery</h6>-->
+<!--        </div>-->
+<!--        <p class="movie-schedule__cinema-address">Tầng 8 | Trung tâm Discovery, số 302 đường Cầu Giấy, Hà Nội</p>-->
+<!--        <div class="movie-schedule__showtime-category">2D Phụ đề</div>-->
+<!--        <div>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>18:00 ~ 19:42</span>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>20:30 ~ 22:12</span>-->
+<!--          <span class="movie-schedule__showtime-btn"><i class="far fa-clock me-1"></i>22:15 ~ 23:57</span>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+
+    <!-- Sidebar movie -->
+    <div class="col-lg-4">
+      <div class="movie-schedule__sticky-sidebar">
+        <h6 class="movie-schedule__sidebar-title">Phim cùng thể loại</h6>
+
+        <div th:each="mo : ${movies}" class="movie-schedule__sidebar-movie">
+          <img th:src="${mo.posterUrl != null ? mo.posterUrl : '/assets/img/empty_img.jfif'}" alt="Poster">
+          <div>
+            <a th:href="${'/movie/' + mo.movieId}" style="text-decoration: none; color: black">
+              <p class="movie-schedule__movie-title" th:text="${mo.title}"></p>
+            </a>
+            <p class="movie-schedule__movie-genre mb-1"
+               th:text="${mo.genre}"
+               th:attr="title=${mo.genre}"
+               style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; display: inline-block;">
+            </p>
+            <div class="movie-schedule__movie-rating">
+              <span class="movie-schedule__rating-star">★</span> <span th:text="${mo.rating == null ? 0 : mo.rating}"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer bg-dark text-white pt-5">
+  <div class="container">
+    <div class="row">
+      <!-- Cột 1 -->
+      <div class="col-md-2 mb-4">
+        <h6 class="text-uppercase fw-bold">Mua vé xem phim</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-white text-decoration-none">Lịch chiếu phim</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Rạp chiếu phim</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Phim chiếu rạp</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Review phim</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Top phim</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Blog phim</a></li>
+        </ul>
+      </div>
+
+      <!-- Cột 2 -->
+      <div class="col-md-2 mb-4">
+        <h6 class="text-uppercase fw-bold">Dịch vụ nổi bật</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-white text-decoration-none">Vé xem phim</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Bảo hiểm Ô tô</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Vé xe khách</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Lóa báo nhân thọ</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Ví nhân ái</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Ví trả sau</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Vay nhanh</a></li>
+          <li><a href="#" class="text-white text-decoration-none">Nạp Data 4G/5G</a></li>
+        </ul>
+      </div>
+
+      <!-- Cột 3 -->
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">Chăm sóc khách hàng</h6>
+        <p>Địa chỉ: Lầu 6, Tòa nhà Phú Mỹ Hưng, số 8 Hoàng Văn Thái, khu phố 1, Phường Tân Phú, Quận 7, Thành phố Hồ Chí Minh</p>
+        <p>Hotline: 1900 5454 41 <small>(Phí 1.000đ/phút)</small></p>
+        <p>Email: hotro@gmail.vn</p>
+        <p>Tổng đài gọi ra: 028.7306.5555 - 028.9999.5555</p>
+      </div>
+
+      <!-- Cột 4 -->
+      <div class="col-md-2 mb-4">
+        <h6 class="text-uppercase fw-bold">Kết nối với chúng tôi</h6>
+        <div class="d-flex gap-2 mb-3">
+          <a href="#" class="text-white fs-4"><i class="ri-facebook-line"></i></a>
+          <a href="#" class="text-white fs-4"><i class="ri-linkedin-line"></i></a>
+          <a href="#" class="text-white fs-4"><i class="ri-youtube-line"></i></a>
+        </div>
+        <div class="d-flex gap-2">
+        </div>
+      </div>
+    </div>
+
+    <hr class="border-secondary">
+
+
+  </div>
+</footer>
+
+<!-- Modal Trailer -->
+<div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark text-white rounded-3 overflow-hidden">
+      <!--      <button type="button" class="btn-close btn-close-white position-absolute end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>-->
+      <div class="ratio ratio-16x9">
+        <iframe th:src="${movie.trailerUrl != null ? movie.trailerUrl : 'https://www.youtube.com/embed/2LqzF5WauAw'}" title="Trailer" allowfullscreen></iframe>
+      </div>
+      <div class="d-flex p-3 gap-3">
+        <div>
+          <div>
+            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal" tabindex="0">Đóng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="/js/custom/common.js"></script>
+<script src="/js/custom/custom-ui-toast.js"></script>
+<script>
+  $(document).ready(function () {
+    const desc = $("#description");
+    const toggle = $("#toggle");
+    let releaseDateSpan = $('#releaseDateSpan');
+    const parts = releaseDateSpan.text().split("-");
+    const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+    releaseDateSpan.text(formattedDate);
+
+
+    toggle.click(function () {
+      if (desc.hasClass("truncate")) {
+        desc.removeClass("truncate");
+        toggle.text("Thu gọn");
+      } else {
+        desc.addClass("truncate");
+        toggle.text("Xem thêm");
+      }
+    });
+
+    // Auto ẩn "Xem thêm" nếu nội dung ngắn
+    const lineHeight = parseInt(desc.css("line-height"));
+    const height = desc[0].scrollHeight;
+    if (height <= lineHeight * 2) {
+      toggle.hide();
+    }
+    renderRating();
+  });
+
+  function renderRating(){
+    let movieRating = $('#mRating').val();
+    if(!movieRating)
+      movieRating = 0;
+    $('#rating i').each(function() {
+      var starValue = $(this).data('value');
+
+      if (movieRating >= starValue) {
+        $(this).addClass('hover');
+      } else{
+        $(this).removeClass('hover');
+      }
+    });
+  }
+</script>
+<script>
+  function rateMovie(movieId, rating) {
+    $.ajax({
+      url: '/movies/rating',
+      type: 'PUT',
+      data: {
+        movieId: movieId,
+        rating: rating
+      },
+      success: function(response) {
+        showSuccessToast('Đánh giá thành công');
+        $('#mRating').val(response);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+      }
+    });
+  }
+
+  let activeDate = new Date();  // Track the active date
+  $(document).ready(function(){
+    $(".ri-star-smile-line").hover(
+            function() {
+              var ratingValue = $(this).data("value");
+
+              $(".ri-star-smile-line").each(function() {
+                var starValue = $(this).data("value");
+                if (starValue <= ratingValue) {
+                  $(this).addClass("hover");
+                } else {
+                  $(this).removeClass("hover");
+                }
+              });
+            },
+            function() {
+              // $(".ri-star-smile-line").removeClass("hover");
+              renderRating();
+            }
+    );
+
+    // Khi click vào sao
+    $(".ri-star-smile-line").on("click", function() {
+      var ratingValue = $(this).data("value");
+
+      // Đánh dấu sao đã chọn
+      $(".ri-star-smile-line").each(function() {
+        var starValue = $(this).data("value");
+        if (starValue <= ratingValue) {
+          $(this).addClass("selected"); // Thêm class selected cho các sao đã chọn
+        } else {
+          $(this).removeClass("selected"); // Loại bỏ class selected cho sao chưa chọn
+        }
+      });
+      rateMovie($('#movieId').val(), ratingValue);
+      // Log giá trị đánh giá
+      $("#rating-output").text("Bạn đã đánh giá " + ratingValue + " sao.");
+    });
+
+
+    // Handle date selection
+    $('.movie-schedule__date-item').click(function(){
+      $('.movie-schedule__date-item').removeClass('active');
+      $(this).addClass('active');
+    });
+
+    // Handle cinema selection
+    $('.movie-schedule__cinema-logo').click(function(){
+      $('.movie-schedule__cinema-logo img').css('border-color', '#e7e7e7');
+      $(this).find('img').css('border-color', '#e72e71');
+    });
+
+    // Simple scroll implementation for date carousel
+    const scrollAmount = 200;
+    const carousel = document.querySelector('.movie-schedule__carousel-inner');
+
+    $('#dateCarouselNext').click(function() {
+      carousel.scrollLeft += scrollAmount;
+    });
+
+    $('#dateCarouselPrev').click(function() {
+      carousel.scrollLeft -= scrollAmount;
+    });
+
+// Format settings
+    const dayNames = {
+      0: 'CN',      // Sunday
+      1: 'Thứ 2',   // Monday
+      2: 'Thứ 3',   // Tuesday
+      3: 'Thứ 4',   // Wednesday
+      4: 'Thứ 5',   // Thursday
+      5: 'Thứ 6',   // Friday
+      6: 'Thứ 7'    // Saturday
+    };
+
+// Initialize variables
+    let currentStartDate = new Date();
+    let currentIndex = 0;
+    const visibleItems = 9; // Number of visible items in carousel
+    const slideAmount = 5;  // Number of days to slide each time
+
+// Function to format date for display
+    function formatDateItem(date, index) {
+      const day = date.getDate();
+      const dayOfWeek = date.getDay();
+      const dayLabel = dayNames[dayOfWeek];
+
+      // Today label for the first day when starting from today
+      const todayLabel = (isSameDay(date, new Date())) ? 'Hôm nay' : dayLabel;
+
+      // Check if this date is the active one
+      const isActive = activeDate && isSameDay(date, activeDate);
+
+      return `
+        <div class="movie-schedule__date-item ${isActive ? 'active' : ''}">
+          <div><strong>${day}</strong></div>
+          <small>${todayLabel}</small>
+        </div>
+      `;
+    }
+
+// Check if two dates are the same day
+    function isSameDay(date1, date2) {
+      return date1.getDate() === date2.getDate() &&
+              date1.getMonth() === date2.getMonth() &&
+              date1.getFullYear() === date2.getFullYear();
+    }
+
+// Function to generate dates and update carousel
+    function updateDateCarousel() {
+      const $carousel = $('.movie-schedule__carousel-inner');
+      $carousel.empty();
+
+      // Generate dates from current start date
+      for (let i = 0; i < visibleItems; i++) {
+        const date = new Date(currentStartDate);
+        date.setDate(date.getDate() + i);
+
+        // Create date item
+        const $dateItem = $(formatDateItem(date, i));
+
+        // Store the date object as data attribute (for comparison)
+        $dateItem.data('date', date);
+
+        // Add click handler
+        $dateItem.on('click', function() {
+          $('.movie-schedule__date-item').removeClass('active');
+          $(this).addClass('active');
+
+          // Update the active date
+          activeDate = $(this).data('date');
+          loadShowtimes(activeDate);
+        });
+
+        // Add to carousel
+        $carousel.append($dateItem);
+      }
+    }
+
+// Initial load
+    updateDateCarousel();
+
+// Next button click handler
+    $('#dateCarouselNext').on('click', function() {
+      // Move start date forward by 5 days
+      currentStartDate.setDate(currentStartDate.getDate() + slideAmount);
+      currentIndex += slideAmount;
+      updateDateCarousel();
+    });
+
+// Previous button click handler
+    $('#dateCarouselPrev').on('click', function() {
+      // Only go back if we're not at the beginning
+      if (currentIndex >= slideAmount) {
+        currentStartDate.setDate(currentStartDate.getDate() - slideAmount);
+        currentIndex -= slideAmount;
+        updateDateCarousel();
+      }
+    });
+  });
+</script>
+<script src="/js/custom/client-movie-detail.js"></script>
+<script src="/js/custom/seat-modal.js"></script>
+</body>
+
+</html>

@@ -101,7 +101,7 @@ function fetchMoviePersons() {
                 keyWord: keyWord
             },
             pageIndex: 1,
-            pageSize: 10
+            pageSize: 9999
         }),
         success: function(response) {
             console.log('response: ', response);
@@ -127,7 +127,8 @@ function fetchMoviePersons() {
     });
 }
 
-function setContentModal(modalType, callbackFunc, id) {
+function setContentModalMoviePerson(modalType, callbackFunc) {
+    console.log('aa');
     $('#exampleModalLabel3').text('Cập nhật diễn viên');
     $('#selected-actors').empty();
     roles.forEach(function (item) {
@@ -154,8 +155,7 @@ function setContentModal(modalType, callbackFunc, id) {
         }
     });
 
-    if (modalType === 'edit')
-        modalDialog.modal('show');
+    modalDialog.modal('show');
 }
 
 function deletePerson(actor){
@@ -394,18 +394,6 @@ function renderPersonRow(searchText){
     $('.actor-checkbox').change(handleCheckboxChange);
 }
 
-function getMovieData(){
-    let movieJsonString = $("#movieJson").val();
-    console.log(movieJsonString);
-
-    try {
-        let movieData = JSON.parse(movieJsonString.replace(/MovieDTO|MoviePersonDTO|\(|\)/g, ""));
-        console.log(movieData.duration);
-    } catch (error) {
-        console.error("Lỗi khi parse JSON:", error);
-    }
-}
-
 $(document).ready(function () {
     getCurrentTab();
     fetchPersons();
@@ -414,8 +402,8 @@ $(document).ready(function () {
         keyWord = $('.form-control').val().trim();
         fetchMoviePersons();
     });
-    $('#btnCreate').on('click', function() {
-        setContentModal('add', updateMoviePerson);
+    $('#btnUpdateMoviePerson').on('click', function() {
+        setContentModalMoviePerson('add', updateMoviePerson);
     });
     $('#nameSelect').on('change', function () {
         let selectedValue = $(this).val();

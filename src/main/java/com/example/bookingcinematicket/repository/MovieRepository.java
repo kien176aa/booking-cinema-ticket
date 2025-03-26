@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.bookingcinematicket.entity.Movie;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -20,4 +21,16 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("select m from Movie m order by m.rating desc")
     List<Movie> findTopMovie(Pageable pageable);
+
+    @Query(value = """
+    SELECT DISTINCT m.* 
+    FROM movies m
+    WHERE m.genre REGEXP REPLACE(:genre, ',', '|')
+    AND m.movie_id <> :movieId
+    ORDER BY m.rating DESC
+    LIMIT 5
+""", nativeQuery = true)
+    List<Movie> findTop5MovieSameGenre(@Param("genre") String genre, @Param("movieId") Long movieId);
+
+
 }

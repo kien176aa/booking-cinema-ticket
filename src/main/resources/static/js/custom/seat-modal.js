@@ -60,7 +60,7 @@ function showSeatModal() {
           </div>
           <div class="row">
           <div class="col-md-6 text-start">
-            Tạm tính: <span id="seatsPrice" style="font-weight: bold; font-size: 1.5em;">${totalAmount}</span>
+            Tạm tính: <span id="seatsPrice" style="font-weight: bold; font-size: 1.5em;">${totalAmount.toLocaleString()}</span><span>đ</span>
           </div>
           <div class="col-md-6 text-end">
           <button id="closeSeatModal" class="btn btn-outline-secondary">
@@ -241,13 +241,13 @@ function calcPrice(seatText, isAdd){
     let currPriceTxt = $('#seatsPrice').text();
     let price = selectShowtime?.price ? selectShowtime?.price : 0;
     if(currPriceTxt && currPriceTxt.length > 0){
-        price = Number(currPriceTxt);
+        price = Number(currPriceTxt.replace(/[^0-9.-]+/g, ""));
     }
     if(s){
         price = isAdd ? (price + s.price) : (price - s.price);
     }
     totalAmount = price;
-    $('#seatsPrice').text(price);
+    $('#seatsPrice').text(price.toLocaleString());
 }
 
 function renderSelectedSeat() {
@@ -407,7 +407,7 @@ function showFoodModal() {
             const price = $(this).data('price');
             total += quantity * price;
         });
-        $('#totalPrice').text(total + 'đ');
+        $('#totalPrice').text(total.toLocaleString() + 'đ');
     }
 }
 
@@ -645,6 +645,7 @@ function showPayModal(selectedFoods) {
             }
         } catch (error) {
             // Handle network or other errors
+            showErrorToast('Có lỗi xảy ra trong quá trình thanh toán');
             errorElement.textContent = 'Có lỗi xảy ra trong quá trình thanh toán';
             document.getElementById('submit').disabled = false;
         } finally {

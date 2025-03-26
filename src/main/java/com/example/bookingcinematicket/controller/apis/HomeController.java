@@ -29,7 +29,8 @@ public class HomeController {
     }
 
     @GetMapping("/get-showtimes-by-date")
-    public List<ShowtimeDTO> getShowtimeByDate(@RequestParam LocalDate date, @RequestParam Long branchId){
-        return ConvertUtils.convertList(showtimeService.getShowtimesByDate(date, branchId), ShowtimeDTO.class);
+    public List<ShowtimeDTO> getShowtimeByDate(@RequestParam LocalDate date, @RequestParam Long branchId,
+                                               @RequestParam(required = false) Long movieId){
+        return ConvertUtils.convertList(showtimeService.getShowtimesByDate(date, branchId, movieId), ShowtimeDTO.class);
     }
 }

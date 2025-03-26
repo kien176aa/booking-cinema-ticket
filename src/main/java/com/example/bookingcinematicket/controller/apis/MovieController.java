@@ -65,6 +65,11 @@ public class MovieController extends BaseController {
         movieService.updatePersonToMovie(req);
     }
 
+    @PutMapping("/rating")
+    public float ratingMovie(@RequestParam Long movieId, @RequestParam Integer rating) {
+        return movieService.ratingMovie(movieId, rating, getCurrentUser());
+    }
+
     @DeleteMapping("/{id}/remove-person/{personId}")
     public void removePersonFromMovie(@PathVariable("id") Long id, @PathVariable("personId") Long personId) {
         movieService.removePersonFromMovie(personId, id);

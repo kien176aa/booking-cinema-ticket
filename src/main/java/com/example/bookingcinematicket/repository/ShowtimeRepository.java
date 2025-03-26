@@ -47,8 +47,11 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
     List<Showtime> findOverlappingShowtimes(
             Long branchId, Long roomId, Long movieId, LocalDateTime startTime, LocalDateTime endTime);
 
-    @Query("SELECT s FROM Showtime s WHERE DATE(s.startTime) = :date and s.branch.branchId = :branchId ORDER BY s.startTime")
-    List<Showtime> findShowtimesByDate(@Param("date") LocalDate date, @Param("branchId") Long branchId);
+    @Query("SELECT s FROM Showtime s WHERE DATE(s.startTime) = :date and s.branch.branchId = :branchId " +
+            "and (:movieId is null or s.movie.movieId = :movieId) " +
+            "and s.startTime > NOW() " +
+            "ORDER BY s.startTime")
+    List<Showtime> findShowtimesByDate(@Param("date") LocalDate date, @Param("branchId") Long branchId, Long movieId);
     @Query("select s from Showtime s where s.showtimeId in (:ids)")
     List<Showtime> findByIds(List<Long> ids);
 }

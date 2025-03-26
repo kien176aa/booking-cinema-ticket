@@ -4,12 +4,134 @@ let branchId = -1;
 let showtimesRes = [];
 let seatTypes = [];
 let selectShowtime = {};
+let carouselContainer = $('#carousel-container');
+let actorData = {}, roles = [];
 
 $(document).ready(function () {
     fetchMovie();
     fetchBranches('');
-    initDateButtons();
+    fetchRoles();
 });
+
+function fetchRoles() {
+    toggleLoading(true);
+    $.ajax({
+        url: "/roles/get-active-role",
+        type: "GET",
+        contentType: "application/json",
+        success: function(response) {
+            console.log('response: ', response);
+            roles = response;
+            fetchMoviePersons();
+        },
+        error: function(error) {
+            console.error("Error fetching rooms:", error);
+            showErrorToast(error.responseText);
+            toggleLoading(false);
+        }
+    });
+}
+
+function fetchMoviePersons() {
+    toggleLoading(true);
+    const url = window.location.pathname;
+    const id = url.split('/').pop();
+    $.ajax({
+        url: `/movies/search-movie-person`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+            condition: {
+                movieId: Number(id),
+            },
+            pageIndex: 1,
+            pageSize: 9999
+        }),
+        success: function(response) {
+            console.log('response: ', response);
+            actorData = response;
+            carouselContainer.empty();
+            let hasData = false;
+            roles.forEach(function (item) {
+                let arr = response[`${item.name}`];
+                if(arr && arr.length > 0){
+                    hasData = true;
+                    renderCarousel(item.name, arr);
+                }
+            });
+            if(!hasData){
+                renderEmptyData('#carousel-container');
+            }
+            toggleLoading(false);
+        },
+        error: function(error) {
+            console.error("Error fetching :", error);
+            toggleLoading(false);
+        }
+    });
+}
+
+function renderCarousel(roleName, actors) {
+    const carouselId = `carousel-${roleName.replace(' ', '-').toLowerCase()}`;
+
+    const carouselHTML = `
+        <div class="divider text-start">
+            <div style="font-weight: bold" class="divider-text">${roleName}</div>
+        </div>
+        <div id="${carouselId}" class="carousel carousel-dark slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner" id="carousel-inner-${carouselId}"></div>
+            <a class="carousel-control-prev" href="#${carouselId}" role="button" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#${carouselId}" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    `;
+
+    carouselContainer.append(carouselHTML);
+
+    let currentIndex = 0;
+    const chunkSize = 5;
+
+    while (currentIndex < actors.length) {
+        const chunk = actors.slice(currentIndex, currentIndex + chunkSize);
+        renderCarouselItem(carouselId, chunk, currentIndex === 0);
+        currentIndex += chunkSize;
+    }
+}
+
+function renderCarouselItem(carouselId, actors, isActive) {
+    const carouselItem = $('<div class="carousel-item"></div>');
+    if (isActive) {
+        carouselItem.addClass('active');
+    }
+
+    const row = $('<div class="d-flex justify-content-sm-evenly mt-3"></div>');
+
+    actors.forEach(actor => {
+        let roleIds = actor.roleArr.split(',').map(Number);
+        let roleNames = roleIds.map(id => roles.find(role => role.roleId === id)?.name).filter(Boolean).join(',');
+        const actorDiv = $('<div class="text-center" style="position:relative;"></div>');
+        const img = $(`<img class="rounded-circle" src="${getImageUrl(actor.personImageUrl)}" 
+                        type="button"
+                        data-bs-toggle="popover"
+                        data-bs-placement="top"
+                        title="Tên: ${actor.personName}\nNhân vật: ${actor.characterName}\nVai trò: ${roleNames}"
+                        alt="${actor.personName}" width="80" height="80">`);
+        const name = $(`<div class="mt-2 text-truncate" style="max-width: 150px;" title="${actor.personName}">${actor.personName}</div>`);
+        const character = $(`<div class="text-truncate" style="max-width: 150px;" title="${actor.characterName}">${actor.characterName}</div>`);
+
+        actorDiv.append(img, name, character);
+        row.append(actorDiv);
+
+    });
+
+    carouselItem.append(row);
+    $(`#carousel-inner-${carouselId}`).append(carouselItem);
+}
 
 // ========== MOVIE ==========
 function fetchMovie() {
@@ -74,6 +196,7 @@ function fetchBranches(query) {
         renderBranchList(branches);
         if (branches.length > 0) {
             branchId = branches[0]?.branchId;
+            $('#branchAddress').text(`${branches[0].name} - ${branches[0].address}`);
             selectBranch();
             fetchSeatTypes();
         }
@@ -81,15 +204,23 @@ function fetchBranches(query) {
 }
 
 function renderBranchList(branches) {
-    let html = '';
+    let html = `
+        <button class="btn btn-outline-secondary dropdown-toggle movie-schedule__location-btn" type="button" data-bs-toggle="dropdown">
+          <i class="fas fa-map-marker-alt me-1"></i> <span id="currentBranchName">${branches[0]?.name}</span>
+        </button><ul class="dropdown-menu">`;
     branches.forEach(branch => {
-        html += `
-        <li class="list-group-item d-flex justify-content-between align-items-center" data-branch-id="${branch.branchId}" style="cursor:pointer;">
-            ${branch.name}
-            <i class="bi bi-chevron-right"></i>
-        </li>`;
+        html += `<li><a class="dropdown-item branch__item" data-branchid="${branch.branchId}">${branch.name}</a></li>`;
     });
-    $('#cinema-list').html(html);
+    html += `</ul>`;
+
+    $('#branchDropdown').html(html);
+
+    $('.branch__item').off('click').on('click', function () {
+       branchId = Number($(this).data('branchid'));
+       let b = branchesCache.find(item => item.branchId == branchId);
+       $('#currentBranchName').text($(this).text());
+       $('#branchAddress').text(`${b.name} - ${b.address}`);
+    });
 }
 
 // ========== SHOWTIMES ==========
@@ -103,8 +234,16 @@ function getShowtimeById(id) {
 }
 
 function loadShowtimes(date) {
+    let formattedDate = null;
+    console.log('aa ', date, formattedDate);
+    if(date){
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        formattedDate = `${year}-${month}-${day}`;
+    }
     toggleLoading(true);
-    $.get('/home/get-showtimes-by-date', { date: date, branchId: branchId }, function (showtimes) {
+    $.get('/home/get-showtimes-by-date', { date: formattedDate, branchId: branchId }, function (showtimes) {
         let html = '';
 
         if (showtimes.length === 0) {
@@ -120,7 +259,6 @@ function loadShowtimes(date) {
             showtimes.forEach(s => {
                 if (!grouped[s.movieTitle]) {
                     grouped[s.movieTitle] = {
-                        movieId: s.movieMovieId,
                         movieTitle: s.movieTitle,
                         branchName: s.branchName,
                         roomName: s.roomName,
@@ -132,12 +270,12 @@ function loadShowtimes(date) {
             });
 
             Object.values(grouped).forEach(group => {
-                html += `
-    <div class="d-flex mb-4 showtime-block">
-        <img src="${group.posterUrl || commonDefaultImgUrl}" 
-            class="me-3 rounded" width="100" height="160" alt="Poster">
-        <div>
-            <h5><a href="/movie/${group.movieId}" style="text-decoration: none; color: black">${group.movieTitle}</a></h5>`;
+    //             html += `
+    // <div class="d-flex mb-4 showtime-block">
+    //     <img src="${group.posterUrl || commonDefaultImgUrl}"
+    //         class="me-3 rounded" width="100" height="160" alt="Poster">
+    //     <div>
+    //         <h5>${group.movieTitle}</h5>`;
 
                 // Nhóm các showtimes theo roomName
                 const showtimesByRoom = {};
@@ -148,32 +286,38 @@ function loadShowtimes(date) {
                     showtimesByRoom[s.roomName].push(s);
                 });
 
-                html += `<div class="d-flex flex-wrap gap-3">`;
+                // html += `<div class="d-flex flex-wrap gap-3">`;
 
                 // Duyệt qua từng roomName và render các showtimes tương ứng
                 Object.entries(showtimesByRoom).forEach(([roomName, showtimes]) => {
+                    let bName = '', bAddress = '', roomType = '';
+                    if(showtimes[0]){
+                        bName = showtimes[0].branchName;
+                        bAddress = showtimes[0].branchAddress;
+                        roomType = showtimes[0].roomRoomType;
+                        console.log(bName, bAddress);
+                    }
                     html += `
-        <div>
-            <span class="fw-bold px-2 py-1 mb-4">${roomName}</span>
-            <div class="d-flex flex-wrap gap-2 mt-2">`;
+                    <div class="movie-schedule__cinema-item">
+                    <div class="movie-schedule__showtime-category">${roomName} - ${roomType}</div>
+                    <div>`;
 
                     showtimes.forEach(s => {
-                        html += `<button data-showtime-id="${s.showtimeId}"
-                        class="btn btn-outline-primary btn-sm book-seat">
-                ${formatTime(s.startTime)} ~ ${formatTime(s.endTime)}
-            </button>`;
+                        html += `
+                            <span data-showtime-id="${s.showtimeId}" class="movie-schedule__showtime-btn">
+                            <i class="far fa-clock me-1"></i>${formatTime(s.startTime)} ~ ${formatTime(s.endTime)}</span>`;
                     });
 
                     html += `</div></div>`;
                 });
 
-                html += `</div></div></div>`;
+                // html += `</div></div></div>`;
             });
 
         }
 
         $('#showtime-container').html(html);
-        $('.book-seat').off('click').on('click', function () {
+        $('.movie-schedule__showtime-btn').off('click').on('click', function () {
             let id = $(this).data('showtime-id');
             getShowtimeById(id);
         })
@@ -221,24 +365,8 @@ $(document).on('click', '.play-icon', function () {
     }
 });
 
-// Search cinema name
-$('#cinema-search').on('input', function () {
-    const query = $(this).val().trim().toLowerCase();
-    const filteredBranches = branchesCache.filter(b => b.name.toLowerCase().includes(query));
-    renderBranchList(filteredBranches);
-});
-
-// Click branch item
-$(document).on('click', '#cinema-list li[data-branch-id]', function () {
-    branchId = $(this).data('branch-id');
-    selectBranch();
-});
-
 // ========== UTILS ==========
 function selectBranch() {
-    $('#cinema-list li[data-branch-id]').removeClass('active');
-    $(`#cinema-list li[data-branch-id="${branchId}"]`).addClass('active');
-    const activeDate = $('.nav-link[data-date].active').data('date') || new Date().toISOString().split('T')[0];
     loadShowtimes(activeDate);
     fetchSeatTypes();
 }
@@ -251,83 +379,6 @@ function truncateText(text, maxLength) {
 function formatTime(dateTime) {
     const date = new Date(dateTime);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-// ========== DATES ==========
-function initDateButtons() {
-    const days = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
-    const today = new Date();
-    const $container = $('#date-container');
-    $container.empty();
-
-    // Inject CSS styles nếu chưa có
-    if (!$('#date-button-styles').length) {
-        const styles = `
-            <style id="date-button-styles">
-                #date-container {
-                    display: flex;
-                    gap: 8px;
-                    margin: 20px 0;
-                }
-                #date-container .nav-link {
-                    display: inline-block;
-                    width: 80px;
-                    text-align: center;
-                    padding: 10px;
-                    border: 1px solid #ddd;
-                    border-radius: 6px;
-                    text-decoration: none;
-                    color: #000;
-                    font-weight: bold;
-                    background-color: #f9f9f9;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-                #date-container .nav-link small {
-                    display: block;
-                    margin-top: 4px;
-                    font-weight: normal;
-                    color: #888;
-                }
-                #date-container .nav-link.active {
-                    background-color: #d81b60;
-                    color: #fff;
-                    border-color: #d81b60;
-                }
-                #date-container .nav-link.active small {
-                    color: #fff;
-                }
-                #date-container .nav-link:hover {
-                    background-color: #e0e0e0;
-                }
-            </style>
-        `;
-        $('head').append(styles);
-    }
-
-    for (let i = 0; i < 7; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() + i);
-        const dateString = date.toISOString().split('T')[0];
-        const day = date.getDate();
-        const dayOfWeek = i === 0 ? 'Hôm nay' : days[date.getDay()];
-        const activeClass = i === 0 ? 'active' : '';
-
-        $container.append(`
-            <a class="nav-link ${activeClass}" data-date="${dateString}">
-                ${day}<br><small>${dayOfWeek}</small>
-            </a>
-        `);
-    }
-
-    $('#date-container .nav-link').on('click', function (e) {
-        e.preventDefault();
-        $('#date-container .nav-link').removeClass('active');
-        $(this).addClass('active');
-
-        const selectedDate = $(this).data('date');
-        loadShowtimes(selectedDate);
-    });
 }
 
 // Hàm xử lý rạp gần bạn
@@ -389,20 +440,30 @@ function degreesToRadians(degrees) {
 
 // Render danh sách rạp gần nhất
 function renderNearbyList(cinemas) {
-    let html = '';
+    let html = `
+        <button class="btn btn-outline-secondary dropdown-toggle movie-schedule__location-btn" type="button" data-bs-toggle="dropdown">
+          <i class="fas fa-map-marker-alt me-1"></i> 
+          <span id="currentBranchName">${cinemas[0]?.name}
+          ${cinemas[0].distance === null ? 'Không rõ' : `[${cinemas[0].distance.toFixed(2)} km]`}
+          </span>
+        </button><ul class="dropdown-menu">`;
     cinemas.forEach(c => {
-        const distanceText = c.distance === null ? 'Không rõ' : `${c.distance.toFixed(2)} km`;
+        const distanceText = c.distance === null ? 'Không rõ' : `[${c.distance.toFixed(2)} km]`;
         html += `
-            <li class="list-group-item d-flex justify-content-between align-items-center" data-branch-id="${c.branchId}">
-                ${c.name}
-                <small>${distanceText}</small>
-            </li>`;
+            <li><a class="dropdown-item branch__item" data-branchid="${c.branchId}">${c.name} ${distanceText}</a></li>`;
     });
-    $('#cinema-list li[data-branch-id]').off('click').on('click', function () {
-        branchId = $(this).data('branch-id');
+    html += `</ul>`;
+
+    $('#branchDropdown').html(html);
+
+    $('.branch__item').off('click').on('click', function () {
+        branchId = Number($(this).data('branchid'));
+        let b = branchesCache.find(item => item.branchId == branchId);
+        $('#currentBranchName').text($(this).text());
+        $('#branchAddress').text(`${b.name} - ${b.address}`);
         selectBranch();
     });
-    $('#cinema-list').html(html);
+
 }
 
 $('#btn-nearby').on('click', function () {

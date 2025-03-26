@@ -4,6 +4,7 @@ import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.entity.Showtime;
 import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.ShowtimeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,15 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/payment")
+@Slf4j
 public class PaymentController {
 
     @Autowired
     private ShowtimeRepository showtimeRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createPaymentIntent(@RequestParam("amount") long amount, @RequestParam Long showtimeId) {
+    public ResponseEntity<String> createPaymentIntent(@RequestParam("amount") Long amount, @RequestParam Long showtimeId) {
+        log.info("amount: {}", amount);
         if(showtimeId == null)
             throw new CustomException(SystemMessage.SHOW_TIME_IS_REQUIRED);
         Showtime showtime = showtimeRepository.findById(showtimeId).orElseThrow(
