@@ -665,7 +665,8 @@ function processSaveBooking(selectedFoods, promoId, amountToCharge){
                 price: seat.price,
                 seatNumber: seat.seatNumber,
                 seatTypeId: seat.seatTypeSeatTypeId,
-                roomId: selectShowtime?.roomRoomId
+                roomId: selectShowtime?.roomRoomId,
+                color: seat.color
             });
         }
     });

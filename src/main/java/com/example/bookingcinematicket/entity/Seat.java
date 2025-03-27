@@ -28,7 +28,7 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "seat_type_id")
     private SeatType seatType;
-    private Boolean status;
+    private String color;
     @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
 }

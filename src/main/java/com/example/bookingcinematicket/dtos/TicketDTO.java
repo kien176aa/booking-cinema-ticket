@@ -10,5 +10,6 @@ public class TicketDTO {
     private Long seatTypeId;
     private Long roomId;
     private String seatNumber;
+    private String color;
     private Long showtimeId;
 }
