@@ -1,9 +1,11 @@
 package com.example.bookingcinematicket.controller.mvc;
 
+import com.example.bookingcinematicket.dtos.auth.LoginResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import com.example.bookingcinematicket.service.AuthService;
 
 @Controller
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
     @Autowired
     private AuthService authService;
@@ -45,12 +48,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute LoginRequest request, HttpServletResponse response, Model model) {
-        String message = authService.login(request.getEmail(), request.getPassword(), response);
+        LoginResponse res = authService.login(request.getEmail(), request.getPassword(), response);
 
-        if (message.isEmpty()) {
-            return "redirect:/";
+        if (res.getMessage().isEmpty()) {
+            if(SystemMessage.ROLE_ADMIN.equals(res.getRole()))
+                return "redirect:/";
+            else
+                return "redirect:/home";
         } else {
-            model.addAttribute("error", message);
+            model.addAttribute("error", res.getMessage());
             return "auth-login-basic";
         }
     }
@@ -75,5 +81,17 @@ public class AuthController {
     @GetMapping("/forgot-password")
     public String getForgotPasswordPage() {
         return "auth-forgot-password-basic";
+    }
+
+    @PostMapping("/forgot-password")
+    public String sendMailForgotPasswordPage(String email, Model model) {
+        try{
+            authService.sendCodeForgotPass(email);
+            return "auth-login-basic";
+        }catch (Exception ex){
+            model.addAttribute("mess", "Email không chính xác");
+            log.error("EX: {}", ex.getMessage());
+            return "auth-forgot-password-basic";
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.bookingcinematicket.service;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.example.bookingcinematicket.repository.RoleRepository;
 import com.example.bookingcinematicket.utils.ConvertUtils;
 
 @Service
+@Slf4j
 public class PersonService {
     @Autowired
     private RoleRepository roleRepository;
@@ -27,6 +29,9 @@ public class PersonService {
 
     @Autowired
     private ImgurService imgurService;
+
+    @Autowired
+    private FileUploadService fileUploadService;
 
     public SearchResponse<List<PersonDTO>> search(SearchRequest<String, Person> request) {
         if (request.getCondition() != null) {
@@ -65,7 +70,17 @@ public class PersonService {
 
     public PersonDTO create(PersonDTO req, MultipartFile file) {
         Person person = ConvertUtils.convert(req, Person.class);
-        if (file != null) person.setImageUrl(imgurService.uploadImageToImgur(file));
+        if (file != null) {
+//            person.setImageUrl(imgurService.uploadImageToImgur(file));
+            String originalFilename = file.getOriginalFilename();
+            String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+            String fileName = fileUploadService.generateFileName(SystemMessage.IMG_POSTER);
+            person.setImageUrl(fileUploadService.getUploadDir() + fileName + extension);
+            fileUploadService.uploadFile(file, true, fileName).exceptionally(ex -> {
+                log.error("Upload file lỗi: {}", ex.getMessage(), ex);
+                return null;
+            });
+        }
         personRepository.save(person);
 
         return ConvertUtils.convert(person, PersonDTO.class);
@@ -74,7 +89,17 @@ public class PersonService {
     public PersonDTO update(Long id, PersonDTO personDTO, MultipartFile file) {
         Person person =
                 personRepository.findById(id).orElseThrow(() -> new CustomException(SystemMessage.PERSON_NOT_FOUND));
-        if (file != null) person.setImageUrl(imgurService.uploadImageToImgur(file));
+        if (file != null) {
+//            person.setImageUrl(imgurService.uploadImageToImgur(file));
+            String originalFilename = file.getOriginalFilename();
+            String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+            String fileName = fileUploadService.generateFileName(SystemMessage.IMG_POSTER);
+            person.setImageUrl(fileUploadService.getUploadDir() + fileName + extension);
+            fileUploadService.uploadFile(file, true, fileName).exceptionally(ex -> {
+                log.error("Upload file lỗi: {}", ex.getMessage(), ex);
+                return null;
+            });
+        }
         person.setName(personDTO.getName());
         person.setBiography(personDTO.getBiography());
         person.setBirthDate(personDTO.getBirthDate());

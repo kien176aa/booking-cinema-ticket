@@ -56,4 +56,17 @@ public class SystemMessage {
     public static final String SHOW_TIME_IS_EXPIRED_OR_SOLD_OUT = "Suất chiếu đã hết vé hoặc hết hạn";
     public static final String RATING_IS_REQUIRED = "Đánh giá là bắt buộc";
     public static final String BOOKING_NOT_FOUND = "Đơn hàng không tồn tại";
+    public static final String FROM_ADDRESS = "account@gmail.com";
+    public static final String SENDER_NAME = "Hệ thống đặt vé xem phim";
+    public static final String PASSWORD_SUBJECT = "Quên mật khẩu";
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_USER = "USER";
+    public static final String FILE_IS_REQUIRED = "File không được để trống";
+    public static final String INVALID_SIZE_FILE = "Kích thước file tối đa là 10MB";
+    public static final String INVALID_IMAGE_TYPE = "Chỉ hỗ trợ ảnh JPG, JPEG, PNG";
+    public static final String INVALID_VIDEO_TYPE = "Chỉ hỗ trợ video MP4";
+    public static final String IMG_POSTER = "POSTER";
+    public static final String TRAILER = "TRAILER";
+    public static final String IMG_ACTOR = "ACTOR";
+    public static final String IMG_FOOD = "FOOD";
 }

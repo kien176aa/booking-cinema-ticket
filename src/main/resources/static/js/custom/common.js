@@ -156,6 +156,24 @@ function formatDate(dateString) {
     return `${hours}:${minutes} ${day}/${month}/${year}`;
 }
 
+function formatDateStartEnd(start, end) {
+    if(!start || !end){
+        return '';
+    }
+    let date = new Date(start);
+    let endDate = new Date(end);
+
+    let hours = date.getHours().toString().padStart(2, '0');
+    let minutes = date.getMinutes().toString().padStart(2, '0');
+    let eHours = endDate.getHours().toString().padStart(2, '0');
+    let eMinutes = endDate.getMinutes().toString().padStart(2, '0');
+    let day = date.getDate().toString().padStart(2, '0');
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+    let year = date.getFullYear();
+
+    return `${hours}:${minutes} ~ ${eHours}:${eMinutes} · ${day}/${month}/${year}`;
+}
+
 function formatDateWithoutHour(dateString) {
     if(!dateString){
         return '';

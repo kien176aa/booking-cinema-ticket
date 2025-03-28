@@ -32,4 +32,11 @@ public class ClientHomeController extends BaseController {
         model.addAttribute("account", account);
         return "page/my-booking";
     }
+
+    @GetMapping("/showtime-list")
+    public String viewShowtime(Model model) {
+        Account account = getCurrentUser();
+        model.addAttribute("account", account);
+        return "page/client-showtime-list";
+    }
 }

@@ -154,7 +154,7 @@ function loadShowtimes(date) {
                 Object.entries(showtimesByRoom).forEach(([roomName, showtimes]) => {
                     html += `
         <div>
-            <span class="fw-bold px-2 py-1 mb-4">${roomName}</span>
+            <span class="fw-bold px-2 py-1 mb-4">${roomName} - ${showtimes[0]?.roomRoomType}</span>
             <div class="d-flex flex-wrap gap-2 mt-2">`;
 
                     showtimes.forEach(s => {

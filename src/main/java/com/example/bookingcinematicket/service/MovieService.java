@@ -1,5 +1,6 @@
 package com.example.bookingcinematicket.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +50,9 @@ public class MovieService {
     @Autowired
     private ApiVideoService apiVideoService;
 
+    @Autowired
+    private FileUploadService fileUploadService;
+
     public SearchResponse<List<MovieDTO>> search(SearchRequest<String, Movie> request) {
         if (request.getCondition() != null)
             request.setCondition(request.getCondition().toLowerCase().trim());
@@ -79,7 +83,15 @@ public class MovieService {
         }
         if (file != null) {
             try {
-                dto.setPosterUrl(imgurService.uploadImageToImgur(file));
+//                dto.setPosterUrl(imgurService.uploadImageToImgur(file));
+                String originalFilename = file.getOriginalFilename();
+                String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+                String fileName = fileUploadService.generateFileName(SystemMessage.IMG_POSTER);
+                dto.setPosterUrl(fileUploadService.getUploadDir() + fileName + extension);
+                fileUploadService.uploadFile(file, true, fileName).exceptionally(ex -> {
+                    log.error("Upload file lỗi: {}", ex.getMessage(), ex);
+                    return null;
+                });
             } catch (Exception ex) {
                 log.error("upload img: {}", ex.getMessage(), ex);
                 throw new CustomException(SystemMessage.ERROR_500);
@@ -87,9 +99,17 @@ public class MovieService {
         }
         String vId = "";
         if (video != null) {
-            vId = apiVideoService.createVideo(video.getOriginalFilename());
-            dto.setTrailerUrl(apiVideoService.getUrlByVideoId(vId));
-            apiVideoService.uploadVideoAsync(vId, dto.getTitle(), video);
+//            vId = apiVideoService.createVideo(video.getOriginalFilename());
+//            dto.setTrailerUrl(apiVideoService.getUrlByVideoId(vId));
+//            apiVideoService.uploadVideoAsync(vId, dto.getTitle(), video);
+            String originalFilename = video.getOriginalFilename();
+            String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+            String fileName = fileUploadService.generateFileName(SystemMessage.TRAILER);
+            dto.setTrailerUrl(fileUploadService.getUploadDir() + fileName + extension);
+            fileUploadService.uploadFile(video, false, fileName).exceptionally(ex -> {
+                log.error("Upload video lỗi: {}", ex.getMessage(), ex);
+                return null;
+            });
         }
         Movie movie = ConvertUtils.convert(dto, Movie.class);
         movie.setStatus(true);
@@ -109,7 +129,15 @@ public class MovieService {
         }
         if (file != null) {
             try {
-                movie.setPosterUrl(imgurService.uploadImageToImgur(file));
+//                movie.setPosterUrl(imgurService.uploadImageToImgur(file));
+                String originalFilename = file.getOriginalFilename();
+                String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+                String fileName = fileUploadService.generateFileName(SystemMessage.IMG_POSTER);
+                movie.setPosterUrl(fileUploadService.getUploadDir() + fileName + extension);
+                fileUploadService.uploadFile(file, true, fileName).exceptionally(ex -> {
+                    log.error("Upload file lỗi: {}", ex.getMessage(), ex);
+                    return null;
+                });
             } catch (Exception ex) {
                 log.error("upload img: {}", ex.getMessage(), ex);
                 throw new CustomException(SystemMessage.ERROR_500);
@@ -117,10 +145,18 @@ public class MovieService {
         }
         String vId = "";
         if (video != null) {
-            vId = apiVideoService.createVideo(video.getOriginalFilename());
-            dto.setTrailerUrl(vId);
-            movie.setTrailerUrl(apiVideoService.getUrlByVideoId(vId));
-            apiVideoService.uploadVideoAsync(vId, dto.getTitle(), video);
+//            vId = apiVideoService.createVideo(video.getOriginalFilename());
+//            dto.setTrailerUrl(vId);
+//            movie.setTrailerUrl(apiVideoService.getUrlByVideoId(vId));
+//            apiVideoService.uploadVideoAsync(vId, dto.getTitle(), video);
+            String originalFilename = video.getOriginalFilename();
+            String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+            String fileName = fileUploadService.generateFileName(SystemMessage.TRAILER);
+            movie.setTrailerUrl(fileUploadService.getUploadDir() + fileName + extension);
+            fileUploadService.uploadFile(video, false, fileName).exceptionally(ex -> {
+                log.error("Upload video lỗi: {}", ex.getMessage(), ex);
+                return null;
+            });
         }
         movie.setTitle(dto.getTitle());
         movie.setGenre(dto.getGenre());

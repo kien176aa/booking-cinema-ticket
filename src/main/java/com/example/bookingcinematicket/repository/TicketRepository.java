@@ -10,4 +10,7 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("select s.seat.seatNumber from Ticket s where s.showtime.showtimeId = :showtimeId")
     List<String> findBookedSeat(Long showtimeId);
+
+    @Query("select count(t) from Ticket t where MONTH(t.showtime.startTime) = MONTH(CURRENT_DATE())")
+    Integer getTotalTicketsInMonth();
 }

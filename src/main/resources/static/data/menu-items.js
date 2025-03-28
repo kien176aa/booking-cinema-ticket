@@ -1,7 +1,7 @@
 const arr = [
     {
         isHeader: false,
-        text: "Dashboards",
+        text: "Thống kê",
         icon: "ri-home-smile-line",
         href: "/",
         badge: { text: "5", color: "danger" },

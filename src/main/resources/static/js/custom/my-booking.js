@@ -217,6 +217,7 @@ function renderOrderDetails(order) {
                 <div class="mb-3">
                     <h5>Thông Tin Phim</h5>
                     <p class="mb-1"><strong>Tên Phim:</strong> ${showtime?.movieTitle}</p>
+                    <p class="mb-1"><strong>Thời gian chiếu:</strong> ${formatDateStartEnd(showtime?.startTime, showtime?.endTime)}</p>
                     <p class="mb-1"><strong>Địa chỉ:</strong> ${showtime?.branchAddress}</p>
                     <p class="mb-1"><strong>Phòng Chiếu:</strong> ${showtime?.roomName}</p>
 

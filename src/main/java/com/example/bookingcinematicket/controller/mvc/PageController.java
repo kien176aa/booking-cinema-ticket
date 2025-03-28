@@ -1,15 +1,37 @@
 package com.example.bookingcinematicket.controller.mvc;
 
+import com.example.bookingcinematicket.controller.BaseController;
+import com.example.bookingcinematicket.repository.MovieRepository;
+import com.example.bookingcinematicket.service.StatisticService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDate;
+
 @Controller
-public class PageController {
+@Slf4j
+public class PageController extends BaseController {
+
+    @Autowired
+    private StatisticService statisticService;
 
     // Dashboards
     @GetMapping("/")
-    public String getDashboardsPage() {
-        return "index"; // Analytics page
+    public String getDashboardsPage(Model model) {
+        try {
+            model.addAttribute("account", getCurrentUser());
+            model.addAttribute("month", LocalDate.now().getMonthValue());
+            model.addAttribute("bestMovie", statisticService.getBestMovieOfMonth());
+            model.addAttribute("generalStat", statisticService.generalStatistic());
+//            model.addAttribute("top5M", statisticService.getTop5Movie());
+            return "index";
+        }catch (Exception ex){
+            log.error("EX INDEX: {}", ex.getMessage());
+            return "error-page";
+        }
     }
 
     // Layouts

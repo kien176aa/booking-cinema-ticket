@@ -21,4 +21,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and (:isSearchByAccountId = false or b.account.accountId = :accountId)")
     Page<Booking> search(LocalDate startTime, LocalDate endTime, Double minPrice, Double maxPrice,
                          String keyWord, Boolean isSearchByAccountId, Long accountId, Pageable pageable);
+
+    @Query("select sum(b.totalAmount) from Booking b where MONTH(b.bookingDate) = MONTH(CURRENT_DATE())")
+    Double getTotalRevenues();
 }
