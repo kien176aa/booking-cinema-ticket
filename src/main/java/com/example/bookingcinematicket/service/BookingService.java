@@ -68,6 +68,7 @@ public class BookingService {
             saveSeatAndTicketInfo(t, room, showtime, booking);
         }
         saveFoodOrders(booking, req);
+        showtimeRepository.updateShowtimeStatus(showtime.getShowtimeId());
     }
 
     private void saveFoodOrders(Booking booking, BookingDTO req) {

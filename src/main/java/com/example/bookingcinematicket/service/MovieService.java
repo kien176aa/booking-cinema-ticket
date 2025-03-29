@@ -277,4 +277,16 @@ public class MovieService {
             movies = new ArrayList<>();
         return movies;
     }
+
+    public SearchResponse<List<MovieDTO>> searchActiveMovie(SearchRequest<String, Movie> request) {
+        if (request.getCondition() != null)
+            request.setCondition(request.getCondition().toLowerCase().trim());
+        Page<Movie> movies = movieRepository.searchActiveMovie(request.getCondition(), request.getPageable(Movie.class));
+        SearchResponse<List<MovieDTO>> response = new SearchResponse<>();
+        response.setData(ConvertUtils.convertList(movies.getContent(), MovieDTO.class));
+        response.setPageSize(request.getPageSize());
+        response.setPageIndex(request.getPageIndex());
+        response.setTotalRecords(movies.getTotalElements());
+        return response;
+    }
 }

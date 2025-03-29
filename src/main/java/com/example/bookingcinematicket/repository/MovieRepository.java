@@ -21,14 +21,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     boolean existsByTitleAndMovieIdNot(String title, Long id);
 
-    @Query("select m from Movie m order by m.rating desc")
+    @Query("select m from Movie m where m.status = true order by m.rating desc")
     List<Movie> findTopMovie(Pageable pageable);
 
     @Query(value = """
     SELECT DISTINCT m.* 
     FROM movies m
     WHERE m.genre REGEXP REPLACE(:genre, ',', '|')
-    AND m.movie_id <> :movieId
+    AND m.movie_id <> :movieId AND m.status = true
     ORDER BY m.rating DESC
     LIMIT 5
 """, nativeQuery = true)
@@ -75,4 +75,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "ORDER BY total_revenue DESC\n" +
             "LIMIT 5", nativeQuery = true)
     List<IKeyValueStatistic<String, Double>> getTop5Movie();
+    @Query("select m from Movie m where (:condition is null or lower(m.title) like %:condition% "
+            + "or lower(m.genre) like %:condition% or lower(m.country) like %:condition%) " +
+            "and m.status = true ")
+    Page<Movie> searchActiveMovie(String condition, Pageable pageable);
 }

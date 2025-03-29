@@ -33,6 +33,11 @@ public class MovieController extends BaseController {
         return movieService.search(request);
     }
 
+    @PostMapping("/search-active")
+    public SearchResponse<List<MovieDTO>> searchActiveMovie(@RequestBody SearchRequest<String, Movie> request) {
+        return movieService.searchActiveMovie(request);
+    }
+
     @PostMapping("/search-movie-person")
     public HashMap<String, List<MoviePersonDTO>> searchMoviePerson(
             @RequestBody SearchRequest<SearchMoviePersonRequest, MoviePerson> request) {

@@ -208,7 +208,7 @@ function fetchPersons() {
         data: JSON.stringify({ condition: null, pageSize: 9999, pageIndex: 1 }),
         success: function(response) {
             console.log('response person: ', response);
-            persons = response.data;
+            persons = response.data.filter(item => item.status);
             actorTable.empty();
             persons.forEach((item) => {
                actorTable.append(`<tr data-person-id="${item.personId}">

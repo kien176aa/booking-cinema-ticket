@@ -34,7 +34,8 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
     Showtime findByShowtimeIdAndBranch_BranchId(Long showtimeId, Long branchId);
 
     @Modifying
-    @Query("delete from Showtime s where s.showtimeId in (:deleteIds)")
+    @Query("delete from Showtime s where s.showtimeId in (:deleteIds) " +
+            "and not exists (select 1 from s.tickets) ")
     void deleteByShowtimeId(List<Long> deleteIds);
 
     @Query("select s.showtimeId from Showtime s where s.branch.branchId = :branchId "
@@ -54,4 +55,9 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
     List<Showtime> findShowtimesByDate(@Param("date") LocalDate date, @Param("branchId") Long branchId, Long movieId);
     @Query("select s from Showtime s where s.showtimeId in (:ids)")
     List<Showtime> findByIds(List<Long> ids);
+
+    @Modifying
+    @Query("update Showtime s set s.status = 'Hết vé' where s.showtimeId = :showtimeId " +
+            "and s.room.capacity = (select count(t) from s.tickets t)")
+    void updateShowtimeStatus(Long showtimeId);
 }

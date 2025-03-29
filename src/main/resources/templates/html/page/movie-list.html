@@ -275,7 +275,7 @@
   function fetchMovies(req) {
     toggleLoading(true);
     $.ajax({
-      url: "/movies/search",
+      url: "/movies/search-active",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({ condition: req.condition, pageSize: req.pageSize, pageIndex: req.pageIndex }),

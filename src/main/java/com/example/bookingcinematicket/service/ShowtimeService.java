@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import com.example.bookingcinematicket.dtos.showtime.UpdatePriceRequest;
 import com.example.bookingcinematicket.repository.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -170,5 +171,28 @@ public class ShowtimeService {
             item.setPrice(req.getPrice());
         });
         showtimeRepository.saveAll(showtimes);
+    }
+
+    public void canDelete(List<Long> ids){
+        if(ids == null || ids.isEmpty())
+            return;
+        List<Showtime> showtimes = showtimeRepository.findByIds(ids);
+        StringBuilder mess = new StringBuilder();
+        if(showtimes != null){
+            int count = 1;
+            for (Showtime s : showtimes) {
+                if(s.getTickets() != null && s.getTickets().size() > 0){
+                    mess.append(String.format("<p>%d. Không thể xóa suất chiếu [%s - %s]</p>",
+                            count,
+                            DateUtils.formatTimeHHmm(s.getStartTime()),
+                            DateUtils.formatTimeHHmm(s.getEndTime()))
+                    );
+                    count++;
+                }
+            }
+        }
+        if(!mess.isEmpty()){
+            throw new CustomException(mess.toString());
+        }
     }
 }

@@ -47,4 +47,10 @@ public class ShowtimeController {
     public void updatePrice(@RequestBody UpdatePriceRequest request) {
         showtimeService.updatePrice(request);
     }
+
+    @PostMapping("/can-delete")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
+    public void canDelete(@RequestBody List<Long> ids) {
+        showtimeService.canDelete(ids);
+    }
 }

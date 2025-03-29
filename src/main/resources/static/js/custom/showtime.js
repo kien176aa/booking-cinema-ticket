@@ -88,7 +88,8 @@ function fetchRooms() {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({ condition: {
-            branchId: branchId
+            branchId: branchId,
+            status: true
             }, pageSize: 9999, pageIndex: 1 }),
         success: function(response) {
             console.log('response: ', response);
@@ -135,7 +136,7 @@ function renderTableRow(item) {
             </td>
             <td>${item.roomName}</td>
             <td>${formatDate(item.startTime)} - ${formatDate(item.endTime)}</td>
-            <td>${item.price}</td>
+            <td>${item.price.toLocaleString()} VNĐ</td>
             <td>${item.status}</td>
         </tr>
     `;
@@ -192,6 +193,7 @@ function fetchShowtimesToModal(){
             if(price)
                 inputPrice.val(price);
             showtimesData = [];
+            $('#createMultiple').prop('disabled', response.data.length > 0);
             response.data.sort((a, b) => {
                 const startA = new Date(a.startTime);
                 const startB = new Date(b.startTime);
@@ -211,7 +213,8 @@ function fetchShowtimesToModal(){
                     startDate: show.startTime.split('T')[0],
                     endDate: show.endTime.split('T')[0],
                     startTime: startTime,
-                    endTime: endTime
+                    endTime: endTime,
+                    canEdit: show.canEdit
                 });
             });
             if(minDate) {
@@ -416,7 +419,7 @@ function renderShowtimes() {
                 <i style="cursor: pointer; font-size: 20px" class="ri-close-circle-line text-danger" onclick="confirmDelete('day', '${date}')"></i>
             </div>`;
         let inputDate = `<input type="date" class="form-control showTimeDate" value="${date}" data-old-date="${date}">`;
-        if(formattedCurrentDate > date){
+        if(formattedCurrentDate >= date){
             divEdit = '';
             inputDate = `<input type="date" disabled="disabled" class="form-control showTimeDate" value="${date}" data-old-date="${date}">`;
         }
@@ -440,7 +443,7 @@ function renderShowtimes() {
         (groupedByDate[date] || []).forEach(show => {
             let disableAttr = ``;
             let deleteIcon = `<i style="cursor: pointer" class="ri-close-circle-line text-danger" onclick="confirmDelete('showtime', '${show.id}')"></i>`;
-            if(formattedCurrentDate > date){
+            if(formattedCurrentDate >= date){
                 disableAttr = `disabled="disabled"`;
                 deleteIcon = ``;
             }
@@ -512,9 +515,31 @@ $(document).on("input", 'input[type="time"]', function () {
 });
 
 function confirmDelete(type, id) {
-    deleteType = type;
-    deleteId = id;
-    $("#confirmDeleteModal").modal("show");
+    toggleLoading(true);
+    let ids = [];
+    if (type === "showtime") {
+        ids = showtimesData.filter(show => show.id == id).map(item => item.id);
+    } else if (type === "day") {
+        ids = showtimesData.filter(show => show.startDate == id).map(item => item.id);
+    }
+    console.log('ids ', ids);
+    $.ajax({
+        url: "/showtimes/can-delete",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(ids),
+        success: function(response) {
+            deleteType = type;
+            deleteId = id;
+            toggleLoading(false);
+            $("#confirmDeleteModal").modal("show");
+        },
+        error: function(xhr, status, error) {
+            toggleLoading(false);
+            showErrorToast(xhr.responseText);
+        }
+    });
+
 }
 
 function deleteConfirmed() {
