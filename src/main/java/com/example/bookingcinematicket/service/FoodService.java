@@ -58,7 +58,7 @@ public class FoodService {
 //                dto.setImage(imgurService.uploadImageToImgur(file));
                 String originalFilename = file.getOriginalFilename();
                 String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
-                String fileName = fileUploadService.generateFileName(SystemMessage.IMG_POSTER);
+                String fileName = fileUploadService.generateFileName(SystemMessage.IMG_FOOD);
                 dto.setImage(fileUploadService.getUploadDir() + fileName + extension);
                 fileUploadService.uploadFile(file, true, fileName).exceptionally(ex -> {
                     log.error("Upload file lỗi: {}", ex.getMessage(), ex);
@@ -86,7 +86,7 @@ public class FoodService {
 //                food.setImage(imgurService.uploadImageToImgur(file));
                 String originalFilename = file.getOriginalFilename();
                 String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
-                String fileName = fileUploadService.generateFileName(SystemMessage.IMG_POSTER);
+                String fileName = fileUploadService.generateFileName(SystemMessage.IMG_FOOD);
                 food.setImage(fileUploadService.getUploadDir() + fileName + extension);
                 fileUploadService.uploadFile(file, true, fileName).exceptionally(ex -> {
                     log.error("Upload file lỗi: {}", ex.getMessage(), ex);

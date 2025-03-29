@@ -14,6 +14,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
 
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/booking")
 @Slf4j
+@PreAuthorize("@securityService.hasPermission('ROLE_ADMIN', 'ROLE_USER')")
 public class BookingController extends BaseController {
 
     @Autowired

@@ -6,6 +6,7 @@ import com.example.bookingcinematicket.service.MovieService;
 import com.example.bookingcinematicket.service.ShowtimeService;
 import com.example.bookingcinematicket.utils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/home")
+@PreAuthorize("@securityService.hasPermission('ROLE_ADMIN', 'ROLE_USER')")
 public class HomeController {
     @Autowired
     private MovieService movieService;

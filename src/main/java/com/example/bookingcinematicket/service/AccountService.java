@@ -1,9 +1,15 @@
 package com.example.bookingcinematicket.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.example.bookingcinematicket.utils.EmailValidator;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +34,10 @@ public class AccountService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public SearchResponse<List<AccountDTO>> search(SearchRequest<String, Account> request, Account currentUser) {
         if (request.getCondition() != null)
@@ -61,11 +71,21 @@ public class AccountService {
         if (exists) {
             throw new CustomException(SystemMessage.EMAIL_IS_EXISTED);
         }
+        if(!EmailValidator.isValidEmail(dto.getEmail())){
+            throw new CustomException(SystemMessage.EMAIL_IS_INVALID);
+        }
         Account account = ConvertUtils.convert(dto, Account.class);
         String password = GenerateString.randomPassword();
         account.setPassword(passwordEncoder.encode(password));
         accountRepository.save(account);
         account.setPassword(null);
+        try {
+            sendCodeContent(account, password);
+        } catch (MessagingException e) {
+            log.error("MessagingException: {}", e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            log.error("UnsupportedEncodingException: {}", e.getMessage());
+        }
         return ConvertUtils.convert(account, AccountDTO.class);
     }
 
@@ -77,6 +97,9 @@ public class AccountService {
         boolean emailExists = accountRepository.existsByEmailAndAccountIdNot(dto.getEmail(), id);
         if (emailExists) {
             throw new CustomException(SystemMessage.EMAIL_IS_EXISTED);
+        }
+        if(!EmailValidator.isValidEmail(dto.getEmail())){
+            throw new CustomException(SystemMessage.EMAIL_IS_INVALID);
         }
         account.setFullName(dto.getFullName());
         account.setRole(dto.getRole());
@@ -102,5 +125,106 @@ public class AccountService {
         }
         acc.setPassword(passwordEncoder.encode(request.getNewPassword()));
         accountRepository.save(acc);
+    }
+
+
+    public String sendCodeContent(Account user, String code) throws MessagingException, UnsupportedEncodingException {
+        String toAddress = user.getEmail();
+        String fromAddress = SystemMessage.FROM_ADDRESS;
+        String senderName = SystemMessage.SENDER_NAME;
+        String subject = SystemMessage.NEW_ACCOUNT_SUBJECT;
+
+        String emailTemplate = """
+                            <html>
+                            <head>
+                                <style>
+                                    body {
+                                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                                        background-color: #f4f4f4;
+                                        margin: 0;
+                                        padding: 20px;
+                                        line-height: 1.6;
+                                    }
+                                    .email-container {
+                                        max-width: 500px;
+                                        margin: 0 auto;
+                                        background-color: white;
+                                        border-radius: 12px;
+                                        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                                        overflow: hidden;
+                                    }
+                                    .email-header {
+                                        background-color: #f0f0f0;
+                                        padding: 20px;
+                                        text-align: center;
+                                    }
+                                    .email-body {
+                                        padding: 30px;
+                                        text-align: center;
+                                    }
+                                    .reset-button {
+                                        display: inline-block;
+                                        background-color: #007bff;
+                                        color: white;
+                                        padding: 12px 24px;
+                                        text-decoration: none;
+                                        border-radius: 6px;
+                                        margin: 20px 0;
+                                        font-weight: bold;
+                                    }
+                                    .reset-code {
+                                        background-color: #f4f4f4;
+                                        padding: 15px;
+                                        border-radius: 6px;
+                                        font-size: 18px;
+                                        letter-spacing: 2px;
+                                        margin: 20px 0;
+                                        display: inline-block;
+                                    }
+                                    .email-footer {
+                                        background-color: #f0f0f0;
+                                        padding: 15px;
+                                        text-align: center;
+                                        font-size: 12px;
+                                        color: #666;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="email-container">
+                                    <div class="email-header">
+                                        <h1 style="margin: 0; color: #333;">Cung cấp tài khoản</h1>
+                                    </div>
+                                    <div class="email-body">
+                                        <p>Xin chào [[fullname]],</p>
+                                        <p>Bạn đã được tạo một tài khoản để đăng nhập vào hệ thống đặt vé xem phim.</p>
+                                       \s
+                                        <div class="reset-code">
+                                            [[code]]
+                                        </div>
+                                       \s
+                                    </div>
+                                    <div class="email-footer">
+                                        © 2025 Hệ Thống Đặt Vé. Bảo mật thông tin.
+                                    </div>
+                                </div>
+                            </body>
+                            </html>
+                """;
+        // Create and send the email
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        String emailContent = emailTemplate.replace("[[code]]", code)
+                .replace("[[fullname]]", user.getFullName());
+        helper.setText(emailContent, true);
+
+        mailSender.send(message);
+
+        return code;
     }
 }

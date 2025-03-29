@@ -395,7 +395,7 @@ function renderPersonRow(searchText){
 }
 
 $(document).ready(function () {
-    getCurrentTab();
+    // getCurrentTab();
     fetchPersons();
     fetchRoles();
     $('#button-addon2').on('click', function() {

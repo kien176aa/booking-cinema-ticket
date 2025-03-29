@@ -266,6 +266,10 @@ function editRoom(){
         }
     });
 }
+
+let scale = 1;
+const minScale = 0.3;
+const maxScale = 1.25;
 $(document).ready(function() {
     $('#button-addon2').on('click', function() {
         searchText = $('.form-control').val().trim();
@@ -289,5 +293,22 @@ $(document).ready(function() {
             },
             pageSize: currentPageSize, pageIndex: 1});
         fetchSeatTypes();
+    });
+
+
+    $("#seatMap").on("wheel", function (event) {
+        if (event.shiftKey) { // Chỉ zoom nếu giữ Shift
+            event.preventDefault(); // Ngăn chặn cuộn ngang/dọc mặc định
+
+            if (event.originalEvent.deltaY < 0) {
+                // Cuộn lên => Zoom in
+                scale = Math.min(scale + 0.1, maxScale);
+            } else {
+                // Cuộn xuống => Zoom out
+                scale = Math.max(scale - 0.1, minScale);
+            }
+
+            $(this).css("transform", `scale(${scale})`);
+        }
     });
 });

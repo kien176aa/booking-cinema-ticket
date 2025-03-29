@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller.apis;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,12 +31,14 @@ public class PersonController extends BaseController {
     }
 
     @PostMapping
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public PersonDTO createBranch(
             @ModelAttribute PersonDTO personDTO, @RequestPart(value = "file", required = false) MultipartFile file) {
         return personService.create(personDTO, file);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public PersonDTO updateBranch(
             @PathVariable("id") Long id,
             @ModelAttribute PersonDTO personDTO,

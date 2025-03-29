@@ -13,7 +13,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
 
-    <title>Quản lý phòng chiếu</title>
+    <title>Quản lý đơn hàng</title>
 
     <meta name="description" content=""/>
 
@@ -42,7 +42,6 @@
 
     <!-- Page CSS -->
     <link rel="stylesheet" href="/assets/css/custom/loading.css"/>
-    <link rel="stylesheet" href="/assets/css/custom/seat-map.css"/>
 
     <!-- Helpers -->
     <script src="/assets/vendor/js/helpers.js"></script>
@@ -160,7 +159,7 @@
                             </li>
                             <li class="breadcrumb-item">
                                 <a href="javascript:void(0);" class="d-flex align-items-center"
-                                ><i class="ri-vidicon-line ri-20px me-1 text-body"></i>Quản lý phòng chiếu</a
+                                ><i class="ri-bill-line ri-20px me-1 text-body"></i>Quản lý đơn hàng</a
                                 >
                             </li>
                         </ol>
@@ -231,7 +230,7 @@
                 <!-- Content -->
 
                 <div class="container-xxl flex-grow-1 container-p-y">
-                    <h3>Quản lý phòng chiếu</h3>
+                    <h3>Quản lý đơn hàng</h3>
                     <!-- Bootstrap Table with Caption -->
                     <div class="card">
 <!--                        <h5 class="card-header">Table Caption</h5>-->
@@ -239,38 +238,78 @@
                             <div class="col-md-3 ms-3 mt-4" style="width: 40%; height: 60px">
                                 <!-- Search -->
                                 <div class="input-group">
+                                    <button
+                                            type="button"
+                                            class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                                            data-bs-toggle="dropdown"
+                                            data-bs-auto-close="outside"
+                                            aria-expanded="false">
+                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    </button>
                                     <input
+                                            id="searchText"
                                             type="text"
                                             class="form-control"
                                             placeholder="Tìm kiếm theo tên..."
                                             aria-label="Recipient's username"
                                             aria-describedby="button-addon2" />
-                                    <button class="btn btn-outline-primary" type="button" id="button-addon2"><i class="ri-search-line"></i></button>
+                                    <button class="btn btn-outline-primary rounded-end" type="button" id="button-addon2">
+                                        <i class="ri-search-line"></i>
+                                    </button>
+
+                                    <div class="dropdown-menu w-100 dropdown-menu-md-start">
+                                        <div class="p-4 mt-2">
+                                            <div class="row g-4">
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="date" id="startDate1" class="form-control" />
+                                                        <label for="startDate1">Ngày bắt đầu</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="date" id="endDate1" class="form-control" />
+                                                        <label for="endDate1">Ngày kết thúc</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row g-4">
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="number" id="minPrice" class="form-control" />
+                                                        <label for="minPrice">Giá tối thiểu</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="number" id="maxPrice" class="form-control" />
+                                                        <label for="maxPrice">Giá tối đa</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <button id="advanceSearch" type="button" class="btn btn-primary">Tìm kiếm</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <!-- /Search -->
                             </div>
-                            <div class="col-md-4 mt-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <select class="form-select" id="exampleFormControlSelect1" aria-label="Default select example">
 
-                                    </select>
-                                    <label for="exampleFormControlSelect1">Chọn chi nhánh</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3 text-end mt-4" >
-                                <button id="create-room" type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#largeModal">
-                                    <span class="tf-icons ri-add-line ri-16px me-1_5"></span>Tạo mới
+                            <div class="col-md-6 text-end mt-4" >
+                                <button id="exportBooking" type="button" class="btn btn-lg btn-outline-success">
+                                    <span class="tf-icons ri-upload-2-line ri-16px me-1_5"></span>Xuất file
                                 </button>
                             </div>
-                        </div>
+                    </div>
 
                         <div class="table-responsive text-nowrap">
                             <table id="custom-table" class="table">
                                 <caption>
                                     <!-- Outline Pagination -->
                                     <nav aria-label="Page navigation">
-                                        <ul id="rooms-pagination" class="pagination pagination-outline-primary">
+                                        <ul id="booking-pagination" class="pagination pagination-outline-primary">
                                             <li class="page-item first">
                                                 <a class="page-link" href="javascript:void(0);"
                                                 ><i class="tf-icon ri-skip-back-mini-line ri-22px"></i
@@ -312,16 +351,17 @@
                                 </caption>
                                 <thead>
                                 <tr>
-                                    <th>Tên phòng chiếu</th>
-                                    <th>Số ghế</th>
-                                    <th>Kiểu phòng</th>
-                                    <th>Trạng thái</th>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Khách hàng</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng giá</th>
                                     <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td colspan="5" class="text-center">Không có dữ liệu</td>
+                                    <td colspan="6" class="text-center">Không có dữ liệu</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -379,125 +419,76 @@
 
     <!-- Large Modal -->
     <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel3">Modal title</h5>
-                    <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <input id="bId" hidden="hidden" />
-                    <div class="divider text-start">
-                        <div class="divider-text">Thông tin cơ bản</div>
-                    </div>
+                <div class="modal-body" style="max-height: 560px; overflow-y: auto;">
+
+                    <!-- Thông tin đơn hàng -->
                     <div class="row">
-                        <div class="col-md-6 mb-6 mt-2">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" id="nameLarge" class="form-control" placeholder="Nhập tên phòng" />
-                                <label for="nameLarge">Tên phòng*</label>
+                        <div class="col-md-6">
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary fw-bold">Thông tin đặt vé</h6>
+                                    <p><strong>ID:</strong> <span id="bookingId"></span></p>
+                                    <p><strong>Ngày đặt:</strong> <span id="bookingDate"></span></p>
+                                    <p><strong>Tổng tiền:</strong> <span id="totalAmount"></span> VND</p>
+                                </div>
                             </div>
-                            <span id="nameLarge-error"></span>
                         </div>
-                        <div class="col-md-6 mb-6 mt-2">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-select" id="roomType" aria-label="Default select example">
-                                    <option value="2D Standard" selected="selected">2D Standard</option>
-                                    <option value="3D Cinema">3D Cinema</option>
-                                    <option value="IMAX">IMAX</option>
-                                    <option value="Dolby Cinema">Dolby Cinema</option>
-                                    <option value="4DX">4DX</option>
-                                </select>
-                                <label for="roomType">Chọn kiểu phòng</label>
-                            </div>
-                            <span id="roomType-error"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-6 mt-2">
-                            <div class="form-check mt-4">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-                                <label class="form-check-label" for="defaultCheck1"> Phòng chiếu này còn hoạt động? </label>
+
+                        <div class="col-md-6">
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary fw-bold">Thông tin khách hàng</h6>
+                                    <p><strong>Tên:</strong> <span id="customerName"></span></p>
+                                    <p><strong>Email:</strong> <span id="customerEmail"></span></p>
+                                    <p><strong>Điện thoại:</strong> <span id="customerPhone"></span></p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="divider text-start">
-                        <div class="divider-text">Sơ đồ chỗ ngồi</div>
-                    </div>
-                    <div id="seat-map-body" class="mb-3">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" id="numRows" class="form-control" placeholder="Nhập số hàng" value="6" />
-                                        <label for="numRows">Số hàng:</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" id="numCols" class="form-control" placeholder="Nhập số cột" value="8" />
-                                        <label for="numCols">Số cột:</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <button class="btn btn-danger" id="generateSeats">Tạo sơ đồ</button>
-                                </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" id="rowSelect" class="form-control" placeholder="A, B, C..." />
-                                        <label for="rowSelect">Chọn hàng:</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-select" id="seatType" aria-label="Default select example">
-                                            <option value="vip">Ghế VIP (Đỏ)</option>
-                                            <option value="sweetbox">Ghế Sweetbox (Hồng)</option>
-                                            <option value="regular">Ghế Thường (Tím)</option>
-                                        </select>
-                                        <label for="seatType">Chọn loại ghế</label>
-                                    </div>
-                                </div>
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-danger" id="setSeatType">Đặt loại ghế</button>
-                                    <button class="btn btn-outline-danger" id="hideRow">Ẩn hàng</button>
-                                    <button class="btn btn-danger" id="showRow">Hiện hàng</button>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" id="colSelect" class="form-control" placeholder="1, 2, 3..." />
-                                        <label for="colSelect">Chọn cột:</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3 btn-group" role="group">
-                                    <button class="btn btn-danger" id="hideCol">Ẩn cột</button>
-                                    <button class="btn btn-outline-danger" id="showCol">Hiện cột</button>
-                                </div>
-                            </div>
-
-                            <div id="list-seat-type" class="col-md-3 overflow-auto" style="max-height: 200px; overflow-y: auto;">
-
-                            </div>
+                    <!-- Khuyến mãi (ẩn nếu không có) -->
+                    <div id="promoSection" class="card shadow-sm mb-3 d-none">
+                        <div class="card-body">
+                            <h6 class="card-title text-primary fw-bold">Khuyến mãi</h6>
+                            <p><strong>Mã KM:</strong> <span id="promoTitle"></span></p>
+                            <p><strong>Giảm giá:</strong> <span id="promoDiscount"></span></p>
+<!--                            <p><strong>Điều kiện tối thiểu:</strong> <span id="promoMinPurchase"></span> VND</p>-->
                         </div>
-                        <p style="color: red">*Giữ shift + cuộn chuột để phóng to thu nhỏ</p>
-                        <div class="screen">MÀN HÌNH</div>
-                        <div class="seat-map" id="seatMap"></div>
                     </div>
+
+                    <!-- Thông tin phim + danh sách ghế -->
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title text-primary fw-bold">Thông tin phim</h6>
+                            <p><strong>Phim:</strong> <span id="movieTitle"></span></p>
+                            <p><strong>Chi nhánh:</strong> <span id="branchName"></span></p>
+                            <p><strong>Phòng:</strong> <span id="roomName"></span></p>
+                            <p><strong>Suất chiếu:</strong> <span id="showtime"></span></p>
+                            <p><strong>Ghế:</strong> <span id="seatList"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Bảng đồ ăn -->
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Đồ ăn/uống</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                        </tr>
+                        </thead>
+                        <tbody id="foodList"></tbody>
+                    </table>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Đóng
-                    </button>
-                    <button id="btnSave" type="button" class="btn btn-primary">Lưu thông tin</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
@@ -532,14 +523,14 @@
 
 <!--    data-->
 <script src="/data/menu-items.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <!--    custom-->
 <script src="/js/custom/common.js"></script>
 <script src="/js/custom/render-menu.js"></script>
 <script src="/js/custom/render-pagination.js"></script>
-<script src="/js/custom/rooms.js"></script>
+<script src="/js/custom/booking.js"></script>
 <script src="/js/custom/custom-ui-toast.js"></script>
-<script src="/js/custom/seat-map.js"></script>
 
 </body>
 </html>

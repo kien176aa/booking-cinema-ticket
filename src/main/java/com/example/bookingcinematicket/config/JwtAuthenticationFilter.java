@@ -3,12 +3,15 @@ package com.example.bookingcinematicket.config;
 import java.io.IOException;
 import java.util.*;
 
+import com.example.bookingcinematicket.entity.Account;
+import com.example.bookingcinematicket.repository.AccountRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,14 +25,13 @@ import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.service.CustomUserDetailsService;
 
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
-
-    private final List<String> authUrl = List.of("/branch-management", "/home", "/movie");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -38,7 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Optional<String> jwtOptional = getJwtFromCookies(request);
         String currentUrl = request.getRequestURI();
         System.out.println("Current URL: " + currentUrl);
-        if (authUrl.contains(currentUrl) && jwtOptional.isEmpty()) {
+        if ((SystemMessage.adminAccessUrl.contains(currentUrl) || SystemMessage.userAccessUrl.contains(currentUrl))
+                && jwtOptional.isEmpty()) {
             response.sendRedirect("/forbidden");
             return;
         }
@@ -85,15 +88,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .findFirst();
     }
 
-    private boolean hasPermission(UserDetails userDetails, String currentUrl) {
-        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-
-        if (currentUrl.startsWith("/admin")) {
-            return authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-        } else if (currentUrl.startsWith("/user")) {
-            return authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER"));
-        }
-
-        return true;
-    }
 }

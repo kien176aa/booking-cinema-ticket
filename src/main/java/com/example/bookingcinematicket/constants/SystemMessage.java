@@ -1,7 +1,12 @@
 package com.example.bookingcinematicket.constants;
 
-public class SystemMessage {
+import java.util.List;
 
+public class SystemMessage {
+    public static final List<String> adminAccessUrl = List.of("/branch-management", "/", "/account-management", "/room-management",
+            "/seat-type-management", "/food-management", "/promotion-management", "/role-management", "/person-management",
+            "/movie-management", "/booking-management", "/movie-detail");
+    public static final List<String> userAccessUrl = List.of("/home", "/my-booking", "/movie-list", "/movie", "/showtime-list");
     public static final String BRANCH_NOT_FOUND = "Chi nhánh không tồn tại";
     public static final String BRANCH_NAME_IS_EXISTED = "Tên chi nhánh đã tồn tại";
     public static final String INCORRECT_EMAIL_OR_PASSWORD = "Email hoặc mật khẩu không chính xác";
@@ -69,4 +74,6 @@ public class SystemMessage {
     public static final String TRAILER = "TRAILER";
     public static final String IMG_ACTOR = "ACTOR";
     public static final String IMG_FOOD = "FOOD";
+    public static final String EMAIL_IS_INVALID = "Email không hợp lệ";
+    public static final String NEW_ACCOUNT_SUBJECT = "Cung cấp tài khoản";
 }

@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller.apis;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.bookingcinematicket.controller.BaseController;
@@ -36,11 +37,13 @@ public class PromotionController extends BaseController {
     }
 
     @PostMapping
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public PromotionDTO createBranch(@RequestBody PromotionDTO promotionDTO) {
         return promotionService.create(promotionDTO);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public PromotionDTO updateBranch(@PathVariable Long id, @RequestBody PromotionDTO promotionDTO) {
         return promotionService.update(id, promotionDTO);
     }

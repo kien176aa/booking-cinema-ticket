@@ -1,6 +1,7 @@
 package com.example.bookingcinematicket.service;
 
 import com.example.bookingcinematicket.dtos.auth.LoginResponse;
+import com.example.bookingcinematicket.utils.EmailValidator;
 import com.example.bookingcinematicket.utils.GenerateString;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -62,6 +63,9 @@ public class AuthService {
         Account account = accountRepository.findByEmail(user.getEmail());
         if (account != null) {
             throw new CustomException(SystemMessage.EMAIL_IS_EXISTED);
+        }
+        if(!EmailValidator.isValidEmail(user.getEmail())){
+            throw new CustomException(SystemMessage.EMAIL_IS_INVALID);
         }
         user.setActive(true);
         user.setAccountId(null);

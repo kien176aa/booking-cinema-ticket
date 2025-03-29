@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller.apis;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.bookingcinematicket.dtos.SeatTypeDTO;
@@ -29,11 +30,13 @@ public class SeatTypeController {
     }
 
     @PostMapping
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public SeatTypeDTO createSeatType(@RequestBody SeatTypeDTO seatTypeDTO) {
         return seatTypeService.createSeatType(seatTypeDTO);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public SeatTypeDTO updateSeatType(@PathVariable Long id, @RequestBody SeatTypeDTO seatTypeDTO) {
         return seatTypeService.updateSeatType(id, seatTypeDTO);
     }

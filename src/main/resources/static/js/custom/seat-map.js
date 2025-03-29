@@ -17,9 +17,13 @@ function generateSeats(seats) {
     if(!defaultSeatColor && seatTypes && seatTypes.length > 0){
         defaultSeatColor = seatTypes[0]?.color;
     }
-    seatMap.innerHTML = "";
     let rows = parseInt(numRowsInput.value);
     let cols = parseInt(numColsInput.value);
+    if(rows * cols > 400){
+        showErrorToast('Một phòng chứa tối đa 400 ghế');
+        return;
+    }
+    seatMap.innerHTML = "";
     seatMap.style.gridTemplateColumns = `repeat(${cols}, 40px)`;
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {

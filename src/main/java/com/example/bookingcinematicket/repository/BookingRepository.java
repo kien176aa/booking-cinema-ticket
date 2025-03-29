@@ -17,6 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and (:minPrice is null or b.totalAmount >= :minPrice) " +
             "and (:maxPrice is null or b.totalAmount <= :maxPrice) " +
             "and (:keyWord is null or lower(b.account.fullName) like %:keyWord% " +
+            "   or lower(b.account.email) like %:keyWord% " +
             "   or exists (select 1 from b.tickets t where lower(t.showtime.movie.title) like %:keyWord%)) " +
             "and (:isSearchByAccountId = false or b.account.accountId = :accountId)")
     Page<Booking> search(LocalDate startTime, LocalDate endTime, Double minPrice, Double maxPrice,

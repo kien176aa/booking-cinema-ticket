@@ -6,6 +6,7 @@ import com.example.bookingcinematicket.dtos.PromotionDTO;
 import com.example.bookingcinematicket.dtos.RoomDTO;
 import com.example.bookingcinematicket.dtos.showtime.UpdatePriceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.bookingcinematicket.dtos.ShowtimeDTO;
@@ -23,22 +24,26 @@ public class ShowtimeController {
     private ShowtimeService showtimeService;
 
     @PostMapping("/search")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN', 'ROLE_USER')")
     public SearchResponse<List<ShowtimeDTO>> search(
             @RequestBody SearchRequest<SearchShowtimeRequest, Showtime> request) {
         return showtimeService.search(request);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN', 'ROLE_USER')")
     public ShowtimeDTO getById(@PathVariable Long id) {
         return showtimeService.getById(id);
     }
 
     @PutMapping("/update")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public void update(@RequestBody UpdateShowtimeRequest request) {
         showtimeService.updateShowtime(request);
     }
 
     @PutMapping("/update-price")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public void updatePrice(@RequestBody UpdatePriceRequest request) {
         showtimeService.updatePrice(request);
     }

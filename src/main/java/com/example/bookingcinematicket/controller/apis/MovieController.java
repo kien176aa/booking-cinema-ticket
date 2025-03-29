@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +45,7 @@ public class MovieController extends BaseController {
     }
 
     @PostMapping
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public MovieDTO create(
             @ModelAttribute MovieDTO movieDTO,
             @RequestPart(value = "file", required = false) MultipartFile file,
@@ -52,6 +54,7 @@ public class MovieController extends BaseController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public MovieDTO update(
             @PathVariable("id") Long id,
             @ModelAttribute MovieDTO movieDTO,
@@ -61,16 +64,19 @@ public class MovieController extends BaseController {
     }
 
     @PutMapping("/update-person-movie")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public void updatePersonMovie(@RequestBody UpdatePersonMovie req) {
         movieService.updatePersonToMovie(req);
     }
 
     @PutMapping("/rating")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN', 'ROLE_USER')")
     public float ratingMovie(@RequestParam Long movieId, @RequestParam Integer rating) {
         return movieService.ratingMovie(movieId, rating, getCurrentUser());
     }
 
     @DeleteMapping("/{id}/remove-person/{personId}")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public void removePersonFromMovie(@PathVariable("id") Long id, @PathVariable("personId") Long personId) {
         movieService.removePersonFromMovie(personId, id);
     }

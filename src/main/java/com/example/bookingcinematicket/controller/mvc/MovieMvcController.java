@@ -72,6 +72,7 @@ public class MovieMvcController extends BaseController {
 
     @GetMapping("/movie-list")
     public String viewMovieList(Model model){
+        model.addAttribute("account", getCurrentUser());
         return "page/movie-list";
     }
 }

@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller.apis;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.bookingcinematicket.dtos.RoomDTO;
@@ -30,11 +31,13 @@ public class RoomController {
     }
 
     @PostMapping
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public RoomDTO createRoom(@RequestBody RoomDTO roomDTO) {
         return roomService.createRoom(roomDTO);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
     public RoomDTO updateRoom(@PathVariable Long id, @RequestBody RoomDTO roomDTO) {
         return roomService.updateRoom(id, roomDTO);
     }

@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.bookingcinematicket.utils.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,9 @@ public class BranchService {
         if (exists) {
             throw new CustomException(SystemMessage.BRANCH_NAME_IS_EXISTED);
         }
+        if(!EmailValidator.isValidEmail(branchDTO.getEmail())){
+            throw new CustomException(SystemMessage.EMAIL_IS_INVALID);
+        }
         Branch branch = ConvertUtils.convert(branchDTO, Branch.class);
         Branch savedBranch = branchRepository.save(branch);
         return ConvertUtils.convert(savedBranch, BranchDTO.class);
@@ -60,6 +64,9 @@ public class BranchService {
         boolean nameExists = branchRepository.existsByNameAndBranchIdNot(branchDTO.getName(), id);
         if (nameExists) {
             throw new CustomException(SystemMessage.BRANCH_NAME_IS_EXISTED);
+        }
+        if(!EmailValidator.isValidEmail(branchDTO.getEmail())){
+            throw new CustomException(SystemMessage.EMAIL_IS_INVALID);
         }
         branch.setName(branchDTO.getName());
         branch.setAddress(branchDTO.getAddress());

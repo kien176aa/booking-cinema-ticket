@@ -13,6 +13,7 @@ import com.example.bookingcinematicket.utils.ConvertUtils;
 import com.example.bookingcinematicket.utils.DateUtils;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.io.ByteArrayOutputStream;
 
 @Service
+@Slf4j
 public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
@@ -133,6 +135,9 @@ public class BookingService {
         if(request.getCondition() == null)
             request.setCondition(new SearchBookingRequest());
         request.getCondition().validateInput();
+        if(SystemMessage.ROLE_USER.equals(currentUser.getRole())){
+            request.getCondition().setIsSearchByAccountId(true);
+        }
         Page<Booking> bookings = bookingRepository.search(
                 request.getCondition().getStartTime(),
                 request.getCondition().getEndTime(),
@@ -143,6 +148,7 @@ public class BookingService {
                 currentUser.getAccountId(),
                 request.getPageable(Booking.class)
         );
+        log.info("Booking size: {}", bookings.getTotalElements());
         SearchResponse<List<BookingResponse>> response = new SearchResponse<>();
         response.setData(ConvertUtils.convertList(bookings.getContent(), BookingResponse.class));
         response.setPageIndex(request.getPageIndex());
