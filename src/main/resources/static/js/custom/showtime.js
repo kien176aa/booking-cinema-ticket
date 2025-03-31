@@ -518,11 +518,18 @@ function confirmDelete(type, id) {
     toggleLoading(true);
     let ids = [];
     if (type === "showtime") {
-        ids = showtimesData.filter(show => show.id == id).map(item => item.id);
+        ids = showtimesData.filter(show => show.id == id && getShowtimeId(show.id) != null).map(item => item.id);
     } else if (type === "day") {
-        ids = showtimesData.filter(show => show.startDate == id).map(item => item.id);
+        ids = showtimesData.filter(show => show.startDate == id && getShowtimeId(show.id) != null).map(item => item.id);
     }
     console.log('ids ', ids);
+    if(!ids || ids.length === 0) {
+        deleteType = type;
+        deleteId = id;
+        toggleLoading(false);
+        $("#confirmDeleteModal").modal("show");
+        return;
+    }
     $.ajax({
         url: "/showtimes/can-delete",
         type: "POST",
