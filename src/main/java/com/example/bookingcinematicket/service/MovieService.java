@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.example.bookingcinematicket.dtos.movie.SearchMovieRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -278,10 +279,16 @@ public class MovieService {
         return movies;
     }
 
-    public SearchResponse<List<MovieDTO>> searchActiveMovie(SearchRequest<String, Movie> request) {
-        if (request.getCondition() != null)
-            request.setCondition(request.getCondition().toLowerCase().trim());
-        Page<Movie> movies = movieRepository.searchActiveMovie(request.getCondition(), request.getPageable(Movie.class));
+    public SearchResponse<List<MovieDTO>> searchActiveMovie(SearchRequest<SearchMovieRequest, Movie> request) {
+        if (request.getCondition() == null) {
+            request.setCondition(new SearchMovieRequest());
+        }
+        request.getCondition().validateInput();
+
+        Page<Movie> movies = movieRepository.searchActiveMovie(request.getCondition().getKeyWord(),
+                request.getCondition().getStartTime(),
+                request.getCondition().getEndTime(),
+                request.getPageable(Movie.class));
         SearchResponse<List<MovieDTO>> response = new SearchResponse<>();
         response.setData(ConvertUtils.convertList(movies.getContent(), MovieDTO.class));
         response.setPageSize(request.getPageSize());

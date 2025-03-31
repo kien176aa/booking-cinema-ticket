@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.bookingcinematicket.entity.Movie;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
@@ -77,6 +78,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<IKeyValueStatistic<String, Double>> getTop5Movie();
     @Query("select m from Movie m where (:condition is null or lower(m.title) like %:condition% "
             + "or lower(m.genre) like %:condition% or lower(m.country) like %:condition%) " +
-            "and m.status = true ")
-    Page<Movie> searchActiveMovie(String condition, Pageable pageable);
+            "and m.status = true and ((:startTime is null and :endTime is null) " +
+            "   or (exists (select 1 from m.showtimes s where (:startTime is null or DATE(s.startTime) >= DATE(:startTime)) " +
+            "       and (:endTime is null or DATE(s.endTime) <= DATE(:endTime))))" +
+            ") ")
+    Page<Movie> searchActiveMovie(String condition, LocalDateTime startTime, LocalDateTime endTime, Pageable pageable);
 }

@@ -136,10 +136,26 @@
           <a class="navbar-brand" href="#">Tìm Phim Chiếu Rạp</a>
           <div class="d-flex w-50">
             <div class="input-group flex-grow-1">
+              <div class="input-group-text dropdown" >
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dateFilterDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false"  data-bs-auto-close="outside">
+                </button>
+                <div class="dropdown-menu p-3" style="width: 468px;">
+                  <label for="startDate" class="form-label">Từ ngày:</label>
+                  <input type="date" id="startDate" class="form-control mb-2">
+
+                  <label for="endDate" class="form-label">Đến ngày:</label>
+                  <input type="date" id="endDate" class="form-control mb-2">
+
+                  <button id="applyDateFilter" class="btn btn-primary w-100">Áp dụng</button>
+                </div>
+              </div>
+
+              <!-- Input chung nhóm với dropdown -->
               <input id="searchText" type="text" class="form-control" placeholder="Tìm theo tên phim, thể loại, quốc gia...">
-              <button id="btnSearch" class="btn btn-outline-primary">
-                Tìm
-              </button>
+
+              <!-- Nút tìm kiếm chung với input -->
+              <button id="btnSearch" class="btn btn-outline-primary">Tìm</button>
             </div>
           </div>
 
@@ -176,6 +192,7 @@
 <script src="/js/custom/client-render-menu.js"></script>
 <script>
   let movies = [], pageSize = 8;
+  let searchText = null, startTime = null, endTime = null;
 
   function renderMovies() {
     const $movieList = $('#custom_movie_list-movie-list');
@@ -263,8 +280,13 @@
       let newPage = parseInt($(this).data("page"));
       if (!isNaN(newPage)) {
         renderPagination2(totalElements, newPage, pageSize);
+        getSearchCondition();
         fetchMovies({
-          condition: $('#searchText').val().trim().toLowerCase(),
+          condition: {
+            keyWord: searchText,
+            startTime: startTime,
+            endTime: endTime
+          },
           pageSize: pageSize,
           pageIndex: newPage
         });
@@ -293,22 +315,47 @@
     });
   }
 
-
   $(document).ready(function() {
     fetchMovies({
-      condition: '',
+      condition: {
+        keyWord: ''
+      },
       pageSize: pageSize,
       pageIndex: 1
     });
 
     $('#btnSearch').on('click', function () {
+      getSearchCondition();
       fetchMovies({
-        condition: $('#searchText').val().trim().toLowerCase(),
+        condition: {
+          keyWord: searchText,
+          startTime: startTime,
+          endTime: endTime
+        },
         pageSize: pageSize,
         pageIndex: 1
       });
-    })
+    });
+    $('#applyDateFilter').on('click', function () {
+      getSearchCondition();
+      fetchMovies({
+        condition: {
+          keyWord: searchText,
+          startTime: startTime,
+          endTime: endTime
+        },
+        pageSize: pageSize,
+        pageIndex: 1
+      });
+    });
   });
+  function getSearchCondition(){
+    searchText = $('#searchText').val().trim().toLowerCase();
+    let a = $('#startDate').val();
+    let b = $('#endDate').val();
+    startTime = (a && a.length > 0) ? new Date(a) : null;
+    endTime = (b && b.length > 0) ? new Date(b) : null;
+  }
 </script>
 </body>
 </html>

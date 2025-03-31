@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller.apis;
 import java.util.HashMap;
 import java.util.List;
 
+import com.example.bookingcinematicket.dtos.movie.SearchMovieRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class MovieController extends BaseController {
     }
 
     @PostMapping("/search-active")
-    public SearchResponse<List<MovieDTO>> searchActiveMovie(@RequestBody SearchRequest<String, Movie> request) {
+    public SearchResponse<List<MovieDTO>> searchActiveMovie(@RequestBody SearchRequest<SearchMovieRequest, Movie> request) {
         return movieService.searchActiveMovie(request);
     }
 
