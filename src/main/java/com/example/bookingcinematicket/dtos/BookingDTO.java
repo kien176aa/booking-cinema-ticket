@@ -28,6 +28,7 @@ public class BookingDTO {
     private String paymentMethod;
     private String paymentStatus;
     private String bookingStatus;
+    private String bookingCode;
     private String seatMap;
     private List<TicketDTO> tickets;
     private List<FoodOrderDTO> foodOrders;

@@ -124,7 +124,7 @@ function renderGroupedOrderCards(groupedOrders) {
                 <div class="col-md-4">
                     <div class="card movie-card">
                         <div class="movie-card-header p-3 d-flex justify-content-between align-items-center">
-                            <small>Mã đơn: ${order.bookingId}</small>
+                            <small>Mã đơn: ${order.bookingCode}</small>
                         </div>
                         <div class="card-body p-3">
                             <div class="d-flex">

@@ -10,7 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "seats")
+@Table(name = "seats",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"seat_number", "room_id", "showtime_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +29,8 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "seat_type_id")
     private SeatType seatType;
+    @Column(name = "showtime_id")
+    private Long showtimeId;
     private String color;
     @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
     private List<Ticket> tickets;

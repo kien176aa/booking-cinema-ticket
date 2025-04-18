@@ -112,7 +112,10 @@ function setContentModal(modalType, callbackFunc, id) {
 
 function getFoodInfo(type){
     let isValid = hasValue('#nameLarge', 'Tên đồ ăn/uống') && checkLength('#nameLarge', 'Tên đồ ăn/uống', 0, 255);
-    isValid = hasValue('#price', 'Giá đồ ăn/uống') && isPositiveNumber('#price', 'Giá đồ ăn/uống') && isValid;
+    isValid = hasValue('#price', 'Giá đồ ăn/uống') 
+        && isPositiveNumber('#price', 'Giá đồ ăn/uống') 
+        && checkPriceGreaterThan('#price', 'Giá đồ ăn/uống', 1000)
+        && isValid;
     // isValid = hasValue('#quantity', 'Số lượng') && isPositiveNumber('#quantity', 'Số lượng') && isValid;
     if(isValid) {
         let fileInput = inputImg[0].files[0];

@@ -36,6 +36,7 @@ public class Booking {
     private String paymentMethod;
     private String paymentStatus;
     private String bookingStatus;
+    private String bookingCode;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Ticket> tickets;

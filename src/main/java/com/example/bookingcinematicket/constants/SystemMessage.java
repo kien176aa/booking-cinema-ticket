@@ -5,7 +5,7 @@ import java.util.List;
 public class SystemMessage {
     public static final List<String> adminAccessUrl = List.of("/branch-management", "/", "/account-management", "/room-management",
             "/seat-type-management", "/food-management", "/promotion-management", "/role-management", "/person-management",
-            "/movie-management", "/booking-management", "/movie-detail");
+            "/movie-management", "/booking-management", "/movie-detail", "/booking-code-management");
     public static final List<String> userAccessUrl = List.of("/home", "/my-booking", "/movie-list", "/movie", "/showtime-list");
     public static final String BRANCH_NOT_FOUND = "Chi nhánh không tồn tại";
     public static final String BRANCH_NAME_IS_EXISTED = "Tên chi nhánh đã tồn tại";

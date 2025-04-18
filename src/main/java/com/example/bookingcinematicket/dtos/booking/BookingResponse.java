@@ -19,6 +19,7 @@ public class BookingResponse {
     private String paymentMethod;
     private String paymentStatus;
     private String bookingStatus;
+    private String bookingCode;
     private List<BookingTicket> tickets;
     private List<FoodOrderDTO> foodOrders;
 }

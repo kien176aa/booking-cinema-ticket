@@ -96,8 +96,8 @@ function renderTableRow(item) {
             <td>
                 <span>${item.title}</span>
             </td>
-            <td>${item.discountAmount || item.discountPercent + '%'}</td>
-            <td>${item.minPurchase}</td>
+            <td>${(item.discountAmount ? item.discountAmount.toLocaleString()+'đ' : null) || item.discountPercent + '%'}</td>
+            <td>${item.minPurchase.toLocaleString() + 'đ'}</td>
             <td>${formatDate(item.startDate)}</td>
             <td>${formatDate(item.endDate)}</td>
             <td>

@@ -28,4 +28,8 @@ public class SeatType {
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
+    
+    public SeatType(Long id){
+        this.seatTypeId = id;
+    }
 }

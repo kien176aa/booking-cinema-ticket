@@ -69,6 +69,13 @@ const arr = [
         href: "/movie-management",
         badge: { text: "5", color: "danger" },
     },
+    // {
+    //     isHeader: false,
+    //     text: "Kiểm soát vé",
+    //     icon: "ri-codepen-line",
+    //     href: "/booking-code-management",
+    //     badge: { text: "5", color: "danger" },
+    // },
     {
         isHeader: false,
         text: "Quản lý đơn hàng",

@@ -16,6 +16,7 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,9 +65,12 @@ public class BookingService {
         if(LocalDateTime.now().isAfter(showtime.getStartTime())){
             throw new CustomException(SystemMessage.SHOW_TIME_IS_EXPIRED);
         }
+        StringBuilder mess = new StringBuilder();
         for (TicketDTO t : req.getTickets()) {
-            saveSeatAndTicketInfo(t, room, showtime, booking);
+            saveSeatAndTicketInfo(t, room, showtime, booking, mess);
         }
+        if(!mess.isEmpty())
+            throw new CustomException(mess.toString());
         saveFoodOrders(booking, req);
         showtimeRepository.updateShowtimeStatus(showtime.getShowtimeId());
     }
@@ -87,30 +91,41 @@ public class BookingService {
         foodOrderRepository.saveAll(foodOrders);
     }
 
-    private void saveSeatAndTicketInfo(TicketDTO t, Room room, Showtime showtime, Booking booking) {
+    private void saveSeatAndTicketInfo(TicketDTO t, Room room, Showtime showtime,
+                                       Booking booking, StringBuilder mess) {
         Seat seat = new Seat();
-        seat.setSeatType(new SeatType());
-        seat.getSeatType().setSeatTypeId(t.getSeatTypeId());
         seat.setRoom(room);
+        seat.setShowtimeId(showtime.getShowtimeId());
         seat.setSeatNumber(t.getSeatNumber());
+        seat.setSeatType(new SeatType(t.getSeatTypeId()));
         seat.setColor(t.getColor());
-        seatRepository.save(seat);
+
+        try {
+            seat = seatRepository.save(seat);
+        } catch (DataIntegrityViolationException e) {
+            mess.append("<p>Ghế ").append(t.getSeatNumber())
+                    .append(" đã được đặt trong suất chiếu này.</p>");
+            return;
+        }
+
         Ticket ticket = new Ticket();
         ticket.setBooking(booking);
         ticket.setSeat(seat);
         ticket.setShowtime(showtime);
         ticket.setPrice(t.getPrice());
+
         ticketRepository.save(ticket);
     }
 
     private Booking setBookingInfo(BookingDTO req, Account account) {
         Booking booking = new Booking();
-//        booking.setBookingDate(DateUtils.convertToVietnamTime(LocalDateTime.now()));
         booking.setBookingDate(LocalDateTime.now());
         if(req.getPromotion() != null && req.getPromotion().getPromotionId() != null){
             booking.setPromotion(new Promotion());
             booking.getPromotion().setPromotionId(req.getPromotion().getPromotionId());
         }
+        booking.setBookingCode(bookingRepository.generateSecureBookingCode(
+                req.getTickets().get(0).getShowtimeId().toString()));
         booking.setBookingStatus(SystemMessage.BOOKING_SUCCESS);
         booking.setPaymentMethod(SystemMessage.BOOKING_PAYMENT_METHOD);
         booking.setPaymentStatus(SystemMessage.BOOKING_SUCCESS);

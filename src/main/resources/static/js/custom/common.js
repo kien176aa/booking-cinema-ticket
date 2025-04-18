@@ -113,6 +113,23 @@ function isPositiveNumber(id, fieldName){
     }
 }
 
+function checkPriceGreaterThan(id, fieldName, min){
+    let value = $(id).val().trim();
+    value = Number(value);
+    let errorSpan = $(id + '-error');
+
+    if (!value || value <= 0) {
+        errorSpan.text(fieldName + ' phải là số dương').css('color', 'red');
+        return false;
+    } else if (value < min){
+        errorSpan.text(fieldName + ' phải >= ' + min.toLocaleString() + 'đ').css('color', 'red');
+        return false;
+    } else {
+        errorSpan.text('');
+        return true;
+    }
+}
+
 function blockColor(id){
     let colorInput = $(id);
     let errorSpan = $(id + '-error');

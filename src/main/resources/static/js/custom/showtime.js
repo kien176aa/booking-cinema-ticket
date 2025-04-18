@@ -621,7 +621,8 @@ function getShowtimeId(id) {
 }
 
 function getShowtimeInfo(type) {
-    let isValid = isPositiveNumber('#price', 'Giá vé');
+    let isValid = isPositiveNumber('#price', 'Giá vé')
+        && checkPriceGreaterThan('#price', 'Giá vé', 1000);
     isValid = hasValue('#showDate', 'Ngày chiếu') && isValid;
     let overlapping = checkOverlappingShowtimes();
     if(overlapping || !isValid){
@@ -696,7 +697,8 @@ function showUpdatePriceModal(){
     $('#updatePriceModal').modal('show');
 }
 function updatePrice(){
-    let isValid = isPositiveNumber('#newPrice', 'Giá mới');
+    let isValid = isPositiveNumber('#newPrice', 'Giá mới')
+        && checkPriceGreaterThan('#newPrice', 'Giá mới', 1000);
     if(!isValid)
         return;
     let price = $('#newPrice').val();

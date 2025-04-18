@@ -1,9 +1,12 @@
 package com.example.bookingcinematicket.controller.apis;
 
 import com.example.bookingcinematicket.constants.SystemMessage;
+import com.example.bookingcinematicket.dtos.RefundRequest;
 import com.example.bookingcinematicket.entity.Showtime;
 import com.example.bookingcinematicket.exception.CustomException;
 import com.example.bookingcinematicket.repository.ShowtimeRepository;
+import com.stripe.model.Refund;
+import com.stripe.param.RefundCreateParams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,4 +59,21 @@ public class PaymentController {
                     .body("{\"error\": \"Failed to create payment intent: " + e.getMessage() + "\"}");
         }
     }
+
+    @PostMapping("/refund")
+    public ResponseEntity<String> refundPayment(@RequestBody RefundRequest request) {
+        try {
+            RefundCreateParams params = RefundCreateParams.builder()
+                    .setPaymentIntent(request.getPaymentIntentId())
+                    .build();
+
+            Refund refund = Refund.create(params);
+
+            return ResponseEntity.ok("Refund initiated");
+        } catch (StripeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Không thể hoàn tiền: " + e.getMessage());
+        }
+    }
+
 }

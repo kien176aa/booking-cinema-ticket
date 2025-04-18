@@ -639,11 +639,12 @@ function showPayModal(selectedFoods) {
                     document.getElementById('submit').disabled = false;
                 } else {
                     if (result.paymentIntent.status === 'succeeded') {
-                        processSaveBooking(selectedFoods, promoId, amountToCharge);
+                        processSaveBooking(selectedFoods, promoId, amountToCharge, result);
                     }
                 }
             }
         } catch (error) {
+            console.log('error booking', error);
             // Handle network or other errors
             showErrorToast('Có lỗi xảy ra trong quá trình thanh toán');
             errorElement.textContent = 'Có lỗi xảy ra trong quá trình thanh toán';
@@ -654,7 +655,7 @@ function showPayModal(selectedFoods) {
     });
 }
 
-function processSaveBooking(selectedFoods, promoId, amountToCharge){
+function processSaveBooking(selectedFoods, promoId, amountToCharge, resultPayment){
     let tickets = [], foodOrders = [];
     selectedSeat.forEach(function (seatNumber) {
         let seat = seats.find(s => s.seatNumber === seatNumber);
@@ -693,10 +694,29 @@ function processSaveBooking(selectedFoods, promoId, amountToCharge){
             $('#seatModal').remove();
             $('#foodModal').remove();
             $('#payModal').remove();
+            selectedSeat = [];
             showSuccessToast('Thanh toán thành công');
         },
         error: function(xhr, status, error) {
             console.error('Booking failed:', error);
+            // throw new Error('Đặt vé thất bại: ' + error);
+            $.ajax({
+                url: '/payment/refund',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    paymentIntentId: resultPayment?.paymentIntent?.id
+                }),
+                success: function (res) {
+                    console.log('Refund success:', res);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Refund failed:', error);
+                    // Bạn có thể hiển thị thông báo lỗi ở đây nếu cần
+                }
+            });
+            showErrorToast(xhr.responseText);
+            document.getElementById('submit').disabled = false;
         }
     });
 }

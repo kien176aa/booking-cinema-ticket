@@ -2,6 +2,7 @@ package com.example.bookingcinematicket.entity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Handler;
 
 import jakarta.persistence.*;
 
@@ -52,3 +53,5 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Rating> ratings;
 }
+
+

@@ -112,7 +112,8 @@
 <body>
 <input id="userRole" th:value="${account.role}" hidden="hidden">
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
+<nav style="font-weight: bold; color: #000000 !important;" 
+     class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
   <div class="container">
     <a class="navbar-brand" href="/home">
       <img src="/assets/img/logo2.png" alt="MoMo" width="85" height="40">
@@ -196,7 +197,7 @@
     </div>
   </div>
   <div class="pagination"></div>
-  <div id="orderCardContainer" class="row g-4">
+  <div style="min-height: 400px" id="orderCardContainer" class="row g-4">
     <!-- Các card đơn hàng sẽ được render ở đây -->
   </div>
 </div>
@@ -229,25 +230,6 @@
         <a href="#"
            class="footer-link">Booking ticket website</a>
       </div>
-      <!--                            <div class="d-none d-lg-inline-block">-->
-      <!--                                <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>-->
-      <!--                                <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More-->
-      <!--                                    Themes</a>-->
-
-      <!--                                <a-->
-      <!--                                        href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/documentation/"-->
-      <!--                                        target="_blank"-->
-      <!--                                        class="footer-link me-4"-->
-      <!--                                >Documentation</a-->
-      <!--                                >-->
-
-      <!--                                <a-->
-      <!--                                        href="https://github.com/themeselection/materio-bootstrap-html-admin-template-free/issues"-->
-      <!--                                        target="_blank"-->
-      <!--                                        class="footer-link"-->
-      <!--                                >Support</a-->
-      <!--                                >-->
-      <!--                            </div>-->
     </div>
   </div>
 </footer>
