@@ -95,8 +95,8 @@ public class PromotionService {
         return ConvertUtils.convert(promotion, PromotionDTO.class);
     }
 
-    public List<PromotionDTO> getCurrentPromotions(Double price) {
-        List<Promotion> promotions = promotionRepository.getCurrentPromotions(price);
+    public List<PromotionDTO> getCurrentPromotions(Double price, Long branchId) {
+        List<Promotion> promotions = promotionRepository.getCurrentPromotions(price, branchId);
         return ConvertUtils.convertList(promotions, PromotionDTO.class);
     }
 }

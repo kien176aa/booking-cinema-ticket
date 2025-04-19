@@ -27,8 +27,8 @@ public class PromotionController extends BaseController {
     }
 
     @GetMapping("/get-current")
-    public List<PromotionDTO> getCurrentPromotions(@RequestParam Double price) {
-        return promotionService.getCurrentPromotions(price);
+    public List<PromotionDTO> getCurrentPromotions(@RequestParam Double price, @RequestParam Long branchId) {
+        return promotionService.getCurrentPromotions(price, branchId);
     }
 
     @GetMapping("/{id}")

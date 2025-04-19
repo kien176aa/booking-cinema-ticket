@@ -724,7 +724,7 @@ function processSaveBooking(selectedFoods, promoId, amountToCharge, resultPaymen
 function fetchPromotions(price, selectedItems) {
     toggleLoading(true);
     $.ajax({
-        url: `/promotions/get-current?price=${price}`,
+        url: `/promotions/get-current?price=${price}&branchId=${branchId}`,
         type: "GET",
         contentType: "application/json",
         success: function(response) {

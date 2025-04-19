@@ -206,10 +206,12 @@ function generateTicketPDF(id) {
 function renderOrderDetails(order) {
     const $modalDetails = $('#modalOrderDetails');
     $modalDetails.empty();
-
+    let finalTotal = order.totalAmount;
     const foodTotal = order.foodOrders.reduce((total, food) => total + (food.price * food.quantity), 0);
-    const subtotal = order.totalAmount - foodTotal;
-    const finalTotal = order.totalAmount;
+    let totalTicketPrice = order.tickets.reduce((sum, ticket) => sum + ticket.price, 0);
+    let roomPrice = order.tickets.length > 0 ? order.tickets[0].showtime.price : 0;
+    const subtotal = totalTicketPrice + roomPrice;
+    
     let showtime = order?.tickets[0]?.showtime;
 
     const $details = $(`
@@ -241,7 +243,8 @@ function renderOrderDetails(order) {
                 ${order.promotion ? `
                 <div class="order-summary-item">
                     <span class="badge coupon-badge ms-2">${order.promotion.title}</span>
-                    <strong>-${order.promotion.discountAmount ? order.promotion.discountAmount.toLocaleString() : '0'} VND</strong>
+                    <strong>-${order.promotion.discountAmount ? order.promotion.discountAmount.toLocaleString() + 'đ' 
+                            : order.promotion.discountPercent + '%'}</strong>
                 </div>
                 ` : ''}
                 <div class="order-summary-item bg-light fw-bold">

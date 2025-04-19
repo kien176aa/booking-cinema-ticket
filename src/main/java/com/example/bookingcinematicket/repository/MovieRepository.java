@@ -38,8 +38,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query(value = "WITH movie_revenues AS (\n" +
             "    SELECT\n" +
             "        s.movie_id,\n" +
-            "        SUM(t.price) AS total_revenue,\n" +
-            "        SUM(SUM(t.price)) OVER () AS total_all_movies\n" +
+            "        SUM(COALESCE(t.price, 0)) AS total_revenue,\n" +
+            "        SUM(SUM(COALESCE(t.price, 0))) OVER () AS total_all_movies\n" +
             "    FROM showtimes s\n" +
             "             LEFT JOIN tickets t ON s.showtime_id = t.showtime_id\n" +
             "    WHERE MONTH(s.start_time) = MONTH(CURRENT_DATE())\n" +
@@ -62,7 +62,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query(value = "WITH movie_revenues AS (\n" +
             "    SELECT\n" +
             "        s.movie_id,\n" +
-            "        SUM(t.price) AS total_revenue\n" +
+            "        SUM(COALESCE(t.price, 0)) AS total_revenue\n" +
             "    FROM showtimes s\n" +
             "             LEFT JOIN tickets t ON s.showtime_id = t.showtime_id\n" +
             "    WHERE MONTH(s.start_time) = MONTH(CURRENT_DATE())\n" +

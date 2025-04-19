@@ -78,5 +78,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 """, nativeQuery = true)
     String generateSecureBookingCode(@Param("prefix") String prefix);
 
-    Booking findByBookingCode(String code);
+    @Query("SELECT b FROM Booking b " +
+            "WHERE b.bookingCode = :code " +
+            "AND EXISTS (SELECT 1 FROM b.tickets t " +
+            "WHERE FUNCTION('date', t.showtime.startTime) = CURRENT_DATE)")
+    Booking findByBookingCode(@Param("code") String code);
+
 }

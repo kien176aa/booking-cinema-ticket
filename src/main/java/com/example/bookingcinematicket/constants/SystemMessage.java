@@ -77,7 +77,7 @@ public class SystemMessage {
     public static final String EMAIL_IS_INVALID = "Email không hợp lệ";
     public static final String NEW_ACCOUNT_SUBJECT = "Cung cấp tài khoản";
     public static final String CODE_IS_REQUIRED = "Mã đơn hàng là bắt buộc";
-    public static final String CODE_NOT_FOUND = "Mã đơn hàng không tồn tại";
+    public static final String CODE_NOT_FOUND = "Mã đơn không tồn tại hoặc vé chưa đến ngày chiếu";
     public static final String BOOKING_IS_USED = "Vé của đơn hàng đã được sử dụng";
     public static final String BOOKING_STATUS_USED = "Đã sử dụng";
 }

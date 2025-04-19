@@ -54,7 +54,7 @@ function renderTableRow(item) {
                 <span>${item.fullName}</span>
             </td>
             <td>${item.email}</td>
-            <td>${item.phone}</td>
+            <td>${item.phone || ''}</td>
             <td>${item.role === 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}</td>
             <td>
                 <span class="badge rounded-pill ${item.active ? 'bg-label-primary' : 'bg-label-warning'} me-1">

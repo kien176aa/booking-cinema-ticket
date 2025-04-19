@@ -19,8 +19,8 @@ let imgPreview = $('#preview');
 let actorTable = $('#actor-table');
 let carouselContainer = $('#carousel-container');
 
-function renderCarousel(roleName, actors) {
-    const carouselId = `carousel-${roleName.replace(' ', '-').toLowerCase()}`;
+function renderCarousel(id, roleName, actors) {
+    const carouselId = `carousel-roleee-${id}`;
 
     const carouselHTML = `
         <div class="divider text-start">
@@ -110,9 +110,10 @@ function fetchMoviePersons() {
             let hasData = false;
             roles.forEach(function (item) {
                let arr = response[`${item.name}`];
+                console.log('arr', arr);
                if(arr && arr.length > 0){
                    hasData = true;
-                   renderCarousel(item.name, arr);
+                   renderCarousel(item.roleId, item.name, arr);
                }
             });
             if(!hasData){
