@@ -78,4 +78,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 """, nativeQuery = true)
     String generateSecureBookingCode(@Param("prefix") String prefix);
 
+    Booking findByBookingCode(String code);
 }

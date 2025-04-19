@@ -3,6 +3,7 @@ package com.example.bookingcinematicket.controller.apis;
 import com.example.bookingcinematicket.controller.BaseController;
 import com.example.bookingcinematicket.dtos.BookingDTO;
 import com.example.bookingcinematicket.dtos.booking.BookingResponse;
+import com.example.bookingcinematicket.dtos.booking.GetByCodeRequest;
 import com.example.bookingcinematicket.dtos.booking.SearchBookingRequest;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
@@ -37,6 +38,20 @@ public class BookingController extends BaseController {
     public SearchResponse<List<BookingResponse>> search(@RequestBody SearchRequest<SearchBookingRequest, Booking> request){
         log.info("req {}", request);
         return bookingService.search(request, getCurrentUser());
+    }
+
+    @PostMapping("/get-by-code")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
+    public BookingResponse getByCode(@RequestBody GetByCodeRequest request){
+        log.info("req {}", request);
+        return bookingService.getByCode(request);
+    }
+
+    @PostMapping("/change-status")
+    @PreAuthorize("@securityService.hasPermission('ROLE_ADMIN')")
+    public void changeStatus(@RequestBody GetByCodeRequest request){
+        log.info("req {}", request);
+        bookingService.changeStatus(request);
     }
 
     @GetMapping("/generate-pdf/{id}")

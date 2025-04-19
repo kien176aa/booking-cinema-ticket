@@ -3,6 +3,8 @@ package com.example.bookingcinematicket.service;
 import com.example.bookingcinematicket.constants.SystemMessage;
 import com.example.bookingcinematicket.dtos.*;
 import com.example.bookingcinematicket.dtos.booking.BookingResponse;
+import com.example.bookingcinematicket.dtos.booking.BookingTicket;
+import com.example.bookingcinematicket.dtos.booking.GetByCodeRequest;
 import com.example.bookingcinematicket.dtos.booking.SearchBookingRequest;
 import com.example.bookingcinematicket.dtos.common.SearchRequest;
 import com.example.bookingcinematicket.dtos.common.SearchResponse;
@@ -166,7 +168,19 @@ public class BookingService {
         );
         log.info("Booking size: {}", bookings.getTotalElements());
         SearchResponse<List<BookingResponse>> response = new SearchResponse<>();
-        response.setData(ConvertUtils.convertList(bookings.getContent(), BookingResponse.class));
+        List<BookingResponse> bookingResponses = new ArrayList<>();
+        for (Booking booking : bookings.getContent()) {
+            BookingResponse bookingResponse = ConvertUtils.convert(booking, BookingResponse.class);
+            if(bookingResponse.getTickets() != null) {
+                for(BookingTicket a : bookingResponse.getTickets()){
+                    if(a.getShowtime() != null){
+                        a.getShowtime().setRoomSeatMap(null);
+                    }
+                }
+            }
+            bookingResponses.add(bookingResponse);
+        }
+        response.setData(bookingResponses);
         response.setPageIndex(request.getPageIndex());
         response.setPageSize(request.getPageSize());
         response.setTotalRecords(bookings.getTotalElements());
@@ -274,4 +288,36 @@ public class BookingService {
         return String.format("%,.0f VNĐ", amount);
     }
 
+    public BookingResponse getByCode(GetByCodeRequest request) {
+        if(request.getCode() == null){
+            throw new CustomException(SystemMessage.CODE_IS_REQUIRED);
+        }
+        Booking booking = bookingRepository.findByBookingCode(request.getCode());
+        if(booking == null)
+            throw new CustomException(SystemMessage.CODE_NOT_FOUND);
+        BookingResponse bookingResponse = ConvertUtils.convert(booking, BookingResponse.class);
+        if(bookingResponse.getTickets() != null) {
+            for(BookingTicket a : bookingResponse.getTickets()){
+                if(a.getShowtime() != null){
+                    a.getShowtime().setRoomSeatMap(null);
+                }
+            }
+        }
+        return bookingResponse;
+    }
+
+    public void changeStatus(GetByCodeRequest request) {
+        if(request.getCode() == null){
+            throw new CustomException(SystemMessage.CODE_IS_REQUIRED);
+        }
+        Booking booking = bookingRepository.findByBookingCode(request.getCode());
+        if(booking == null)
+            throw new CustomException(SystemMessage.CODE_NOT_FOUND);
+        
+        if(!SystemMessage.BOOKING_SUCCESS.equals(booking.getBookingStatus())) {
+            throw new CustomException(SystemMessage.BOOKING_IS_USED);
+        }
+        booking.setBookingStatus(SystemMessage.BOOKING_STATUS_USED);
+        bookingRepository.save(booking);
+    }
 }
