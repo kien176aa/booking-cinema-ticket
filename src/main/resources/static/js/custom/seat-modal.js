@@ -582,7 +582,7 @@ function showPayModal(selectedFoods) {
         $('#payModal').remove();
     });
 
-    var stripe = Stripe("pk_test_51R2w4ERtHPK7YGbtmDrLj3AUZ5m6NY7tFF1nFuBgDlRpMv7guB0iScQMP8UntGBKuxtI2ImWvxBHwQRaxAN1fcvf00Bii45oVq"); // Thay YOUR_PUBLISHABLE_KEY bằng khóa API công khai của bạn
+    var stripe = Stripe("pk_test_51RMqmHFL4Ydn4zhitiiJMpb0Ta2gvW5oUxK6eaDr1oXarf0pg48XuXrZ9N9pUPtnYTRWQ4i0BYgz4DL2NeShWDWN00hM7DaINE"); // Thay YOUR_PUBLISHABLE_KEY bằng khóa API công khai của bạn
     var elements = stripe.elements();
 
     var card = elements.create("card");

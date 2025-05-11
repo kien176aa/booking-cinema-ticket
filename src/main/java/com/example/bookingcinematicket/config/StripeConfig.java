@@ -7,6 +7,6 @@ import com.stripe.Stripe;
 @Configuration
 public class StripeConfig {
     public StripeConfig() {
-        Stripe.apiKey = "sk_test_51R2w4ERtHPK7YGbtdCZCAFfeY53Q6BalOXv3qFyrUfcTmMRo4aKDuqS9r4QjSybnqzNBZtYE4fHtWxXO86NKhcTQ00rjTJi3Jk";
+        Stripe.apiKey = "sk_test_51RMqmHFL4Ydn4zhi6gLGJyKc0LzqVr0EDIJ5FIsmMAf1voSK0wTkZlWnD5SYZL1wjNBdIKxvCiPCh4JUWczsmk8c00BXqniB9l";
     }
 }
