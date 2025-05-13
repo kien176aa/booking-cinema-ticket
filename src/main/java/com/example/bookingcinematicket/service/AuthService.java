@@ -50,7 +50,7 @@ public class AuthService {
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
-            cookie.setMaxAge(7 * 24 * 60 * 60);
+            cookie.setMaxAge(Integer.MAX_VALUE);
             response.addCookie(cookie);
             return new LoginResponse("", account.getRole());
         } catch (Exception e) {
